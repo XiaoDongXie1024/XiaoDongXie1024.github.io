@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在IOS或者Mac OS X通过UIKit提供的用来显示字符串控件有三个：UILable，UITextField，UITextView。然而这些控件本身对文本的展现方式很单一，通常仅仅能够控制字体样式、大小、颜色、加粗、斜体等等，而对于行距控制，字距控制，段落控制等高级功能却无能为力。此时不免要提起一个非常强大的文本排版框架CoreText.framework。">
+<meta name="keywords" content="ios,富文本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS之富文本">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2016/10/09/fulltext/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="在IOS或者Mac OS X通过UIKit提供的用来显示字符串控件有三个：UILable，UITextField，UITextView。然而这些控件本身对文本的展现方式很单一，通常仅仅能够控制字体样式、大小、颜色、加粗、斜体等等，而对于行距控制，字距控制，段落控制等高级功能却无能为力。此时不免要提起一个非常强大的文本排版框架CoreText.framework。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-10-09T12:42:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS之富文本">
+<meta name="twitter:description" content="在IOS或者Mac OS X通过UIKit提供的用来显示字符串控件有三个：UILable，UITextField，UITextView。然而这些控件本身对文本的展现方式很单一，通常仅仅能够控制字体样式、大小、颜色、加粗、斜体等等，而对于行距控制，字距控制，段落控制等高级功能却无能为力。此时不免要提起一个非常强大的文本排版框架CoreText.framework。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2016/10/09/fulltext/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS之富文本 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-top">
+    <a href="/top/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-signal"></i> <br />top</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />About</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2016/10/09/fulltext/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪/Demon">
+      <meta itemprop="description" content="风陵渡口初相遇，一遇杨过与终身">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS之富文本
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-10-09 20:42:05" itemprop="dateCreated datePublished" datetime="2016-10-09T20:42:05+08:00">2016-10-09</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/10/09/fulltext/" class="leancloud_visitors" data-flag-title="iOS之富文本">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
+<ul>
+<li>在IOS或者Mac OS X通过UIKit提供的用来显示字符串控件有三个：<br>UILable，UITextField，UITextView。<br>然而这些控件本身对文本的展现方式很单一，通常仅仅能够控制字体样式、大小、颜色、加粗、斜体等等，而对于行距控制，字距控制，段落控制等高级功能却无能为力。<br>此时不免要提起一个非常强大的文本排版框架CoreText.framework。<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+</the></li>
+</ul>
+<h2 id="主要demo"><a href="#主要demo" class="headerlink" title="主要demo"></a>主要demo</h2><h3 id="图文混排"><a href="#图文混排" class="headerlink" title="图文混排"></a>图文混排</h3><ol start="19">
+<li>NSAttachmentAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSAttachmentAttributeName 设置文本附件,取值为NSTextAttachment对象,常用于文字图片混排      NSTextAttachment <em>textAttachment01 = [[NSTextAttachment alloc] init];   textAttachment01.image = [UIImage imageNamed: @”10000.jpeg”];  //设置图片源   textAttachment01.bounds = CGRectMake(0, 0, 30, 30);          //设置图片位置和大小   NSMutableAttributedString </em>attrStr01 = [[NSMutableAttributedString alloc] initWithString: originStr];      [attrStr01 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];   NSAttributedString <em>attrStr11 = [NSAttributedString attributedStringWithAttachment: textAttachment01];      [attrStr01 insertAttributedString: attrStr11 atIndex: 2];  //NSTextAttachment占用一个字符长度，插入后原字符串长度增加1      _label01.attributedText = attrStr01;         NSTextAttachment </em>textAttachment02 = [[NSTextAttachment alloc] init];   textAttachment02.image = [UIImage imageNamed: @”10000.jpeg”];  //设置图片源   textAttachment02.bounds = CGRectMake(0, -10, 30, 40);          //设置图片位置和大小   NSMutableAttributedString <em>attrStr02 = [[NSMutableAttributedString alloc] initWithString: originStr];      [attrStr02 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];   NSAttributedString </em>attrStr12 = [NSAttributedString attributedStringWithAttachment: textAttachment02];      [attrStr02 insertAttributedString: attrStr12 atIndex: 6];      _label02.attributedText = attrStr02;      NSTextAttachment <em>textAttachment03 = [[NSTextAttachment alloc] init];   textAttachment03.image = [UIImage imageNamed: @”10000.jpeg”];  //设置图片源   textAttachment03.bounds = CGRectMake(0, -6, 50, 30);          //设置图片位置和大小   NSMutableAttributedString </em>attrStr03 = [[NSMutableAttributedString alloc] initWithString: originStr];      [attrStr03 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];   NSAttributedString *attrStr13 = [NSAttributedString attributedStringWithAttachment: textAttachment03];      [attrStr03 insertAttributedString: attrStr13 atIndex: 8];      _label03.attributedText = attrStr03;<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">//NSAttachmentAttributeName 设置文本附件,取值为NSTextAttachment对象,常用于文字图片混排</span><br><span class="line"></span><br><span class="line">NSTextAttachment *textAttachment01 = [[NSTextAttachment alloc] init];</span><br><span class="line">textAttachment01.image = [UIImage imageNamed: @<span class="string">"10000.jpeg"</span>];  //设置图片源</span><br><span class="line">textAttachment01.bounds = CGRectMake(0, 0, 30, 30);          //设置图片位置和大小</span><br><span class="line">NSMutableAttributedString *attrStr01 = [[NSMutableAttributedString alloc] initWithString: originStr];</span><br><span class="line"></span><br><span class="line">[attrStr01 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];</span><br><span class="line">NSAttributedString *attrStr11 = [NSAttributedString attributedStringWithAttachment: textAttachment01];</span><br><span class="line"></span><br><span class="line">[attrStr01 insertAttributedString: attrStr11 atIndex: 2];  //NSTextAttachment占用一个字符长度，插入后原字符串长度增加1</span><br><span class="line"></span><br><span class="line">_label01.attributedText = attrStr01;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">NSTextAttachment *textAttachment02 = [[NSTextAttachment alloc] init];</span><br><span class="line">textAttachment02.image = [UIImage imageNamed: @<span class="string">"10000.jpeg"</span>];  //设置图片源</span><br><span class="line">textAttachment02.bounds = CGRectMake(0, -10, 30, 40);          //设置图片位置和大小</span><br><span class="line">NSMutableAttributedString *attrStr02 = [[NSMutableAttributedString alloc] initWithString: originStr];</span><br><span class="line"></span><br><span class="line">[attrStr02 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];</span><br><span class="line">NSAttributedString *attrStr12 = [NSAttributedString attributedStringWithAttachment: textAttachment02];</span><br><span class="line"></span><br><span class="line">[attrStr02 insertAttributedString: attrStr12 atIndex: 6];</span><br><span class="line"></span><br><span class="line">_label02.attributedText = attrStr02;</span><br><span class="line"></span><br><span class="line">NSTextAttachment *textAttachment03 = [[NSTextAttachment alloc] init];</span><br><span class="line">textAttachment03.image = [UIImage imageNamed: @<span class="string">"10000.jpeg"</span>];  //设置图片源</span><br><span class="line">textAttachment03.bounds = CGRectMake(0, -6, 50, 30);          //设置图片位置和大小</span><br><span class="line">NSMutableAttributedString *attrStr03 = [[NSMutableAttributedString alloc] initWithString: originStr];</span><br><span class="line"></span><br><span class="line">[attrStr03 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];</span><br><span class="line">NSAttributedString *attrStr13 = [NSAttributedString attributedStringWithAttachment: textAttachment03];</span><br><span class="line"></span><br><span class="line">[attrStr03 insertAttributedString: attrStr13 atIndex: 8];</span><br><span class="line"></span><br><span class="line">_label03.attributedText = attrStr03;</span><br></pre></td></tr></table></figure></p>
+<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h3><ol start="6">
+<li>NSStrikethroughColorAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSStrikethroughColorAttributeName 设置删除线颜色，取值为 UIColor 对象，默认值为黑色      NSDictionary <em>attrDict1 = @{ NSStrikethroughColorAttributeName: [UIColor blueColor],                                NSStrikethroughStyleAttributeName: @(1),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSStrikethroughColorAttributeName: [UIColor orangeColor],                                NSStrikethroughStyleAttributeName: @(3),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSStrikethroughColorAttributeName: [UIColor greenColor],                                NSStrikethroughStyleAttributeName: @(7),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line">    //NSStrikethroughColorAttributeName 设置删除线颜色，取值为 UIColor 对象，默认值为黑色</span><br><span class="line">    </span><br><span class="line">    NSDictionary *attrDict1 = @&#123; NSStrikethroughColorAttributeName: [UIColor blueColor],</span><br><span class="line">                                 NSStrikethroughStyleAttributeName: @(1),</span><br><span class="line">                                 NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;</span><br><span class="line">    _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    NSDictionary *attrDict2 = @&#123; NSStrikethroughColorAttributeName: [UIColor orangeColor],</span><br><span class="line">                                 NSStrikethroughStyleAttributeName: @(3),</span><br><span class="line">                                 NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;</span><br><span class="line">    _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    NSDictionary *attrDict3 = @&#123; NSStrikethroughColorAttributeName: [UIColor greenColor],</span><br><span class="line">                                 NSStrikethroughStyleAttributeName: @(7),</span><br><span class="line">                                 NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;</span><br><span class="line">    _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];</span><br><span class="line"></span><br><span class="line"> ``` </span><br><span class="line"><span class="comment">### 下划线</span></span><br><span class="line">8. NSUnderlineColorAttributeName</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">可以完全参照下划线颜色设置</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[objc] view plain copy <span class="built_in">print</span> ?</span><br><span class="line">//NSUnderlineColorAttributeName 设置下划线颜色，取值为 UIColor 对象，默认值为黑色      NSDictionary *attrDict1 = @&#123; NSUnderlineColorAttributeName: [UIColor blueColor],                                NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),                                NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary *attrDict2 = @&#123; NSUnderlineColorAttributeName: [UIColor orangeColor],                                NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick),                                NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @&#123; NSUnderlineColorAttributeName: [UIColor greenColor],                                NSUnderlineStyleAttributeName: @(NSUnderlineStyleDouble),                                NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];  </span><br><span class="line"> ``` bash</span><br><span class="line">    //NSUnderlineColorAttributeName 设置下划线颜色，取值为 UIColor 对象，默认值为黑色</span><br><span class="line">    </span><br><span class="line">    NSDictionary *attrDict1 = @&#123; NSUnderlineColorAttributeName: [UIColor blueColor],</span><br><span class="line">                                 NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),</span><br><span class="line">                                 NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;</span><br><span class="line">    _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    NSDictionary *attrDict2 = @&#123; NSUnderlineColorAttributeName: [UIColor orangeColor],</span><br><span class="line">                                 NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick),</span><br><span class="line">                                 NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;</span><br><span class="line">    _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    NSDictionary *attrDict3 = @&#123; NSUnderlineColorAttributeName: [UIColor greenColor],</span><br><span class="line">                                 NSUnderlineStyleAttributeName: @(NSUnderlineStyleDouble),</span><br><span class="line">                                 NSFontAttributeName: [UIFont systemFontOfSize:20] &#125;;</span><br><span class="line">    _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];</span><br><span class="line"> ``` </span><br><span class="line"></span><br><span class="line"><span class="comment">## 前言</span></span><br><span class="line">	在IOS或者Mac OS X通过UIKit提供的用来显示字符串控件有三个：</span><br><span class="line">UILable，UITextField，UITextView。</span><br><span class="line">然而这些控件本身对文本的展现方式很单一，通常仅仅能够控制字体样式、大小、颜色、加粗、斜体等等，而对于行距控制，字距控制，段落控制等高级功能却无能为力。</span><br><span class="line"></span><br><span class="line">此时不免要提起一个非常强大的文本排版框架CoreText.framework。</span><br><span class="line"></span><br><span class="line">CoreText框架是基于 iOS 3.2+ 和 OSX 10.5+ 的一种能够对文本格式和文本布局进行精细控制的文本引擎。它良好的结合了 UIKit 和 Core Graphics/Quartz：</span><br><span class="line"></span><br><span class="line">UIKit 的 UILabel 允许你通过在 IB 中简单的拖曳添加文本，但你不能改变文本的颜色和其中的单词。</span><br><span class="line"></span><br><span class="line">Core Graphics/Quartz几乎允许你做任何系统允许的事情，但你需要为每个字形计算位置，并画在屏幕上。</span><br><span class="line"></span><br><span class="line">CoreText正结合了这两者！你自己可以完全控制位置、布局、类似文本大小和颜色这样的属性，CoreText将帮你完善其它的东西??类似文本换行、字体呈现等等。</span><br><span class="line"></span><br><span class="line">然而，CoreText.framework本身非常庞大，学习成本较高，使用起来也不是很方便，所以一般不是特殊需要，很少会有人去使用它。</span><br><span class="line"></span><br><span class="line">随 着iOS6 API的发布，文字显示的API越来越完善，其中一个重要的更新是在UITextField，UITextView和UILabel中加入了对 AttributedString的支持，实现行距控制，字距控制，段落控制等高级功能也不必再去使用深奥的CoreText框架。</span><br><span class="line"></span><br><span class="line">而iOS7的发布，苹果又引入了TextKit,TextKit是一个快速而又现代化的文字排版和渲染引擎。</span><br><span class="line"></span><br><span class="line">TextKit并没有新增类，只是在原有的文本显示控件上进行了封装，可以在平时我们最喜欢使用的UILabel，UITextField，UITextView等控件里面使用，其最主要的作用就是为程序提供文字排版和渲染的功能。</span><br><span class="line"></span><br><span class="line">苹 果引入TextKit的目的并非要取代已有的CoreText框架，虽然CoreText的主要作用也是用于文字的排版和渲染，但它是一种先进而又处于底 层技术，如果我们需要将文本内容直接渲染到图形上下文(Graphics context)时，从性能和易用性来考虑，最佳方案就是使用CoreText。而如果我们需要直接利用苹果提供的一些控件(如UITextView、 UILabel和UITextField等)对文字进行排版，那么借助于UIKit中TextKit提供的API无疑更为方便快捷。</span><br><span class="line"></span><br><span class="line">TextKit在文字处理方面具有非常强大的功能，并且开发者可以对TextKit进行定制和扩展。据悉，苹果利用了2年的时间来开发TextKit，相信这对许多开发者来说都是福音。</span><br><span class="line"></span><br><span class="line"><span class="comment">## IOS之NSMutableAttributedString 使用详解</span></span><br><span class="line"><span class="comment">### 1、NSMutableAttributedString的基本使用</span></span><br><span class="line">富文本注意：</span><br><span class="line">先设置的先显示，后设置的，如果和先设置的样式不一致，是会覆盖的，富文本的设置具有先后顺序。</span><br><span class="line">不要忽略了空格也是一个字符。</span><br><span class="line">建议使用灵活的好用的NSMutableAttributedString，不要使用NSAttributedString。</span><br><span class="line">富文本基本使用方法的思路概要</span><br><span class="line"></span><br><span class="line">1、创建一个NSMutableAttributedString富文本对象(一般不用NSAttributedString)</span><br><span class="line">2、设置addAttribute属性</span><br><span class="line">    (1) addAttribute: 一个属性</span><br><span class="line">    (2) addAttributes: 一个存储多个属性的属性字典，比如这个字典可以是：</span><br><span class="line">        NSDictionary *attrDic = @&#123; </span><br><span class="line">                NSFontAttributeName: [UIFont fontWithName: @<span class="string">"Zapfino"</span> size: 15],                               </span><br><span class="line">                NSForegroundColorAttributeName: [UIColor blueColor] </span><br><span class="line">        &#125;; </span><br><span class="line">3、控件.attributedText = 富文本对象(和控件.txt = NSString文本对象不一样的)</span><br><span class="line">示例富文本使用过程：</span><br><span class="line">其中AttributedString究竟可以设置哪些属性，具体来说，有以下21个：</span><br><span class="line">***********************************************************************************</span><br><span class="line">NSFontAttributeName                设置字体属性，默认值：字体：Helvetica(Neue) 字号：12</span><br><span class="line">NSForegroundColorAttributeNam      设置字体颜色，取值为 UIColor对象，默认值为黑色</span><br><span class="line">NSBackgroundColorAttributeName     设置字体所在区域背景颜色，取值为 UIColor对象，默认值为nil, 透明色</span><br><span class="line">NSLigatureAttributeName            设置连体属性，取值为NSNumber 对象(整数)，0 表示没有连体字符，1 表示使用默认的连体字符</span><br><span class="line">NSKernAttributeName                设定字符间距，取值为 NSNumber 对象（整数），正值间距加宽，负值间距变窄</span><br><span class="line">NSStrikethroughStyleAttributeName  设置删除线，取值为 NSNumber 对象（整数）</span><br><span class="line">NSStrikethroughColorAttributeName  设置删除线颜色，取值为 UIColor 对象，默认值为黑色</span><br><span class="line">NSUnderlineStyleAttributeName      设置下划线，取值为 NSNumber 对象（整数），枚举常量 NSUnderlineStyle中的值，与删除线类似</span><br><span class="line">NSUnderlineColorAttributeName      设置下划线颜色，取值为 UIColor 对象，默认值为黑色</span><br><span class="line">NSStrokeWidthAttributeName         设置笔画宽度，取值为 NSNumber 对象（整数），负值填充效果，正值中空效果</span><br><span class="line">NSStrokeColorAttributeName         填充部分颜色，不是字体颜色，取值为 UIColor 对象</span><br><span class="line">NSShadowAttributeName              设置阴影属性，取值为 NSShadow 对象</span><br><span class="line">NSTextEffectAttributeName          设置文本特殊效果，取值为 NSString 对象，目前只有图版印刷效果可用：</span><br><span class="line">NSBaselineOffsetAttributeName      设置基线偏移值，取值为 NSNumber （<span class="built_in">float</span>）,正值上偏，负值下偏</span><br><span class="line">NSObliquenessAttributeName         设置字形倾斜度，取值为 NSNumber （<span class="built_in">float</span>）,正值右倾，负值左倾</span><br><span class="line">NSExpansionAttributeName           设置文本横向拉伸属性，取值为 NSNumber （<span class="built_in">float</span>）,正值横向拉伸文本，负值横向压缩文本</span><br><span class="line">NSWritingDirectionAttributeName    设置文字书写方向，从左向右书写或者从右向左书写</span><br><span class="line">NSVerticalGlyphFormAttributeName   设置文字排版方向，取值为 NSNumber 对象(整数)，0 表示横排文本，1 表示竖排文本</span><br><span class="line">NSLinkAttributeName                设置链接属性，点击后调用浏览器打开指定URL地址</span><br><span class="line">NSAttachmentAttributeName          设置文本附件,取值为NSTextAttachment对象,常用于文字图片混排</span><br><span class="line">NSParagraphStyleAttributeName      设置文本段落排版格式，取值为 NSParagraphStyle 对象</span><br><span class="line">***********************************************************************************</span><br><span class="line"></span><br><span class="line"><span class="comment">### 2、NSMutableAttributedString的简易封装</span></span><br><span class="line">根据NSMutableAttributedString的基本使用，我们每次需要设置富文本，都需要创建NSMutableAttributedString并调用相同的add...方法。</span><br><span class="line">那么，就可以先创建一个类，并把这个add...方法抽离出来放进这个类中，类似MVC的抽离模型数据对象。</span><br><span class="line">这个类是属性模型对象，而不是数据模型对象哦。说法不一，但本质其实一样的。</span><br><span class="line"></span><br><span class="line"><span class="comment">### 3、使用开源代码GOBMarkupPaser处理富文本</span></span><br><span class="line">首先，关于开源代码GOBMarkupPaser处理富文本有一个很好的学习博客：http://www.cnblogs.com/YouXianMing/p/4269213.html也是框架原开发者github博文的翻译。值得英语不好的学习。</span><br><span class="line"></span><br><span class="line">github描述的虽然比较多，但是用起来还是比较容易的。下面只要跑一下程序，源码中也有demo，先看看源码运行的</span><br><span class="line"></span><br><span class="line"><span class="comment">### 4、UITextKit简介</span></span><br><span class="line">什么是UITextKit？</span><br><span class="line"></span><br><span class="line">TextKit是在iOS7中新出的,实现了对CoreText的封装,使用起来更加方便.</span><br><span class="line"></span><br><span class="line">虽然是新出的,但也不代表立马就能上手-_-!!,TextKit可以实现图文混排效果,很好用.</span><br><span class="line"></span><br><span class="line">实现的过程如下:</span><br><span class="line"></span><br><span class="line">storage --&gt; layoutManager --&gt; textContainer --&gt; textView</span><br><span class="line"></span><br><span class="line">这.....显示一串文本就要做这么多的事情.....</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 实战</span></span><br><span class="line"><span class="comment">### 方式一：</span></span><br><span class="line"></span><br><span class="line">    首先初始化一个NSMutableAttributedString，然后向里面添加文字样式，最后将它赋给控件的AttributedText，该方法适合于文本较少而又需要分段精细控制的情况。</span><br><span class="line"></span><br><span class="line">[objc] view plain copy <span class="built_in">print</span> ?</span><br><span class="line">NSString *originStr = @<span class="string">"Hello,中秋节！"</span>;      //方式一      //创建 NSMutableAttributedString   NSMutableAttributedString *attributedStr01 = [[NSMutableAttributedString alloc] initWithString: originStr];      //添加属性      //给所有字符设置字体为Zapfino，字体高度为15像素   [attributedStr01 addAttribute: NSFontAttributeName value: [UIFont fontWithName: @<span class="string">"Zapfino"</span> size: 15]                                                      range: NSMakeRange(0, originStr.length)];   //分段控制，最开始4个字符颜色设置成蓝色   [attributedStr01 addAttribute: NSForegroundColorAttributeName value: [UIColor blueColor] range: NSMakeRange(0, 4)];   //分段控制，第5个字符开始的3个字符，即第5、6、7字符设置为红色   [attributedStr01 addAttribute: NSForegroundColorAttributeName value: [UIColor redColor] range: NSMakeRange(4, 3)];      //赋值给显示控件label01的 attributedText   _label01.attributedText = attributedStr01;  </span><br><span class="line">``` bash </span><br><span class="line"> NSString *originStr = @<span class="string">"Hello,中秋节！"</span>;</span><br><span class="line">    </span><br><span class="line"> // 方式一</span><br><span class="line">    </span><br><span class="line">    //创建 NSMutableAttributedString</span><br><span class="line">    NSMutableAttributedString *attributedStr01 = [[NSMutableAttributedString alloc] initWithString: originStr];</span><br><span class="line">    </span><br><span class="line">    //添加属性</span><br><span class="line">    </span><br><span class="line">    //给所有字符设置字体为Zapfino，字体高度为15像素</span><br><span class="line">    [attributedStr01 addAttribute: NSFontAttributeName value: [UIFont fontWithName: @<span class="string">"Zapfino"</span> size: 15]</span><br><span class="line">                                                       range: NSMakeRange(0, originStr.length)];</span><br><span class="line">    //分段控制，最开始4个字符颜色设置成蓝色</span><br><span class="line">    [attributedStr01 addAttribute: NSForegroundColorAttributeName value: [UIColor blueColor] range: NSMakeRange(0, 4)];</span><br><span class="line">    //分段控制，第5个字符开始的3个字符，即第5、6、7字符设置为红色</span><br><span class="line">    [attributedStr01 addAttribute: NSForegroundColorAttributeName value: [UIColor redColor] range: NSMakeRange(4, 3)];</span><br><span class="line">    </span><br><span class="line">    //赋值给显示控件label01的 attributedText</span><br><span class="line">    _label01.attributedText = attributedStr01;</span><br></pre></td></tr></table></figure></p>
+<p>![Alt text](/img/tbgroup/1.png</p>
+<h3 id="方式二："><a href="#方式二：" class="headerlink" title="方式二："></a>方式二：</h3><p>   首先创建属性字典，初始化各种属性，然后和需要控制的文本一起创建并赋值给控件的AttributedText，该方法适合于需要控制的文本较多整体控制的情况，通常是从文件中读取的大段文本控制。</p>
+<p>[objc] view plain copy print ?</p>
+<p>//方式二      //创建属性字典   NSDictionary *attrDict = @{ NSFontAttributeName: [UIFont fontWithName: @”Zapfino” size: 15],                               NSForegroundColorAttributeName: [UIColor blueColor] };      //创建 NSAttributedString 并赋值   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict];<br>![Alt text](/img/tbgroup/2.png</p>
+<p>   通过对比两个例子可以看出，方式一比较容易处理复杂的格式，但是属性设置比较繁多复杂，而方式二的属性设置比较简单明了，却不善于处理复杂多样的格式控制，但是不善于并不等于不能，可以通过属性字符串分段的方式来达到方式一的效果，如下：</p>
+<p>[objc] view plain copy print ?<br>//方式二的分段处理   //第一段   NSDictionary <em>attrDict1 = @{ NSFontAttributeName: [UIFont fontWithName: @”Zapfino” size: 15],                                NSForegroundColorAttributeName: [UIColor blueColor] };   NSAttributedString </em>attrStr1 = [[NSAttributedString alloc] initWithString: [originStr substringWithRange: NSMakeRange(0, 4)] attributes: attrDict1];      //第二段   NSDictionary <em>attrDict2 = @{ NSFontAttributeName: [UIFont fontWithName: @”Zapfino” size: 15],                                NSForegroundColorAttributeName: [UIColor redColor] };   NSAttributedString </em>attrStr2 = [[NSAttributedString alloc] initWithString: [originStr substringWithRange: NSMakeRange(4, 3)] attributes: attrDict2];      //第三段   NSDictionary <em>attrDict3 = @{ NSFontAttributeName: [UIFont fontWithName: @”Zapfino” size: 15],                                NSForegroundColorAttributeName: [UIColor blackColor] };   NSAttributedString </em>attrStr3 = [[NSAttributedString alloc] initWithString: [originStr substringWithRange:                                                                               NSMakeRange(7, originStr.length - 4 - 3)] attributes: attrDict3];   //合并   NSMutableAttributedString *attributedStr03 = [[NSMutableAttributedString alloc] initWithAttributedString: attrStr1];   [attributedStr03 appendAttributedString: attrStr2];   [attributedStr03 appendAttributedString: attrStr3];      _label03.attributedText = attributedStr03;<br>![Alt text](/img/tbgroup/1.png</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p> 1.NSLigatureAttributeName</p>
+<p>[objc] view plain copy print ?<br>//NSLigatureAttributeName 设置连体属性，取值为NSNumber 对象(整数)，0 表示没有连体字符，1 表示使用默认的连体字符，   //                        2 表示使用所有连体符号，默认值为 1（iOS 不支持 2）      NSString <em>ligatureStr = @”flush”;      NSDictionary </em>attrDict1 = @{ NSLigatureAttributeName: [NSNumber numberWithInt: 0],                                NSFontAttributeName: [UIFont fontWithName: @”futura” size: 30] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: ligatureStr attributes: attrDict1];      NSDictionary *attrDict2 = @{ NSLigatureAttributeName: @(1),                                NSFontAttributeName: [UIFont fontWithName: @”futura” size: 30]                                 };   _label02.attributedText = [[NSAttributedString alloc] initWithString: ligatureStr attributes: attrDict2];<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//NSLigatureAttributeName 设置连体属性，取值为NSNumber 对象(整数)，0 表示没有连体字符，1 表示使用默认的连体字符，</span><br><span class="line">   //                        2 表示使用所有连体符号，默认值为 1（iOS 不支持 2）</span><br><span class="line">   </span><br><span class="line">   NSString *ligatureStr = @<span class="string">"flush"</span>;</span><br><span class="line">   </span><br><span class="line">   NSDictionary *attrDict1 = @&#123; NSLigatureAttributeName: [NSNumber numberWithInt: 0],</span><br><span class="line">                                NSFontAttributeName: [UIFont fontWithName: @<span class="string">"futura"</span> size: 30] &#125;;</span><br><span class="line">   _label01.attributedText = [[NSAttributedString alloc] initWithString: ligatureStr attributes: attrDict1];</span><br><span class="line">   </span><br><span class="line">   NSDictionary *attrDict2 = @&#123; NSLigatureAttributeName: @(1),</span><br><span class="line">                                NSFontAttributeName: [UIFont fontWithName: @<span class="string">"futura"</span> size: 30] </span><br><span class="line">                                &#125;;</span><br><span class="line">   _label02.attributedText = [[NSAttributedString alloc] initWithString: ligatureStr attributes: attrDict2];</span><br></pre></td></tr></table></figure></p>
+<p>由于要展示连体字符，所以将前面使用的带有中文的字符串换成 flush</p>
+<pre><code>NSLigatureAttributeName的取值为NSNumber对象，所以不能直接将一个整数值赋给它，创建 NSNumber 对象的方法有很多，或者可以简写成 @(int)
+</code></pre><p>![Alt text](/img/tbgroup/3.png<br>注意观察字母f和l之间的变化。</p>
+<pre><code>感觉连写就是一个艺术字功能，当字符f和l组合使用组合符号（所谓的字形(glyph)）绘制时，看起来确实更加美观。但是并非所有的字符之间都有组合符号，事实上，只有某些字体中得某些字符的组合（如字符f和l，字符f和i等）才具有美观的组合符号。
+
+2.NSKernAttributeName
+[objc] view plain copy print ?
+</code></pre><p>//NSKernAttributeName 设定字符间距，取值为 NSNumber 对象（整数），正值间距加宽，负值间距变窄         NSDictionary <em>attrDict1 = @{ NSKernAttributeName: @(-3),                                NSFontAttributeName: [UIFont systemFontOfSize: 20]                                };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSKernAttributeName: @(0),                                NSFontAttributeName: [UIFont systemFontOfSize: 20]                                };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSKernAttributeName: @(10),                                NSFontAttributeName: [UIFont systemFontOfSize: 20]                                };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];  </p>
+<pre><code class="bash">//NSKernAttributeName 设定字符间距，取值为 NSNumber 对象（整数），正值间距加宽，负值间距变窄
+
+
+   NSDictionary *attrDict1 = @{ NSKernAttributeName: @(-3),
+                                NSFontAttributeName: [UIFont systemFontOfSize: 20]
+                                };
+   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+   NSDictionary *attrDict2 = @{ NSKernAttributeName: @(0),
+                                NSFontAttributeName: [UIFont systemFontOfSize: 20]
+                                };
+   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+   NSDictionary *attrDict3 = @{ NSKernAttributeName: @(10),
+                                NSFontAttributeName: [UIFont systemFontOfSize: 20]
+                                };
+   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre>
+<p>![Alt text](/img/tbgroup/4.png</p>
+<ol start="3">
+<li>NSStrikethroughStyleAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSStrikethroughStyleAttributeName 设置删除线，取值为 NSNumber 对象（整数），枚举常量 NSUnderlineStyle中的值   // NSUnderlineStyleNone   不设置删除线   // NSUnderlineStyleSingle 设置删除线为细单实线   // NSUnderlineStyleThick  设置删除线为粗单实线   // NSUnderlineStyleDouble 设置删除线为细双实线         NSDictionary <em>attrDict1 = @{ NSStrikethroughStyleAttributeName: @(NSUnderlineStyleSingle),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSStrikethroughStyleAttributeName: @(NSUnderlineStyleThick),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSStrikethroughStyleAttributeName: @(NSUnderlineStyleDouble),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];  </p>
+<pre><code class="bash">//NSStrikethroughStyleAttributeName 设置删除线，取值为 NSNumber 对象（整数），枚举常量 NSUnderlineStyle中的值
+   // NSUnderlineStyleNone   不设置删除线
+   // NSUnderlineStyleSingle 设置删除线为细单实线
+   // NSUnderlineStyleThick  设置删除线为粗单实线
+   // NSUnderlineStyleDouble 设置删除线为细双实线
+
+
+   NSDictionary *attrDict1 = @{ NSStrikethroughStyleAttributeName: @(NSUnderlineStyleSingle),
+                                NSFontAttributeName: [UIFont systemFontOfSize:20] };
+   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+   NSDictionary *attrDict2 = @{ NSStrikethroughStyleAttributeName: @(NSUnderlineStyleThick),
+                                NSFontAttributeName: [UIFont systemFontOfSize:20] };
+   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+   NSDictionary *attrDict3 = @{ NSStrikethroughStyleAttributeName: @(NSUnderlineStyleDouble),
+                                NSFontAttributeName: [UIFont systemFontOfSize:20] };
+   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre>
+<p>注意：</p>
+<pre><code>虽然使用了枚举常量，但是枚举常量的本质仍为整数，所以同样必须先转化为 NSNumber 才能使用
+
+删除线和下划线使用相同的枚举常量作为其属性值
+
+目前iOS中只有上面列出的4中效果，虽然我们能够在头文件中发现其他更多的取值，但是使用后没有任何效果
+</code></pre><p>运行结果：<br>![Alt text](/img/tbgroup/5.png<br>另外，删除线属性取值除了上面的4种外，其实还可以取其他整数值，有兴趣的可以自行试验，取值为 0 - 7时，效果为单实线，随着值得增加，单实线逐渐变粗，取值为 9 - 15时，效果为双实线，取值越大，双实线越粗。</p>
+<p>[objc] view plain copy print ?<br>NSDictionary <em>attrDict1 = @{ NSStrikethroughStyleAttributeName: @(1),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSStrikethroughStyleAttributeName: @(3),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSStrikethroughStyleAttributeName: @(7),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3]; </p>
+<pre><code class="bash">NSDictionary *attrDict1 = @{ NSStrikethroughStyleAttributeName: @(1),
+                                 NSFontAttributeName: [UIFont systemFontOfSize:20] };
+    _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+    NSDictionary *attrDict2 = @{ NSStrikethroughStyleAttributeName: @(3),
+                                 NSFontAttributeName: [UIFont systemFontOfSize:20] };
+    _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+    NSDictionary *attrDict3 = @{ NSStrikethroughStyleAttributeName: @(7),
+                                 NSFontAttributeName: [UIFont systemFontOfSize:20] };
+    _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre>
+<p>![Alt text](/img/tbgroup/6.png</p>
+<ol start="6">
+<li>NSStrikethroughColorAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSStrikethroughColorAttributeName 设置删除线颜色，取值为 UIColor 对象，默认值为黑色      NSDictionary <em>attrDict1 = @{ NSStrikethroughColorAttributeName: [UIColor blueColor],                                NSStrikethroughStyleAttributeName: @(1),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSStrikethroughColorAttributeName: [UIColor orangeColor],                                NSStrikethroughStyleAttributeName: @(3),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSStrikethroughColorAttributeName: [UIColor greenColor],                                NSStrikethroughStyleAttributeName: @(7),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];  </p>
+<pre><code class="bash">//NSStrikethroughColorAttributeName 设置删除线颜色，取值为 UIColor 对象，默认值为黑色
+
+    NSDictionary *attrDict1 = @{ NSStrikethroughColorAttributeName: [UIColor blueColor],
+                                 NSStrikethroughStyleAttributeName: @(1),
+                                 NSFontAttributeName: [UIFont systemFontOfSize:20] };
+    _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+    NSDictionary *attrDict2 = @{ NSStrikethroughColorAttributeName: [UIColor orangeColor],
+                                 NSStrikethroughStyleAttributeName: @(3),
+                                 NSFontAttributeName: [UIFont systemFontOfSize:20] };
+    _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+    NSDictionary *attrDict3 = @{ NSStrikethroughColorAttributeName: [UIColor greenColor],
+                                 NSStrikethroughStyleAttributeName: @(7),
+                                 NSFontAttributeName: [UIFont systemFontOfSize:20] };
+    _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre>
+<p>![Alt text](/img/tbgroup/7.png</p>
+<ol start="7">
+<li>NSUnderlineStyleAttributeName</li>
+</ol>
+<p>下划线除了线条位置和删除线不同外，其他的都可以完全参照删除线设置。</p>
+<p>[objc] view plain copy print ?<br>//NSUnderlineStyleAttributeName 设置下划线，取值为 NSNumber 对象（整数），枚举常量 NSUnderlineStyle中的值，与删除线类似      NSDictionary <em>attrDict1 = @{ NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSUnderlineStyleAttributeName: @(NSUnderlineStyleDouble),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSUnderlineStyleAttributeName 设置下划线，取值为 NSNumber 对象（整数），枚举常量 NSUnderlineStyle中的值，与删除线类似</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+NSDictionary *attrDict3 = @{ NSUnderlineStyleAttributeName: @(NSUnderlineStyleDouble),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本12</p>
+<ol start="8">
+<li>NSUnderlineColorAttributeName</li>
+</ol>
+<p>可以完全参照下划线颜色设置</p>
+<p>[objc] view plain copy print ?<br>//NSUnderlineColorAttributeName 设置下划线颜色，取值为 UIColor 对象，默认值为黑色      NSDictionary <em>attrDict1 = @{ NSUnderlineColorAttributeName: [UIColor blueColor],                                NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSUnderlineColorAttributeName: [UIColor orangeColor],                                NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSUnderlineColorAttributeName: [UIColor greenColor],                                NSUnderlineStyleAttributeName: @(NSUnderlineStyleDouble),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSUnderlineColorAttributeName 设置下划线颜色，取值为 UIColor 对象，默认值为黑色</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSUnderlineColorAttributeName: [UIColor blueColor],
+                             NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSUnderlineColorAttributeName: [UIColor orangeColor],
+                             NSUnderlineStyleAttributeName: @(NSUnderlineStyleThick),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+NSDictionary *attrDict3 = @{ NSUnderlineColorAttributeName: [UIColor greenColor],
+                             NSUnderlineStyleAttributeName: @(NSUnderlineStyleDouble),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本13</p>
+<ol start="9">
+<li>NSStrokeWidthAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSStrokeWidthAttributeName 设置笔画宽度，取值为 NSNumber 对象（整数），负值填充效果，正值中空效果      NSDictionary <em>attrDict1 = @{ NSStrokeWidthAttributeName: @(-3),                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSStrokeWidthAttributeName: @(0),                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSStrokeWidthAttributeName: @(3),                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSStrokeWidthAttributeName 设置笔画宽度，取值为 NSNumber 对象（整数），负值填充效果，正值中空效果</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSStrokeWidthAttributeName: @(-3),
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSStrokeWidthAttributeName: @(0),
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+NSDictionary *attrDict3 = @{ NSStrokeWidthAttributeName: @(3),
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本14</p>
+<ol start="10">
+<li>NSStrokeColorAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSStrokeColorAttributeName 填充部分颜色，不是字体颜色，取值为 UIColor 对象      NSDictionary <em>attrDict1 = @{ NSStrokeWidthAttributeName: @(-3),                                NSStrokeColorAttributeName: [UIColor orangeColor],                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSStrokeWidthAttributeName: @(0),                                NSStrokeColorAttributeName: [UIColor blueColor],                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];         NSDictionary *attrDict3 = @{ NSStrokeWidthAttributeName: @(3),                                NSStrokeColorAttributeName: [UIColor greenColor],                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSStrokeColorAttributeName 填充部分颜色，不是字体颜色，取值为 UIColor 对象</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSStrokeWidthAttributeName: @(-3),
+                             NSStrokeColorAttributeName: [UIColor orangeColor],
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSStrokeWidthAttributeName: @(0),
+                             NSStrokeColorAttributeName: [UIColor blueColor],
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+
+NSDictionary *attrDict3 = @{ NSStrokeWidthAttributeName: @(3),
+                             NSStrokeColorAttributeName: [UIColor greenColor],
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本15</p>
+<p>我们并没有设置字体的颜色，所以所有字体颜色应该是黑色，上图清晰的表明了 StrokeColor 的作用范围。</p>
+<ol start="11">
+<li>NSShadowAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSShadowAttributeName 设置阴影属性，取值为 NSShadow 对象      NSShadow <em>shadow1 = [[NSShadow alloc] init];  //NSShadow 对象比较简单，只有3个属性：阴影颜色，模糊半径和偏移   shadow1.shadowOffset = CGSizeMake(3, 3);      //阴影偏移（X方向偏移和Y方向偏移）   shadow1.shadowBlurRadius = 0.5;               //模糊半径   shadow1.shadowColor = [UIColor orangeColor];  //阴影颜色      NSShadow </em>shadow2 = [[NSShadow alloc] init];   shadow2.shadowOffset = CGSizeMake(3, 16);   shadow2.shadowBlurRadius = 2.5;   shadow2.shadowColor = [UIColor purpleColor];      NSShadow <em>shadow3 = [[NSShadow alloc] init];   shadow3.shadowOffset = CGSizeMake(16, 3);   shadow3.shadowBlurRadius = 4.0;   shadow3.shadowColor = [UIColor blueColor];      NSDictionary </em>attrDict1 = @{ NSShadowAttributeName: shadow1,                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary <em>attrDict2 = @{ NSShadowAttributeName: shadow2,                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary </em>attrDict3 = @{ NSShadowAttributeName: shadow3,                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSShadowAttributeName 设置阴影属性，取值为 NSShadow 对象</p>
+<pre><code>NSShadow *shadow1 = [[NSShadow alloc] init];  //NSShadow 对象比较简单，只有3个属性：阴影颜色，模糊半径和偏移
+shadow1.shadowOffset = CGSizeMake(3, 3);      //阴影偏移（X方向偏移和Y方向偏移）
+shadow1.shadowBlurRadius = 0.5;               //模糊半径
+shadow1.shadowColor = [UIColor orangeColor];  //阴影颜色
+
+NSShadow *shadow2 = [[NSShadow alloc] init];
+shadow2.shadowOffset = CGSizeMake(3, 16);
+shadow2.shadowBlurRadius = 2.5;
+shadow2.shadowColor = [UIColor purpleColor];
+
+NSShadow *shadow3 = [[NSShadow alloc] init];
+shadow3.shadowOffset = CGSizeMake(16, 3);
+shadow3.shadowBlurRadius = 4.0;
+shadow3.shadowColor = [UIColor blueColor];
+
+NSDictionary *attrDict1 = @{ NSShadowAttributeName: shadow1,
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSShadowAttributeName: shadow2,
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSShadowAttributeName: shadow3,
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本16</p>
+<ol start="12">
+<li>NSTextEffectAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSTextEffectAttributeName 设置文本特殊效果，取值为 NSString 对象，目前只有一个可用的特效：   //                          NSTextEffectLetterpressStyle（凸版印刷效果），适用于iOS 7.0及以上         NSDictionary <em>attrDict1 = @{ NSTextEffectAttributeName: NSTextEffectLetterpressStyle,                                NSForegroundColorAttributeName: [UIColor grayColor],                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ //NSTextEffectAttributeName: NSTextEffectLetterpressStyle,                                NSForegroundColorAttributeName: [UIColor grayColor],                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary *attrDict3 = @{ NSTextEffectAttributeName: NSTextEffectLetterpressStyle,                                NSForegroundColorAttributeName: [UIColor blueColor],                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSTextEffectAttributeName 设置文本特殊效果，取值为 NSString 对象，目前只有一个可用的特效：<br>    //                          NSTextEffectLetterpressStyle（凸版印刷效果），适用于iOS 7.0及以上</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSTextEffectAttributeName: NSTextEffectLetterpressStyle,
+                             NSForegroundColorAttributeName: [UIColor grayColor],
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ //NSTextEffectAttributeName: NSTextEffectLetterpressStyle,
+                             NSForegroundColorAttributeName: [UIColor grayColor],
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSTextEffectAttributeName: NSTextEffectLetterpressStyle,
+                             NSForegroundColorAttributeName: [UIColor blueColor],
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果： </p>
+<p>iOS之富文本17</p>
+<p>仔细对比label01和label02的文字显示效果</p>
+<ol start="13">
+<li>NSBaselineOffsetAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSBaselineOffsetAttributeName 设置基线偏移值，取值为 NSNumber （float）,正值上偏，负值下偏      NSDictionary <em>attrDict1 = @{ NSBaselineOffsetAttributeName: @(-10),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSBaselineOffsetAttributeName: @(0),                               NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary *attrDict3 = @{ NSBaselineOffsetAttributeName: @(10),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSBaselineOffsetAttributeName 设置基线偏移值，取值为 NSNumber （float）,正值上偏，负值下偏</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSBaselineOffsetAttributeName: @(-10),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSBaselineOffsetAttributeName: @(0),
+                            NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSBaselineOffsetAttributeName: @(10),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本18</p>
+<ol start="14">
+<li>NSObliquenessAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSObliquenessAttributeName 设置字形倾斜度，取值为 NSNumber （float）,正值右倾，负值左倾      NSDictionary <em>attrDict1 = @{ NSObliquenessAttributeName: @(-0.5),                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSObliquenessAttributeName: @(0),                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary *attrDict3 = @{ NSObliquenessAttributeName: @(0.8),                                NSFontAttributeName: [UIFont systemFontOfSize:30] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSObliquenessAttributeName 设置字形倾斜度，取值为 NSNumber （float）,正值右倾，负值左倾</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSObliquenessAttributeName: @(-0.5),
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSObliquenessAttributeName: @(0),
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSObliquenessAttributeName: @(0.8),
+                             NSFontAttributeName: [UIFont systemFontOfSize:30] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本19</p>
+<ol start="15">
+<li>NSExpansionAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSExpansionAttributeName 设置文本横向拉伸属性，取值为 NSNumber （float）,正值横向拉伸文本，负值横向压缩文本      NSDictionary <em>attrDict1 = @{ NSExpansionAttributeName: @(-1),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSExpansionAttributeName: @(0),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary *attrDict3 = @{ NSExpansionAttributeName: @(0.6),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSExpansionAttributeName 设置文本横向拉伸属性，取值为 NSNumber （float）,正值横向拉伸文本，负值横向压缩文本</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSExpansionAttributeName: @(-1),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSExpansionAttributeName: @(0),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSExpansionAttributeName: @(0.6),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本20</p>
+<ol start="16">
+<li>NSWritingDirectionAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSWritingDirectionAttributeName 设置文字书写方向，取值为以下组合      //@[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionEmbedding)]   //@[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionOverride)]   //@[@(NSWritingDirectionRightToLeft | NSTextWritingDirectionEmbedding)]   //@[@(NSWritingDirectionRightToLeft | NSTextWritingDirectionOverride)]      NSDictionary <em>attrDict1 = @{ NSWritingDirectionAttributeName: @[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionEmbedding)],                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];      NSDictionary </em>attrDict2 = @{ NSWritingDirectionAttributeName: @[@(NSWritingDirectionRightToLeft | NSTextWritingDirectionOverride)],                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary *attrDict3 = @{ NSWritingDirectionAttributeName: @[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionOverride)],                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSWritingDirectionAttributeName 设置文字书写方向，取值为以下组合</p>
+<pre><code>//@[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionEmbedding)]
+//@[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionOverride)]
+//@[@(NSWritingDirectionRightToLeft | NSTextWritingDirectionEmbedding)]
+//@[@(NSWritingDirectionRightToLeft | NSTextWritingDirectionOverride)]
+
+NSDictionary *attrDict1 = @{ NSWritingDirectionAttributeName: @[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionEmbedding)],
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+NSDictionary *attrDict2 = @{ NSWritingDirectionAttributeName: @[@(NSWritingDirectionRightToLeft | NSTextWritingDirectionOverride)],
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSWritingDirectionAttributeName: @[@(NSWritingDirectionLeftToRight | NSTextWritingDirectionOverride)],
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本21</p>
+<p>一直没搞明白  NSTextWritingDirectionEmbedding 和  NSTextWritingDirectionOverride 有什么不同的效果。</p>
+<ol start="17">
+<li>NSVerticalGlyphFormAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSVerticalGlyphFormAttributeName 设置文字排版防线，取值为 NSNumber 对象(整数)，0 表示横排文本，1 表示竖排文本。   //                                 在 iOS 中，总是使用横排文本，0 以外的值都未定义      NSDictionary <em>attrDict1 = @{ NSVerticalGlyphFormAttributeName: @(-10),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];         NSDictionary </em>attrDict2 = @{ NSVerticalGlyphFormAttributeName: @(0),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];      NSDictionary *attrDict3 = @{ NSVerticalGlyphFormAttributeName: @(10),                                NSFontAttributeName: [UIFont systemFontOfSize:20] };   _label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];<br>    //NSVerticalGlyphFormAttributeName 设置文字排版防线，取值为 NSNumber 对象(整数)，0 表示横排文本，1 表示竖排文本。<br>    //                                 在 iOS 中，总是使用横排文本，0 以外的值都未定义</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSVerticalGlyphFormAttributeName: @(-10),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+
+
+NSDictionary *attrDict2 = @{ NSVerticalGlyphFormAttributeName: @(0),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label02.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict2];
+
+NSDictionary *attrDict3 = @{ NSVerticalGlyphFormAttributeName: @(10),
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+_label03.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict3];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本22</p>
+<ol start="18">
+<li>NSLinkAttributeName</li>
+</ol>
+<pre><code>链接属性点击将启动浏览器打开一个URL地址，中间用到一个代理函数，UILabel 和 UITextField 无法使用该属性，所以只能用UITextView来做示例。
+</code></pre><p>[objc] view plain copy print ?<br>//NSLinkAttributeName 设置链接属性，点击后调用浏览器打开指定URL地址      NSDictionary *attrDict1 = @{ NSLinkAttributeName: [NSURL URLWithString: @”<a href="http://www.baidu.com&quot;]" target="_blank" rel="noopener">http://www.baidu.com&quot;]</a>,                                NSFontAttributeName: [UIFont systemFontOfSize:20] };      _textview01.editable = NO;        //必须禁止输入，否则点击将弹出输入键盘   _textview01.scrollEnabled = NO;   //可选   _textview01.delegate = self;      //必须设置，否则代理函数不会被回调      _textview01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];<br>    //NSLinkAttributeName 设置链接属性，点击后调用浏览器打开指定URL地址</p>
+<pre><code>NSDictionary *attrDict1 = @{ NSLinkAttributeName: [NSURL URLWithString: @&quot;http://www.baidu.com&quot;],
+                             NSFontAttributeName: [UIFont systemFontOfSize:20] };
+
+_textview01.editable = NO;        //必须禁止输入，否则点击将弹出输入键盘
+_textview01.scrollEnabled = NO;   //可选
+_textview01.delegate = self;      //必须设置，否则代理函数不会被回调
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: originStr attributes: attrDict1];
+</code></pre><p>代理函数：</p>
+<p>[objc] view plain copy print ?</p>
+<ul>
+<li>(BOOL)textView:(UITextView <em>)textView shouldInteractWithURL:(NSURL </em>)URL inRange:(NSRange)characterRange{       NSLog(@”textView is clicked…”);       return YES;   }  </li>
+<li>(BOOL)textView:(UITextView <em>)textView shouldInteractWithURL:(NSURL </em>)URL inRange:(NSRange)characterRange{<br>  NSLog(@”textView is clicked…”);<br>  return YES;<br>}</li>
+</ul>
+<p>运行结果：</p>
+<p>iOS之富文本23</p>
+<p>点击UITextView中得“Hello，中秋节！”，即可打开浏览器</p>
+<p>iOS之富文本24</p>
+<ol start="19">
+<li>NSAttachmentAttributeName</li>
+</ol>
+<p>[objc] view plain copy print ?<br>//NSAttachmentAttributeName 设置文本附件,取值为NSTextAttachment对象,常用于文字图片混排      NSTextAttachment <em>textAttachment01 = [[NSTextAttachment alloc] init];   textAttachment01.image = [UIImage imageNamed: @”10000.jpeg”];  //设置图片源   textAttachment01.bounds = CGRectMake(0, 0, 30, 30);          //设置图片位置和大小   NSMutableAttributedString </em>attrStr01 = [[NSMutableAttributedString alloc] initWithString: originStr];      [attrStr01 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];   NSAttributedString <em>attrStr11 = [NSAttributedString attributedStringWithAttachment: textAttachment01];      [attrStr01 insertAttributedString: attrStr11 atIndex: 2];  //NSTextAttachment占用一个字符长度，插入后原字符串长度增加1      _label01.attributedText = attrStr01;         NSTextAttachment </em>textAttachment02 = [[NSTextAttachment alloc] init];   textAttachment02.image = [UIImage imageNamed: @”10000.jpeg”];  //设置图片源   textAttachment02.bounds = CGRectMake(0, -10, 30, 40);          //设置图片位置和大小   NSMutableAttributedString <em>attrStr02 = [[NSMutableAttributedString alloc] initWithString: originStr];      [attrStr02 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];   NSAttributedString </em>attrStr12 = [NSAttributedString attributedStringWithAttachment: textAttachment02];      [attrStr02 insertAttributedString: attrStr12 atIndex: 6];      _label02.attributedText = attrStr02;      NSTextAttachment <em>textAttachment03 = [[NSTextAttachment alloc] init];   textAttachment03.image = [UIImage imageNamed: @”10000.jpeg”];  //设置图片源   textAttachment03.bounds = CGRectMake(0, -6, 50, 30);          //设置图片位置和大小   NSMutableAttributedString </em>attrStr03 = [[NSMutableAttributedString alloc] initWithString: originStr];      [attrStr03 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];   NSAttributedString *attrStr13 = [NSAttributedString attributedStringWithAttachment: textAttachment03];      [attrStr03 insertAttributedString: attrStr13 atIndex: 8];      _label03.attributedText = attrStr03;<br>    //NSAttachmentAttributeName 设置文本附件,取值为NSTextAttachment对象,常用于文字图片混排</p>
+<pre><code>NSTextAttachment *textAttachment01 = [[NSTextAttachment alloc] init];
+textAttachment01.image = [UIImage imageNamed: @&quot;10000.jpeg&quot;];  //设置图片源
+textAttachment01.bounds = CGRectMake(0, 0, 30, 30);          //设置图片位置和大小
+NSMutableAttributedString *attrStr01 = [[NSMutableAttributedString alloc] initWithString: originStr];
+
+[attrStr01 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];
+NSAttributedString *attrStr11 = [NSAttributedString attributedStringWithAttachment: textAttachment01];
+
+[attrStr01 insertAttributedString: attrStr11 atIndex: 2];  //NSTextAttachment占用一个字符长度，插入后原字符串长度增加1
+
+_label01.attributedText = attrStr01;
+
+
+NSTextAttachment *textAttachment02 = [[NSTextAttachment alloc] init];
+textAttachment02.image = [UIImage imageNamed: @&quot;10000.jpeg&quot;];  //设置图片源
+textAttachment02.bounds = CGRectMake(0, -10, 30, 40);          //设置图片位置和大小
+NSMutableAttributedString *attrStr02 = [[NSMutableAttributedString alloc] initWithString: originStr];
+
+[attrStr02 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];
+NSAttributedString *attrStr12 = [NSAttributedString attributedStringWithAttachment: textAttachment02];
+
+[attrStr02 insertAttributedString: attrStr12 atIndex: 6];
+
+_label02.attributedText = attrStr02;
+
+NSTextAttachment *textAttachment03 = [[NSTextAttachment alloc] init];
+textAttachment03.image = [UIImage imageNamed: @&quot;10000.jpeg&quot;];  //设置图片源
+textAttachment03.bounds = CGRectMake(0, -6, 50, 30);          //设置图片位置和大小
+NSMutableAttributedString *attrStr03 = [[NSMutableAttributedString alloc] initWithString: originStr];
+
+[attrStr03 addAttribute: NSFontAttributeName value: [UIFont systemFontOfSize: 25] range: NSMakeRange(0, originStr.length)];
+NSAttributedString *attrStr13 = [NSAttributedString attributedStringWithAttachment: textAttachment03];
+
+[attrStr03 insertAttributedString: attrStr13 atIndex: 8];
+
+_label03.attributedText = attrStr03;
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本25</p>
+<ol start="20">
+<li>NSParagraphStyleAttributeName</li>
+</ol>
+<p>设置文本段落排版格式，取值为 NSParagraphStyle/NSMutableParagraphStyle 对象，可以设置如下属性：</p>
+<p>[objc] view plain copy print ?<br>// alignment               对齐方式，取值枚举常量 NSTextAlignment   // firstLineHeadIndent     首行缩进，取值 float   // headIndent              缩进，取值 float   // tailIndent              尾部缩进，取值 float   // ineHeightMultiple       可变行高,乘因数，取值 float   // maximumLineHeight       最大行高，取值 float   // minimumLineHeight       最小行高，取值 float   // lineSpacing             行距，取值 float   // paragraphSpacing        段距，取值 float   // paragraphSpacingBefore  段首空间，取值 float   //       // baseWritingDirection    句子方向，取值枚举常量 NSWritingDirection   // lineBreakMode           断行方式，取值枚举常量 NSLineBreakMode   // hyphenationFactor       连字符属性，取值 0 - 1<br>// alignment               对齐方式，取值枚举常量 NSTextAlignment<br>// firstLineHeadIndent     首行缩进，取值 float<br>// headIndent              缩进，取值 float<br>// tailIndent              尾部缩进，取值 float<br>// ineHeightMultiple       可变行高,乘因数，取值 float<br>// maximumLineHeight       最大行高，取值 float<br>// minimumLineHeight       最小行高，取值 float<br>// lineSpacing             行距，取值 float<br>// paragraphSpacing        段距，取值 float<br>// paragraphSpacingBefore  段首空间，取值 float<br>//<br>// baseWritingDirection    句子方向，取值枚举常量 NSWritingDirection<br>// lineBreakMode           断行方式，取值枚举常量 NSLineBreakMode<br>// hyphenationFactor       连字符属性，取值 0 - 1</p>
+<p>下面逐一说明：</p>
+<p><1>. alignment</1></p>
+<p>[objc] view plain copy print ?<br>// alignment 对齐方式，取值枚举常量 NSTextAlignment          //    enum {   //        NSTextAlignmentLeft      = 0,   //        NSTextAlignmentCenter    = 1,   //        NSTextAlignmentRight     = 2,   //        NSTextAlignmentJustified = 3,   //        NSTextAlignmentNatural   = 4,   //    };   //    typedef NSInteger NSTextAlignment;              _textview01.editable = NO;       _textview02.editable = NO;              _label11.text = @”alignment : NSTextAlignmentCenter”;       _label12.text = @”alignment : NSTextAlignmentJustified”;              NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;         // NSParagraphStyle       NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];       paraStyle01.alignment = NSTextAlignmentNatural;              NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                     NSFontAttributeName: [UIFont systemFontOfSize: 12] };              _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];                     NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];       paraStyle02.alignment = NSTextAlignmentJustified;              NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                     NSFontAttributeName: [UIFont systemFontOfSize: 12] };       _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>// alignment 对齐方式，取值枚举常量 NSTextAlignment</p>
+<p>//    enum {<br>//        NSTextAlignmentLeft      = 0,<br>//        NSTextAlignmentCenter    = 1,<br>//        NSTextAlignmentRight     = 2,<br>//        NSTextAlignmentJustified = 3,<br>//        NSTextAlignmentNatural   = 4,<br>//    };<br>//    typedef NSInteger NSTextAlignment;</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;alignment : NSTextAlignmentCenter&quot;;
+_label12.text = @&quot;alignment : NSTextAlignmentJustified&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+</code></pre><p>   // NSParagraphStyle<br>    NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];<br>    paraStyle01.alignment = NSTextAlignmentNatural;</p>
+<pre><code>NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.alignment = NSTextAlignmentJustified;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本26  iOS之富文本27</p>
+<p><2>. firstLineHeadIndent</2></p>
+<p>[objc] view plain copy print ?<br>//firstLineHeadIndent 首行缩进，取值 float      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”firstLineHeadIndent： 24”;   _label12.text = @”firstLineHeadIndent： 48”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.firstLineHeadIndent = 24;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.firstLineHeadIndent = 48;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //firstLineHeadIndent 首行缩进，取值 float</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;firstLineHeadIndent： 24&quot;;
+_label12.text = @&quot;firstLineHeadIndent： 48&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.firstLineHeadIndent = 24;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.firstLineHeadIndent = 48;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本28</p>
+<p><3>. headIndent</3></p>
+<p>[objc] view plain copy print ?<br>//headIndent 除了首行之外的行缩进，取值 float      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”headIndent： 24”;   _label12.text = @”headIndent： 48”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.headIndent = 24;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.headIndent = 48;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //headIndent 除了首行之外的行缩进，取值 float</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;headIndent： 24&quot;;
+_label12.text = @&quot;headIndent： 48&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.headIndent = 24;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.headIndent = 48;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本29</p>
+<p><4>. tailIndent</4></p>
+<p>[objc] view plain copy print ?<br>//tailIndent 行尾缩进，注意距离是从行首算起      _textview01.editable = NO;   _textview02.editable = NO;         _label11.text = @”tailIndent： 48”;   _label12.text = @”tailIndent： 252”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.tailIndent = 48;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.tailIndent = 252;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //tailIndent 行尾缩进，注意距离是从行首算起</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+
+_label11.text = @&quot;tailIndent： 48&quot;;
+_label12.text = @&quot;tailIndent： 252&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.tailIndent = 48;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.tailIndent = 252;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本30</p>
+<p><5>. lineHeightMultiple</5></p>
+<p>[objc] view plain copy print ?<br>//lineHeightMultiple 行高倍数因子，大于1行高变小，小于1行高变小，实际上字体大小不会改变，改变的时行间距      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”lineHeightMultiple： 0.6”;   _label12.text = @”lineHeightMultiple： 2.5”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.lineHeightMultiple = 0.6;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.lineHeightMultiple = 2.5;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //lineHeightMultiple 行高倍数因子，大于1行高变小，小于1行高变小，实际上字体大小不会改变，改变的时行间距</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;lineHeightMultiple： 0.6&quot;;
+_label12.text = @&quot;lineHeightMultiple： 2.5&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.lineHeightMultiple = 0.6;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.lineHeightMultiple = 2.5;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本31</p>
+<p><6>. maximumLineHeight</6></p>
+<p>[objc] view plain copy print ?<br>//maximumLineHeight 最大行高，若其值小于默认行高，则行间距变小，若其值大于默认行高，则不会引起任何变化      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”maximumLineHeight： 7”;   _label12.text = @”maximumLineHeight： 25”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.maximumLineHeight = 7;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.maximumLineHeight = 25;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //maximumLineHeight 最大行高，若其值小于默认行高，则行间距变小，若其值大于默认行高，则不会引起任何变化</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;maximumLineHeight： 7&quot;;
+_label12.text = @&quot;maximumLineHeight： 25&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.maximumLineHeight = 7;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.maximumLineHeight = 25;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本32</p>
+<p><7>. minimumLineHeight</7></p>
+<p>[objc] view plain copy print ?<br>//minimumLineHeight 最小行高，若其值大于默认行高，则行间距变大，若其值小于默认行高，则不会引起任何变化      _textview01.editable = NO;   _textview02.editable = NO;         _label11.text = @”minimumLineHeight： 0.6”;   _label12.text = @”minimumLineHeight： 25”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.minimumLineHeight = 0.6;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.minimumLineHeight = 25;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //minimumLineHeight 最小行高，若其值大于默认行高，则行间距变大，若其值小于默认行高，则不会引起任何变化</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+
+_label11.text = @&quot;minimumLineHeight： 0.6&quot;;
+_label12.text = @&quot;minimumLineHeight： 25&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.minimumLineHeight = 0.6;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.minimumLineHeight = 25;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本33</p>
+<p><8>. lineSpacing</8></p>
+<p>[objc] view plain copy print ?<br>//lineSpacing 行距，取值为 float，可正可负，正值增加行距，负值减小行距      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”lineSpacing： -7”;   _label12.text = @”lineSpacing： 25”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.lineSpacing = -7;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.lineSpacing = 25;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //lineSpacing 行距，取值为 float，可正可负，正值增加行距，负值减小行距</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;lineSpacing： -7&quot;;
+_label12.text = @&quot;lineSpacing： 25&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.lineSpacing = -7;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.lineSpacing = 25;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本34</p>
+<p><9>. paragraphSpacing</9></p>
+<p>[objc] view plain copy print ?<br>//paragraphSpacing 段距，取值 float, 负值无效，取0值      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”paragraphSpacing： -7”;   _label12.text = @”paragraphSpacing： 25”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.paragraphSpacing = -7;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.paragraphSpacing = 25;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //paragraphSpacing 段距，取值 float, 负值无效，取0值</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;paragraphSpacing： -7&quot;;
+_label12.text = @&quot;paragraphSpacing： 25&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.paragraphSpacing = -7;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.paragraphSpacing = 25;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本35</p>
+<p><10>. paragraphSpacingBefore</10></p>
+<p>[objc] view plain copy print ?<br>//paragraphSpacingBefore 段首距离，取值 float , 最小取值为0      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”paragraphSpacingBefore： -7”;   _label12.text = @”paragraphSpacingBefore： 25”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.paragraphSpacingBefore = -7;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.paragraphSpacingBefore = 25;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //paragraphSpacingBefore 段首距离，取值 float , 最小取值为0</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;paragraphSpacingBefore： -7&quot;;
+_label12.text = @&quot;paragraphSpacingBefore： 25&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.paragraphSpacingBefore = -7;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.paragraphSpacingBefore = 25;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本36</p>
+<p><11>. baseWritingDirection</11></p>
+<p>[objc] view plain copy print ?<br>//baseWritingDirection  //句子排版方向，取值为枚举常量 NSWritingDirection       //    enum {   //        NSWritingDirectionNatural = -1,   //        NSWritingDirectionLeftToRight =  0,   //        NSWritingDirectionRightToLeft =  1   //    };   //    typedef NSInteger NSWritingDirection;      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”baseWritingDirection： NSWritingDirectionLeftToRight”;   _label12.text = @”baseWritingDirection： NSWritingDirectionRightToLeft”;      NSString <em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.baseWritingDirection = NSWritingDirectionLeftToRight;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.baseWritingDirection = NSWritingDirectionRightToLeft;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //baseWritingDirection  //句子排版方向，取值为枚举常量 NSWritingDirection<br>    //    enum {<br>    //        NSWritingDirectionNatural = -1,<br>    //        NSWritingDirectionLeftToRight =  0,<br>    //        NSWritingDirectionRightToLeft =  1<br>    //    };<br>    //    typedef NSInteger NSWritingDirection;</p>
+<pre><code>_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;baseWritingDirection： NSWritingDirectionLeftToRight&quot;;
+_label12.text = @&quot;baseWritingDirection： NSWritingDirectionRightToLeft&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.baseWritingDirection = NSWritingDirectionLeftToRight;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.baseWritingDirection = NSWritingDirectionRightToLeft;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本37</p>
+<p><12>. lineBreakMode</12></p>
+<p>[objc] view plain copy print ?<br>//lineBreakMode 断行方式，取值枚举常量 NSLineBreakMode      //    enum {   //        NSLineBreakByWordWrapping = 0, //自动换行，单词切断   //        NSLineBreakByCharWrapping,     //自动换行，字母切断   //        NSLineBreakByClipping,         //非自动换行，不切断   //        NSLineBreakByTruncatingHead,   //非自动换行，行首切断   //        NSLineBreakByTruncatingTail,   //非自动换行，行尾切断   //        NSLineBreakByTruncatingMiddle  //非自动换行，中间切断   //    };   //    typedef NSUInteger NSLineBreakMode;      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”lineBreakMode： NSLineBreakByTruncatingHead”;   _label12.text = @”lineBreakMode： NSLineBreakByTruncatingTail”;         NSString <em>strstr = @”These two documents provide the perfect starting point for iOS and Mac app development. Follow either road map to learn how to get and use Xcode to create your first app. You will learn how to use Xcode to test and debug your source code, analyze to improve your app’s performance, perform source control operations, archive your app, and submit your app to the App Store.”;      NSString </em>text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @”荷塘月色” ofType:@”txt”] encoding: NSUTF8StringEncoding error: NULL] ;      // NSParagraphStyle   NSMutableParagraphStyle <em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.lineBreakMode = NSLineBreakByTruncatingHead;      NSDictionary </em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];         NSMutableParagraphStyle <em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.lineBreakMode = NSLineBreakByTruncatingTail;      NSDictionary </em>attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 12] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];<br>    //lineBreakMode 断行方式，取值枚举常量 NSLineBreakMode</p>
+<pre><code>//    enum {
+//        NSLineBreakByWordWrapping = 0, //自动换行，单词切断
+//        NSLineBreakByCharWrapping,     //自动换行，字母切断
+//        NSLineBreakByClipping,         //非自动换行，不切断
+//        NSLineBreakByTruncatingHead,   //非自动换行，行首切断
+//        NSLineBreakByTruncatingTail,   //非自动换行，行尾切断
+//        NSLineBreakByTruncatingMiddle  //非自动换行，中间切断
+//    };
+//    typedef NSUInteger NSLineBreakMode;
+
+_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;lineBreakMode： NSLineBreakByTruncatingHead&quot;;
+_label12.text = @&quot;lineBreakMode： NSLineBreakByTruncatingTail&quot;;
+
+
+NSString *strstr = @&quot;These two documents provide the perfect starting point for iOS and Mac app development. Follow either road map to learn how to get and use Xcode to create your first app. You will learn how to use Xcode to test and debug your source code, analyze to improve your app’s performance, perform source control operations, archive your app, and submit your app to the App Store.&quot;;
+
+NSString *text = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @&quot;荷塘月色&quot; ofType:@&quot;txt&quot;] encoding: NSUTF8StringEncoding error: NULL] ;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.lineBreakMode = NSLineBreakByTruncatingHead;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.lineBreakMode = NSLineBreakByTruncatingTail;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 12] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: text attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本38 iOS之富文本39 iOS之富文本40</p>
+<p><13>. hyphenationFactor</13></p>
+<p>[objc] view plain copy print ?<br>//hyphenationFactor 连字符属性，取值 0 到 1 之间，开启断词功能      NSString <em>strstr = @”These two documents provide the perfect starting point for iOS and Mac app development. Follow either road map to learn how to get and use Xcode to create your first app. You will learn how to use Xcode to test and debug your source code, analyze to improve your app’s performance, perform source control operations, archive your app, and submit your app to the App Store.”;      _textview01.editable = NO;   _textview02.editable = NO;      _label11.text = @”hyphenationFactor： 0.3”;   _label12.text = @”hyphenationFactor： 0.9”;      // NSParagraphStyle   NSMutableParagraphStyle </em>paraStyle01 = [[NSMutableParagraphStyle alloc] init];   paraStyle01.hyphenationFactor = 0.3;      NSDictionary <em>attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,                                 NSFontAttributeName: [UIFont systemFontOfSize: 15] };      _textview01.attributedText = [[NSAttributedString alloc] initWithString: strstr  attributes: attrDict01];         NSMutableParagraphStyle </em>paraStyle02 = [[NSMutableParagraphStyle alloc] init];   paraStyle02.hyphenationFactor = 0.9;      NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,                                 NSFontAttributeName: [UIFont systemFontOfSize: 15] };   _textview02.attributedText = [[NSAttributedString alloc] initWithString: strstr  attributes: attrDict02];<br>    //hyphenationFactor 连字符属性，取值 0 到 1 之间，开启断词功能</p>
+<pre><code>NSString *strstr = @&quot;These two documents provide the perfect starting point for iOS and Mac app development. Follow either road map to learn how to get and use Xcode to create your first app. You will learn how to use Xcode to test and debug your source code, analyze to improve your app’s performance, perform source control operations, archive your app, and submit your app to the App Store.&quot;;
+
+_textview01.editable = NO;
+_textview02.editable = NO;
+
+_label11.text = @&quot;hyphenationFactor： 0.3&quot;;
+_label12.text = @&quot;hyphenationFactor： 0.9&quot;;
+
+// NSParagraphStyle
+NSMutableParagraphStyle *paraStyle01 = [[NSMutableParagraphStyle alloc] init];
+paraStyle01.hyphenationFactor = 0.3;
+
+NSDictionary *attrDict01 = @{ NSParagraphStyleAttributeName: paraStyle01,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 15] };
+
+_textview01.attributedText = [[NSAttributedString alloc] initWithString: strstr  attributes: attrDict01];
+
+
+NSMutableParagraphStyle *paraStyle02 = [[NSMutableParagraphStyle alloc] init];
+paraStyle02.hyphenationFactor = 0.9;
+
+NSDictionary *attrDict02 = @{ NSParagraphStyleAttributeName: paraStyle02,
+                              NSFontAttributeName: [UIFont systemFontOfSize: 15] };
+_textview02.attributedText = [[NSAttributedString alloc] initWithString: strstr  attributes: attrDict02];
+</code></pre><p>运行结果：</p>
+<p>iOS之富文本41</p>
+<p>可参考<a href="http://www.itnose.net/detail/6177538.html" target="_blank" rel="noopener">小东邪</a>!</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ios/" rel="tag"># ios</a>
+          
+            <a href="/tags/富文本/" rel="tag"># 富文本</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/java/" rel="next" title="mac系统安装Apache Tomcat详细步骤">
+                <i class="fa fa-chevron-left"></i> mac系统安装Apache Tomcat详细步骤
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/23/hello/" rel="prev" title="Hello 小东邪">
+                Hello 小东邪 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪/Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪/Demon</p>
+              <p class="site-description motion-element" itemprop="description">风陵渡口初相遇，一遇杨过与终身</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-简书"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-掘金"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#主要demo"><span class="nav-number">1.</span> <span class="nav-text">主要demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图文混排"><span class="nav-number">1.1.</span> <span class="nav-text">图文混排</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除线"><span class="nav-number">1.2.</span> <span class="nav-text">删除线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式二："><span class="nav-number">1.3.</span> <span class="nav-text">方式二：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">2.</span> <span class="nav-text">实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪/Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
