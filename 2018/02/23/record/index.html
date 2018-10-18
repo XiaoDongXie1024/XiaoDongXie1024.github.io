@@ -1,20 +1,123 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
+
+
+
+
+
+
+
+
+
+
+
 
   
-  <title>Audio -- PCM to AAC | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
   <meta name="description" content="本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,gi">
 <meta name="keywords" content="iOS,Audio,PCM,AAC,AudioQueue,AudioUnit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Audio -- PCM to AAC">
-<meta property="og:url" content="http://yoursite.com/2018/02/23/record/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/02/23/record/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,gi">
-<meta property="og:locale" content="default">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://d26dzxoao6i3hh.cloudfront.net/items/0n0S1T2O292o2k3V0l2c/Snip20170727_2.png">
 <meta property="og:image" content="https://cl.ly/30073m1G2s1Z/Snip20170727_3.png">
@@ -25,73 +128,309 @@
 <meta name="twitter:title" content="Audio -- PCM to AAC">
 <meta name="twitter:description" content="本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,gi">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/02/23/record/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Audio -- PCM to AAC | 小东邪 Show Time</title>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-record" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/02/23/record/" class="article-date">
-  <time datetime="2018-02-23T09:39:53.000Z" itemprop="datePublished">2018-02-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
   
-    <h1 class="article-title" itemprop="name">
-      Audio -- PCM to AAC
-    </h1>
+  
+    
   
 
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-top">
+    <a href="/top/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-signal"></i> <br />top</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />About</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/02/23/record/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪/Demon">
+      <meta itemprop="description" content="欢迎来到小东邪的世界">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Audio -- PCM to AAC
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-02-23 17:39:53" itemprop="dateCreated datePublished" datetime="2018-02-23T17:39:53+08:00">2018-02-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-06-23 15:29:37" itemprop="dateModified" datetime="2018-06-23T15:29:37+08:00">2018-06-23</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/02/23/record/" class="leancloud_visitors" data-flag-title="Audio -- PCM to AAC">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
       
         <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
 <ul>
@@ -312,138 +651,551 @@
 <h3 id="总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。"><a href="#总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。" class="headerlink" title="总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。"></a>总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。</h3><h4 id="参考：CoreAudio-Audio-Unit-转码操作-AudioUnit-Audio-Unit-回声消除-AudioQueue-直播基础"><a href="#参考：CoreAudio-Audio-Unit-转码操作-AudioUnit-Audio-Unit-回声消除-AudioQueue-直播基础" class="headerlink" title="参考：CoreAudio, Audio Unit, 转码操作, AudioUnit, Audio Unit, 回声消除, AudioQueue, 直播基础"></a>参考：<a href="https://developer.apple.com/library/content/documentation/MusicAudio/Conceptual/CoreAudioOverview/Introduction/Introduction.html#//apple_ref/doc/uid/TP40003577-CH1-SW1" target="_blank" rel="noopener">CoreAudio</a>, <a href="https://developer.apple.com/library/content/documentation/MusicAudio/Conceptual/AudioUnitHostingGuide_iOS/AudioUnitHostingFundamentals/AudioUnitHostingFundamentals.html#//apple_ref/doc/uid/TP40009492-CH3-SW12" target="_blank" rel="noopener">Audio Unit</a>, <a href="https://stackoverflow.com/questions/8847726/how-to-encode-aac-data-from-pcm-data-in-iphone-sdk-iphone-dev-audio" target="_blank" rel="noopener">转码操作</a>, <a href="http://www.jianshu.com/p/2556022786de" target="_blank" rel="noopener">AudioUnit</a>, <a href="http://teragonaudio.com/article/How-to-do-realtime-recording-with-effect-processing-on-iOS.html" target="_blank" rel="noopener">Audio Unit</a>, <a href="http://blog.csdn.net/lixing333/article/details/46325733" target="_blank" rel="noopener">回声消除</a>, <a href="http://www.jianshu.com/p/ea6b9781441c" target="_blank" rel="noopener">AudioQueue</a>, <a href="https://zhuanlan.zhihu.com/p/22502905" target="_blank" rel="noopener">直播基础</a></h4>
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/02/23/record/" data-id="cjndxgpzl002rvvueu2yfthip" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AAC/">AAC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Audio/">Audio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AudioQueue/">AudioQueue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AudioUnit/">AudioUnit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PCM/">PCM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
 
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/Audio/" rel="tag"># Audio</a>
+          
+            <a href="/tags/PCM/" rel="tag"># PCM</a>
+          
+            <a href="/tags/AAC/" rel="tag"># AAC</a>
+          
+            <a href="/tags/AudioQueue/" rel="tag"># AudioQueue</a>
+          
+            <a href="/tags/AudioUnit/" rel="tag"># AudioUnit</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/25/group/" rel="next" title="代码隐藏GroupedTableView上边多余的间隔">
+                <i class="fa fa-chevron-left"></i> 代码隐藏GroupedTableView上边多余的间隔
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/23/cropSampleBuffer/" rel="prev" title="iOS开发中截取相机部分画面，切割sampleBuffer（Crop sample buffer）">
+                iOS开发中截取相机部分画面，切割sampleBuffer（Crop sample buffer） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
     </footer>
   </div>
   
-    
-<nav id="article-nav">
   
-    <a href="/2018/02/23/cropSampleBuffer/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
         
-          iOS开发中截取相机部分画面，切割sampleBuffer（Crop sample buffer）
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">小东邪/Demon</p>
+              <p class="site-description motion-element" itemprop="description">欢迎来到小东邪的世界</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-简书"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-掘金"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–"><span class="nav-number">1.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC"><span class="nav-number">2.</span> <span class="nav-text">本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API"><span class="nav-number">3.</span> <span class="nav-text">原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-1"><span class="nav-number">4.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义"><span class="nav-number">5.</span> <span class="nav-text">本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-2"><span class="nav-number">6.</span> <span class="nav-text">——————————————————–</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-PCM-gt-AAC"><span class="nav-number">6.1.</span> <span class="nav-text">GitHub地址(附代码) : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-PCM-gt-AAC"><span class="nav-number">6.2.</span> <span class="nav-text">简书地址     : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-PCM-gt-AAC"><span class="nav-number">6.3.</span> <span class="nav-text">博客地址     : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-PCM-gt-AAC"><span class="nav-number">6.4.</span> <span class="nav-text">掘金地址     : PCM-&gt;AAC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-3"><span class="nav-number">7.</span> <span class="nav-text">——————————————————–</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方式：（下文两种实现方式，挑选自己适合的）"><span class="nav-number"></span> <span class="nav-text">实现方式：（下文两种实现方式，挑选自己适合的）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式"><span class="nav-number">1.</span> <span class="nav-text">1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"><span class="nav-number">2.</span> <span class="nav-text">2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。"><span class="nav-number">3.</span> <span class="nav-text">AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-4"><span class="nav-number">4.</span> <span class="nav-text">——————————————————–</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-本文需要基本知识点"><span class="nav-number"></span> <span class="nav-text">一.本文需要基本知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C语言相关函数："><span class="nav-number">1.</span> <span class="nav-text">C语言相关函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OC-中部分知识点："><span class="nav-number">2.</span> <span class="nav-text">OC 中部分知识点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#音频基础知识"><span class="nav-number">3.</span> <span class="nav-text">音频基础知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-AudioQueue"><span class="nav-number"></span> <span class="nav-text">二.AudioQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简述：在iOS和Mac-OS-X中，音频队列是一个用来录制和播放音频的软件对象，他用AudioQueueRef这个不透明数据类型来表示，该类型在AudioQueue-h头文件中声明。"><span class="nav-number">1.</span> <span class="nav-text">1.简述：在iOS和Mac OS X中，音频队列是一个用来录制和播放音频的软件对象，他用AudioQueueRef这个不透明数据类型来表示，该类型在AudioQueue.h头文件中声明。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-工作："><span class="nav-number">2.</span> <span class="nav-text">2.工作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-结构："><span class="nav-number">3.</span> <span class="nav-text">3.结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#它的架构很大程度上依赖于这个音频队列是用来录制还是用来播放的。不同之处在于音频队列如何连接到它的输入和输入，还有它的回调函数所扮演的角色。"><span class="nav-number">3.1.</span> <span class="nav-text">它的架构很大程度上依赖于这个音频队列是用来录制还是用来播放的。不同之处在于音频队列如何连接到它的输入和输入，还有它的回调函数所扮演的角色。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-调用步骤，首先将项目设置为MRC-在控制器中配置audioSession基本设置-基本设置，不会谷歌-，导入该头文件，直接在需要时机调用该类startRecord与stopRecord方法，另外还提供了生成录音文件的功能，具体参考github中的代码。"><span class="nav-number">4.</span> <span class="nav-text">4.调用步骤，首先将项目设置为MRC,在控制器中配置audioSession基本设置(基本设置，不会谷歌)，导入该头文件，直接在需要时机调用该类startRecord与stopRecord方法，另外还提供了生成录音文件的功能，具体参考github中的代码。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-设置AudioStreamBasicDescription-基本信息"><span class="nav-number">5.</span> <span class="nav-text">(1).设置AudioStreamBasicDescription 基本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-设置采集数据的格式，采集PCM必须按照如下设置，参考苹果官方文档，不同需求自己另行修改"><span class="nav-number">6.</span> <span class="nav-text">(2).设置采集数据的格式，采集PCM必须按照如下设置，参考苹果官方文档，不同需求自己另行修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-将PCM转成AAC一些基本设置"><span class="nav-number">7.</span> <span class="nav-text">(3).将PCM转成AAC一些基本设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-设置最终音频文件的头部信息-此类写法为将pcm转为AAC的写法"><span class="nav-number">8.</span> <span class="nav-text">(4).设置最终音频文件的头部信息(此类写法为将pcm转为AAC的写法)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-AudioQueue中注册的回调函数"><span class="nav-number">9.</span> <span class="nav-text">(5).AudioQueue中注册的回调函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1"><span class="nav-number">10.</span> <span class="nav-text">1. What is Audio Unit ？ AudioUnit官方文档,  优秀博客1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-相关概念解析"><span class="nav-number">11.</span> <span class="nav-text">2.相关概念解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用步骤："><span class="nav-number">12.</span> <span class="nav-text">3. 使用步骤：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-代码解析"><span class="nav-number">13.</span> <span class="nav-text">4.代码解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。"><span class="nav-number">14.</span> <span class="nav-text">总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考：CoreAudio-Audio-Unit-转码操作-AudioUnit-Audio-Unit-回声消除-AudioQueue-直播基础"><span class="nav-number">14.1.</span> <span class="nav-text">参考：CoreAudio, Audio Unit, 转码操作, AudioUnit, Audio Unit, 回声消除, AudioQueue, 直播基础</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
         
       </div>
-    </a>
-  
-  
-    <a href="/2016/10/25/group/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">代码隐藏GroupedTableView上边多余的间隔</div>
-    </a>
-  
-</nav>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪/Demon</span>
 
   
-</article>
 
-</section>
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
         
-          <aside id="sidebar">
-  
-    
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AAC/">AAC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/App-extension/">App extension</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Audio/">Audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioQueue/">AudioQueue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioUnit/">AudioUnit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera/">Camera</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CaptureSession/">CaptureSession</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DB/">DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Encoder/">Encoder</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H264/">H264</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H265/">H265</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HEVC/">HEVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Masonry/">Masonry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyEclipse/">MyEclipse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PCM/">PCM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rotate/">Rotate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SizeClass/">SizeClass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TableViewGroup/">TableViewGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VPN/">VPN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crop/">crop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS-API/">iOS API</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sampleBuffer/">sampleBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/video/">video</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yuv/">yuv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/传值/">传值</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/富文本/">富文本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小东邪/">小东邪</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机/">相机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组成结构/">组成结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/队列/">队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音视频/">音视频</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音量柱/">音量柱</a></li></ul>
-    </div>
-  </div>
-
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/App-extension/" style="font-size: 10px;">App extension</a> <a href="/tags/Audio/" style="font-size: 10px;">Audio</a> <a href="/tags/AudioQueue/" style="font-size: 10px;">AudioQueue</a> <a href="/tags/AudioUnit/" style="font-size: 10px;">AudioUnit</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Camera/" style="font-size: 10px;">Camera</a> <a href="/tags/CaptureSession/" style="font-size: 10px;">CaptureSession</a> <a href="/tags/DB/" style="font-size: 10px;">DB</a> <a href="/tags/Data-Structure/" style="font-size: 10px;">Data Structure</a> <a href="/tags/Encoder/" style="font-size: 10px;">Encoder</a> <a href="/tags/H264/" style="font-size: 16.67px;">H264</a> <a href="/tags/H265/" style="font-size: 10px;">H265</a> <a href="/tags/HEVC/" style="font-size: 13.33px;">HEVC</a> <a href="/tags/Masonry/" style="font-size: 10px;">Masonry</a> <a href="/tags/MyEclipse/" style="font-size: 10px;">MyEclipse</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Orientation/" style="font-size: 10px;">Orientation</a> <a href="/tags/PCM/" style="font-size: 10px;">PCM</a> <a href="/tags/Rotate/" style="font-size: 10px;">Rotate</a> <a href="/tags/SizeClass/" style="font-size: 10px;">SizeClass</a> <a href="/tags/TableViewGroup/" style="font-size: 10px;">TableViewGroup</a> <a href="/tags/VPN/" style="font-size: 10px;">VPN</a> <a href="/tags/crop/" style="font-size: 10px;">crop</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/iOS-API/" style="font-size: 10px;">iOS API</a> <a href="/tags/ios/" style="font-size: 13.33px;">ios</a> <a href="/tags/sampleBuffer/" style="font-size: 10px;">sampleBuffer</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/video/" style="font-size: 10px;">video</a> <a href="/tags/yuv/" style="font-size: 10px;">yuv</a> <a href="/tags/传值/" style="font-size: 10px;">传值</a> <a href="/tags/富文本/" style="font-size: 10px;">富文本</a> <a href="/tags/小东邪/" style="font-size: 10px;">小东邪</a> <a href="/tags/相机/" style="font-size: 10px;">相机</a> <a href="/tags/组成结构/" style="font-size: 10px;">组成结构</a> <a href="/tags/队列/" style="font-size: 10px;">队列</a> <a href="/tags/音视频/" style="font-size: 10px;">音视频</a> <a href="/tags/音量柱/" style="font-size: 10px;">音量柱</a>
-    </div>
-  </div>
-
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li></ul>
-    </div>
-  </div>
+</div>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2018/10/18/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2018/06/23/20180623_vpn_extension/">App extension实战 - Personal VPN 连接并捕获packet</a>
-          </li>
-        
-          <li>
-            <a href="/2018/03/25/yuv/">What is YUV ?</a>
-          </li>
-        
-          <li>
-            <a href="/2018/02/24/ios_cacheQueue/">利用C++ 设计缓存队列实现高效传输相机数据</a>
-          </li>
-        
-          <li>
-            <a href="/2018/02/24/deviceOrientation/">iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
-  
-</aside>
+
+
+
+
+
+
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2018 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    
+	
+    
 
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
+    
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
