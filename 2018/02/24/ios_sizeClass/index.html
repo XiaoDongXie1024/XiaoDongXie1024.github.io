@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。">
+<meta name="keywords" content="iOS,SizeClass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况">
+<meta property="og:url" content="http://yoursite.com/2018/02/24/ios_sizeClass/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-c5fecfd77f047472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-d4ff517d39a81c50.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-29026bb563bd1f2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-cb2c6107d94ecfc5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-abcf0c680122dd81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-0922b50659cf243f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-afb5473520ed0065.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-f079de5171faba58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-9210db386e5243e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-02-24T05:49:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况">
+<meta name="twitter:description" content="解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-c5fecfd77f047472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ios_sizeClass" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/24/ios_sizeClass/" class="article-date">
+  <time datetime="2018-02-24T05:49:21.000Z" itemprop="datePublished">2018-02-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
+<ul>
+<li>解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。<a id="more"></a><the rest="" of="" contents="" |="" 余下全文="">
+
+</the></li>
+</ul>
+<h2 id="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况"><a href="#iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况" class="headerlink" title="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况"></a>iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况</h2><h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><h4 id="1-通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。"><a href="#1-通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。" class="headerlink" title="1. 通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。"></a>1. 通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。</h4><blockquote>
+<p>比如控件hello这个Label在横屏下为距离父控件顶部为0，横向垂直于父控件中心如图1，而在竖屏下如果按照自动适配则如图2，但是如果我们想要它在竖屏为图3的效果(即距离父控件左边距离为0，距离父控件上部距离为100)则需要重新设计不同屏幕状态下的约束。本例则为解决此类需求</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-c5fecfd77f047472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Demo"></p>
+<h4 id="2-本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。"><a href="#2-本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。" class="headerlink" title="2. 本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。"></a>2. 本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。</h4><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="适用情况"><a href="#适用情况" class="headerlink" title="适用情况"></a>适用情况</h4><ul>
+<li>在iPad Pro上比iPhone SE上的文字字体更大</li>
+<li>同一个View在横竖屏布局差别较大</li>
+<li>iPad比iPhone多或者少一些控件及属性等</li>
+<li>当应用滑动或者处于分屏模式布局内容有所不同</li>
+</ul>
+<h4 id="注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。"><a href="#注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。" class="headerlink" title="注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。"></a>注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。</h4><h4 id="—————————————–"><a href="#—————————————–" class="headerlink" title="—————————————–"></a>—————————————–</h4><h4 id="GitHub地址-附代码-控件布局Demo"><a href="#GitHub地址-附代码-控件布局Demo" class="headerlink" title="GitHub地址(附代码) : 控件布局Demo"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/XDXScreenOrientationChangedDemo" target="_blank" rel="noopener">控件布局Demo</a></h4><h4 id="简书地址-控件布局"><a href="#简书地址-控件布局" class="headerlink" title="简书地址   : 控件布局"></a>简书地址   : <a href="https://www.jianshu.com/p/085ce8e59625" target="_blank" rel="noopener">控件布局</a></h4><h4 id="博客地址-控件布局"><a href="#博客地址-控件布局" class="headerlink" title="博客地址   : 控件布局"></a>博客地址   : <a href="https://chengyangli.github.io/2018/02/24/ios_sizeClass/" target="_blank" rel="noopener">控件布局</a></h4><h4 id="掘金地址-控件布局"><a href="#掘金地址-控件布局" class="headerlink" title="掘金地址   : 控件布局"></a>掘金地址   : <a href="https://juejin.im/post/5a90f91ef265da4e732ee564" target="_blank" rel="noopener">控件布局</a></h4><h4 id="—————————————–-1"><a href="#—————————————–-1" class="headerlink" title="—————————————–"></a>—————————————–</h4><h4 id="总体流程："><a href="#总体流程：" class="headerlink" title="总体流程："></a>总体流程：</h4><ul>
+<li>使用xib创建View并开启Autolayout功能</li>
+<li>xib中设置每个控件横竖屏下不同的约束</li>
+</ul>
+<h3 id="——————————————————–-2"><a href="#——————————————————–-2" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="Autolayout-Size-Class-简介"><a href="#Autolayout-Size-Class-简介" class="headerlink" title="Autolayout - Size Class 简介"></a>Autolayout - Size Class 简介</h2><blockquote>
+<p>在这里<a href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/AutolayoutPG/Size-ClassSpecificLayout.html#//apple_ref/doc/uid/TP40010853-CH26-SW1" target="_blank" rel="noopener">苹果官方文档</a>,<a href="https://medium.com/@craiggrummitt/size-classes-in-interface-builder-in-xcode-8-74f20a541195" target="_blank" rel="noopener">Size Class</a>有详细的介绍有关Autolayout-SizeClass的用法。</p>
+</blockquote>
+<blockquote>
+<p>在这里不对Autolayout的普通布局做详细介绍了，如果不会使用约束请先学会后再阅读。</p>
+</blockquote>
+<h4 id="Size-Class-基本功能"><a href="#Size-Class-基本功能" class="headerlink" title="Size Class 基本功能"></a>Size Class 基本功能</h4><ul>
+<li>(Install or uninstall)使用或者不使用一个View或control.</li>
+<li>(Install or uninstall)使用或者不使用一条约束</li>
+<li><p>设置选中属性的值(例如文字大小，布局等)</p>
+</li>
+<li><p>installed功能 : 当系统加载一个scene时，会先实例化所有的views, contorls 和 constraints(约束),然后仅仅当这些元素被installed(安装)才会显示在对应的视图结构中</p>
+</li>
+</ul>
+<blockquote>
+<p>注意：系统会保持对uninstalled元素的引用，因此该元素并没有被释放。</p>
+</blockquote>
+<h4 id="Regular-and-Compact"><a href="#Regular-and-Compact" class="headerlink" title="Regular and Compact"></a>Regular and Compact</h4><blockquote>
+<p>背景</p>
+</blockquote>
+<ul>
+<li><p>我们通常使用的布局为 wAny hAny 表示各种不同尺寸的机型均支持</p>
+</li>
+<li><p>在过去适配iPhone和iPad我们需要创建2个View当它们布局中控件差别较大，这样相当于有两个文件，但是比如控件的点击事件做的是同一个操作，这时我们相当于每改动一处代码都需要在iPhone和iPad上做出对应改变，但是随着机型大小的多变已经iOS 8引入的拆分视图控制器，以及iOS 9 引入分屏控制多任务模式使得操作十分繁琐。</p>
+</li>
+</ul>
+<blockquote>
+<p>目的</p>
+</blockquote>
+<ul>
+<li>为了简化这些操作，苹果提出了一种新的规范，比起考虑不同设备机型尺寸的布局，我们更加关注两种类型的宽度(compact and regular) 以及两种类型的高度(compact and regular).称他们为size classes.</li>
+</ul>
+<h5 id="以下为各种机型对应的Size-Class，我们可依据此对不同机型及横竖屏做适配"><a href="#以下为各种机型对应的Size-Class，我们可依据此对不同机型及横竖屏做适配" class="headerlink" title="以下为各种机型对应的Size Class，我们可依据此对不同机型及横竖屏做适配"></a>以下为各种机型对应的Size Class，我们可依据此对不同机型及横竖屏做适配</h5><p><img src="http://upload-images.jianshu.io/upload_images/5086522-d4ff517d39a81c50.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Size-Class.png"></p>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ul>
+<li>在横屏状态下，iPhone(除了Plus)仍然被当成compact widths.</li>
+<li>所有的iPad在横屏或竖屏模式中都被当成regular widths and heights，这也就意味着<br>iPad方向改变不会触发size class.</li>
+</ul>
+<blockquote>
+<p>Size Class 不是约束和自动布局的代替品，而是让它们更好的一起工作。</p>
+<ul>
+<li>调整Views视图或重新定位</li>
+<li>字体和颜色能够改变</li>
+<li>约束能够使用或者不使用(called installed and uninstalled)</li>
+<li>Views 能选择添加或移除 (also called installed and uninstalled).</li>
+</ul>
+</blockquote>
+<h3 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h3><h5 id="1-在xib中打开使用Autolayout功能"><a href="#1-在xib中打开使用Autolayout功能" class="headerlink" title="1. 在xib中打开使用Autolayout功能"></a>1. 在xib中打开使用Autolayout功能</h5><p><img src="http://upload-images.jianshu.io/upload_images/5086522-29026bb563bd1f2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="openAutoLayout.png"></p>
+<h5 id="2-使用Autolayout-设置xib中控件的布局"><a href="#2-使用Autolayout-设置xib中控件的布局" class="headerlink" title="2. 使用Autolayout 设置xib中控件的布局"></a>2. 使用Autolayout 设置xib中控件的布局</h5><ul>
+<li>以横竖屏为例，先添加横屏状态下Hello Label的一条约束，如图所示</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-cb2c6107d94ecfc5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hello_landscape.png"></p>
+<ul>
+<li>在添加完约束后默认是所有状态都支持此约束，则竖屏状态下默认仍遵守此规则，竖屏状态如图所示。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-abcf0c680122dd81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hello_portraitDefault.png"></p>
+<ul>
+<li>因此我们首先要将横屏状态的所有约束依次设置为只有横屏状态支持，而竖屏不支持，则按照图中所示操作即可。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-0922b50659cf243f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="onlyLandscapeSupport.png"></p>
+<ul>
+<li>然后再切换到竖屏状态重新添加竖屏状态需要的约束并设置每一条约束为仅竖屏状态支持。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-afb5473520ed0065.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="onlyPortrait.png"></p>
+<h3 id="注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究"><a href="#注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究" class="headerlink" title="注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究"></a>注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究</h3><h4 id="补充"><a href="#补充" class="headerlink" title="补充 :"></a>补充 :</h4><h4 id="1-为同一条约束赋不同的值"><a href="#1-为同一条约束赋不同的值" class="headerlink" title="1.为同一条约束赋不同的值"></a>1.为同一条约束赋不同的值</h4><p><img src="http://upload-images.jianshu.io/upload_images/5086522-f079de5171faba58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="DiffValue.png"></p>
+<h4 id="2-同一控件不同状态下的颜色，阴影，隐藏状态等等"><a href="#2-同一控件不同状态下的颜色，阴影，隐藏状态等等" class="headerlink" title="2.同一控件不同状态下的颜色，阴影，隐藏状态等等"></a>2.同一控件不同状态下的颜色，阴影，隐藏状态等等</h4><p><img src="http://upload-images.jianshu.io/upload_images/5086522-9210db386e5243e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="portraitOther.png"></p>
+<h4 id="参考文章：苹果官方文档，Size-Class"><a href="#参考文章：苹果官方文档，Size-Class" class="headerlink" title="参考文章：苹果官方文档，Size Class"></a>参考文章：<a href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/AutolayoutPG/Size-ClassSpecificLayout.html#//apple_ref/doc/uid/TP40010853-CH26-SW1" target="_blank" rel="noopener">苹果官方文档</a>，<a href="https://medium.com/@craiggrummitt/size-classes-in-interface-builder-in-xcode-8-74f20a541195" target="_blank" rel="noopener">Size Class</a></h4>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/02/24/ios_sizeClass/" data-id="cjndxgpxj0007vvue7dzwmjnu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SizeClass/">SizeClass</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/02/24/deviceOrientation/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/23/codec/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">硬件编码相关知识(H264,H265)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AAC/">AAC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/App-extension/">App extension</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Audio/">Audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioQueue/">AudioQueue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioUnit/">AudioUnit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera/">Camera</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CaptureSession/">CaptureSession</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DB/">DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Encoder/">Encoder</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H264/">H264</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H265/">H265</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HEVC/">HEVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Masonry/">Masonry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyEclipse/">MyEclipse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PCM/">PCM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rotate/">Rotate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SizeClass/">SizeClass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TableViewGroup/">TableViewGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VPN/">VPN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crop/">crop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS-API/">iOS API</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sampleBuffer/">sampleBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/video/">video</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yuv/">yuv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/传值/">传值</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/富文本/">富文本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小东邪/">小东邪</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机/">相机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组成结构/">组成结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/队列/">队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音视频/">音视频</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音量柱/">音量柱</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/App-extension/" style="font-size: 10px;">App extension</a> <a href="/tags/Audio/" style="font-size: 10px;">Audio</a> <a href="/tags/AudioQueue/" style="font-size: 10px;">AudioQueue</a> <a href="/tags/AudioUnit/" style="font-size: 10px;">AudioUnit</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Camera/" style="font-size: 10px;">Camera</a> <a href="/tags/CaptureSession/" style="font-size: 10px;">CaptureSession</a> <a href="/tags/DB/" style="font-size: 10px;">DB</a> <a href="/tags/Data-Structure/" style="font-size: 10px;">Data Structure</a> <a href="/tags/Encoder/" style="font-size: 10px;">Encoder</a> <a href="/tags/H264/" style="font-size: 16.67px;">H264</a> <a href="/tags/H265/" style="font-size: 10px;">H265</a> <a href="/tags/HEVC/" style="font-size: 13.33px;">HEVC</a> <a href="/tags/Masonry/" style="font-size: 10px;">Masonry</a> <a href="/tags/MyEclipse/" style="font-size: 10px;">MyEclipse</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Orientation/" style="font-size: 10px;">Orientation</a> <a href="/tags/PCM/" style="font-size: 10px;">PCM</a> <a href="/tags/Rotate/" style="font-size: 10px;">Rotate</a> <a href="/tags/SizeClass/" style="font-size: 10px;">SizeClass</a> <a href="/tags/TableViewGroup/" style="font-size: 10px;">TableViewGroup</a> <a href="/tags/VPN/" style="font-size: 10px;">VPN</a> <a href="/tags/crop/" style="font-size: 10px;">crop</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/iOS-API/" style="font-size: 10px;">iOS API</a> <a href="/tags/ios/" style="font-size: 13.33px;">ios</a> <a href="/tags/sampleBuffer/" style="font-size: 10px;">sampleBuffer</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/video/" style="font-size: 10px;">video</a> <a href="/tags/yuv/" style="font-size: 10px;">yuv</a> <a href="/tags/传值/" style="font-size: 10px;">传值</a> <a href="/tags/富文本/" style="font-size: 10px;">富文本</a> <a href="/tags/小东邪/" style="font-size: 10px;">小东邪</a> <a href="/tags/相机/" style="font-size: 10px;">相机</a> <a href="/tags/组成结构/" style="font-size: 10px;">组成结构</a> <a href="/tags/队列/" style="font-size: 10px;">队列</a> <a href="/tags/音视频/" style="font-size: 10px;">音视频</a> <a href="/tags/音量柱/" style="font-size: 10px;">音量柱</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/10/18/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/23/20180623_vpn_extension/">App extension实战 - Personal VPN 连接并捕获packet</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/25/yuv/">What is YUV ?</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/24/ios_cacheQueue/">利用C++ 设计缓存队列实现高效传输相机数据</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/24/deviceOrientation/">iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

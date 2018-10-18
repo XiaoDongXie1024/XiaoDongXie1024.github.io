@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>iOS 音量柱的实现(mic 采集的声音DB反映成音量柱) | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文：APP 将麦克风采集到的声音(Audio Queue / Audio Unit) 通过公式转换成DB然后在界面中显示出来可实时检测DB变化。">
+<meta name="keywords" content="音量柱,DB,iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 音量柱的实现(mic 采集的声音DB反映成音量柱)">
+<meta property="og:url" content="http://yoursite.com/2018/02/23/audioPillar/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文：APP 将麦克风采集到的声音(Audio Queue / Audio Unit) 通过公式转换成DB然后在界面中显示出来可实时检测DB变化。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-7eb11d947a921a1b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-02-23T10:08:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 音量柱的实现(mic 采集的声音DB反映成音量柱)">
+<meta name="twitter:description" content="本文：APP 将麦克风采集到的声音(Audio Queue / Audio Unit) 通过公式转换成DB然后在界面中显示出来可实时检测DB变化。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-7eb11d947a921a1b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-audioPillar" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/23/audioPillar/" class="article-date">
+  <time datetime="2018-02-23T10:08:26.000Z" itemprop="datePublished">2018-02-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS 音量柱的实现(mic 采集的声音DB反映成音量柱)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><excerpt in="" index="" |="" 首页摘要=""></excerpt></p>
+<ul>
+<li>本文：APP 将麦克风采集到的声音(Audio Queue / Audio Unit) 通过公式转换成DB然后在界面中显示出来可实时检测DB变化。<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+</the></li>
+</ul>
+<h3 id="需求-APP-将麦克风采集到的声音-Audio-Queue-Audio-Unit-通过公式转换成DB然后在界面中显示出来可实时检测DB变化。"><a href="#需求-APP-将麦克风采集到的声音-Audio-Queue-Audio-Unit-通过公式转换成DB然后在界面中显示出来可实时检测DB变化。" class="headerlink" title="需求 : APP 将麦克风采集到的声音(Audio Queue / Audio Unit) 通过公式转换成DB然后在界面中显示出来可实时检测DB变化。"></a>需求 : APP 将麦克风采集到的声音(Audio Queue / Audio Unit) 通过公式转换成DB然后在界面中显示出来可实时检测DB变化。</h3><h3 id="流程："><a href="#流程：" class="headerlink" title="流程："></a>流程：</h3><ul>
+<li>配置Audio 初始化参数，必须使用Audio Queue 或 Audio Unit<br>采集声音。</li>
+<li>在Audio Queue 或 Audio Unit 采集声音的回调中将声音数据转为DB。</li>
+<li>将拿到每一帧声音的DB值传给主控制器的UI以反映声音的变化</li>
+</ul>
+<p>最终的效果如下，黄色柱形会反映声音DB的变化：<br><img src="http://upload-images.jianshu.io/upload_images/5086522-7eb11d947a921a1b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="音量柱的实现"></p>
+<h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="GitHub地址-附代码-音量柱的实现"><a href="#GitHub地址-附代码-音量柱的实现" class="headerlink" title="GitHub地址(附代码) : 音量柱的实现"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/XDXPCMToAACDemo" target="_blank" rel="noopener">音量柱的实现</a></h4><h4 id="简书地址-音量柱的实现"><a href="#简书地址-音量柱的实现" class="headerlink" title="简书地址     : 音量柱的实现"></a>简书地址     : <a href="http://www.jianshu.com/p/2a7c8d5438db" target="_blank" rel="noopener">音量柱的实现</a></h4><h4 id="博客地址-音量柱的实现"><a href="#博客地址-音量柱的实现" class="headerlink" title="博客地址     : 音量柱的实现"></a>博客地址     : <a href="https://chengyangli.github.io/2017/11/20/audioPillar/" target="_blank" rel="noopener">音量柱的实现</a></h4><h4 id="掘金地址-音量柱的实现"><a href="#掘金地址-音量柱的实现" class="headerlink" title="掘金地址     : 音量柱的实现"></a>掘金地址     : <a href="https://juejin.im/post/5a8fe7156fb9a063342683b8" target="_blank" rel="noopener">音量柱的实现</a></h4><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
+<li>经过测试如果使用Audio Unit的方式采集声音， 由于设置的声音级别是<code>audioUnit.componentSubType = kAudioUnitSubType_VoiceProcessingIO;</code> 而采集到的声音数据从512开始变得不正常，数据格外大，非正常范围数据，所以我们从512开始不处理后面的数据。下文有具体说明</li>
+<li>如果是采用Audio Queue计算的数据则不需要额外处理</li>
+</ul>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h5 id="1-初始化Audio-Queue-Audio-Unit-采集声音，这里不做说明，如有问题可参考Audio-Queue-Audio-Unit-采集声音"><a href="#1-初始化Audio-Queue-Audio-Unit-采集声音，这里不做说明，如有问题可参考Audio-Queue-Audio-Unit-采集声音" class="headerlink" title="1.初始化Audio Queue / Audio Unit 采集声音，这里不做说明，如有问题可参考Audio Queue/ Audio Unit 采集声音"></a>1.初始化Audio Queue / Audio Unit 采集声音，这里不做说明，如有问题可参考<a href="http://www.jianshu.com/p/e2d072b9e4d8" target="_blank" rel="noopener">Audio Queue/ Audio Unit 采集声音</a></h5><h5 id="2-在采集声音回调中将声音数据转为声音的DB值。"><a href="#2-在采集声音回调中将声音数据转为声音的DB值。" class="headerlink" title="2.在采集声音回调中将声音数据转为声音的DB值。"></a>2.在采集声音回调中将声音数据转为声音的DB值。</h5><p>以Audio Unit 为例，在回调中处理如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - AudioUnit</span><br><span class="line">static OSStatus RecordCallback(void *inRefCon,</span><br><span class="line">AudioUnitRenderActionFlags *ioActionFlags,</span><br><span class="line">const AudioTimeStamp *inTimeStamp,</span><br><span class="line">UInt32 inBusNumber,</span><br><span class="line">UInt32 inNumberFrames,</span><br><span class="line">AudioBufferList *ioData) &#123;</span><br><span class="line"></span><br><span class="line">XDXRecorder *recorder = (XDXRecorder *)inRefCon;</span><br><span class="line"></span><br><span class="line">// 将回调数据传给_buffList</span><br><span class="line">AudioUnitRender(recorder-&gt;_audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, recorder-&gt;_buffList);</span><br><span class="line"></span><br><span class="line">void    *bufferData = recorder-&gt;_buffList-&gt;mBuffers[0].mData;</span><br><span class="line">UInt32   bufferSize = recorder-&gt;_buffList-&gt;mBuffers[0].mDataByteSize;</span><br><span class="line">//    printf(&quot;Audio Recoder Render dataSize : %d \n&quot;,bufferSize);</span><br><span class="line"></span><br><span class="line">float channelValue[2];</span><br><span class="line">caculate_bm_db(bufferData, bufferSize, 0, k_Mono, channelValue,true);</span><br><span class="line">recorder.volLDB = channelValue[0];</span><br><span class="line">recorder.volRDB = channelValue[1];</span><br></pre></td></tr></table></figure></p>
+<p>根据声音的计算公式<code>dB=20∗log(A)→A=pow(10,(db/20.0))</code>，我们对回调中传来的声音数据进行处理，这里需要注意的是，经过测试如果使用Audio Unit的方式采集声音， 由于设置的声音级别是<code>audioUnit.componentSubType = kAudioUnitSubType_VoiceProcessingIO;</code> 而采集到的声音数据从512开始变得不正常，数据格外大，非正常范围数据，所以我们从512开始不处理后面的数据，具体原因可能是因为Audio Unit的kAudioUnitSubType_VoiceProcessingIO分类做了一些声音的消除回声等优化导致数据和正常数据略有不同，在AudioQueue中并不存在这样的情况。</p>
+<p>我们的APP中使用的是单声道，遍历声音数据，如下我们通过遍历每一帧完整的声音数据(audioData)找到其中最大的值(max)来对它进行处理,处理后的数据按照公式可得到一个声音的DB值(-40 - 0)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">void caculate_bm_db(void * const data ,size_t length ,int64_t timestamp, ChannelCount channelModel,float channelValue[2],bool isAudioUnit) &#123;</span><br><span class="line">int16_t *audioData = (int16_t *)data;</span><br><span class="line"></span><br><span class="line">if (channelModel == k_Mono) &#123;   // 单声道</span><br><span class="line">int     sDbChnnel     = 0;</span><br><span class="line">int16_t curr          = 0;</span><br><span class="line">int16_t max           = 0;</span><br><span class="line">size_t traversalTimes = 0;</span><br><span class="line"></span><br><span class="line">if (isAudioUnit) &#123;</span><br><span class="line">traversalTimes = length/2;// 由于512后面的数据显示异常  需要全部忽略掉</span><br><span class="line">&#125;else&#123;</span><br><span class="line">traversalTimes = length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">for(int i = 0; i&lt; traversalTimes; i++) &#123;</span><br><span class="line">curr = *(audioData+i);</span><br><span class="line">if(curr &gt; max) max = curr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(max &lt; 1) &#123;</span><br><span class="line">sDbChnnel = -100;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">sDbChnnel = (20*log10((0.0 + max)/32767) - 0.5);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">channelValue[0] = channelValue[1] = sDbChnnel;</span><br><span class="line"></span><br><span class="line">&#125; else if (channelModel == k_Stereo)&#123;   // 立体声</span><br><span class="line">int sDbChA = 0;</span><br><span class="line">int sDbChB = 0;</span><br><span class="line"></span><br><span class="line">int16_t nCurr[2] = &#123;0&#125;;</span><br><span class="line">int16_t nMax[2] = &#123;0&#125;;</span><br><span class="line"></span><br><span class="line">for(unsigned int i=0; i&lt;length/2; i++) &#123;</span><br><span class="line">nCurr[0] = audioData[i];</span><br><span class="line">nCurr[1] = audioData[i + 1];</span><br><span class="line"></span><br><span class="line">if(nMax[0] &lt; nCurr[0]) nMax[0] = nCurr[0];</span><br><span class="line"></span><br><span class="line">if(nMax[1] &lt; nCurr[1]) nMax[1] = nCurr[0];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(nMax[0] &lt; 1) &#123;</span><br><span class="line">sDbChA = -100;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">sDbChA = (20*log10((0.0 + nMax[0])/32767) - 0.5);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(nMax[1] &lt; 1) &#123;</span><br><span class="line">sDbChB = -100;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">sDbChB = (20*log10((0.0 + nMax[1])/32767) - 0.5);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">channelValue[0] = sDbChA;</span><br><span class="line">channelValue[1] = sDbChB;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="3-将拿到的DB值反映到UI界面上"><a href="#3-将拿到的DB值反映到UI界面上" class="headerlink" title="3.将拿到的DB值反映到UI界面上"></a>3.将拿到的DB值反映到UI界面上</h5><ul>
+<li>自定义音量柱的View类</li>
+</ul>
+<p>我们在这里使用CALayer来实现音量柱的变化，使用CALayer的好处是其底层自动做了动画的处理，所以当我们连续对其设置不同的DB值在UI上变化是连续的。具体UI的处理可在<code>XDXVolumeView.m</code>中查看。</p>
+<ul>
+<li>在主控制器中开启定时器设置每隔0.25s更新一次UI，这样可以保证音量柱连续变化</li>
+<li>注意：我们将拿到的声音DB值(-40 - 0)转为0 - 40方便UI的显示</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/02/23/audioPillar/" data-id="cjndxgpwy0000vvue0zg3mm59" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DB/">DB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/音量柱/">音量柱</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/02/23/codec/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          硬件编码相关知识(H264,H265)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/23/h264DataStructure/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">H.264 Data Structure (H.264码流结构)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AAC/">AAC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/App-extension/">App extension</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Audio/">Audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioQueue/">AudioQueue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioUnit/">AudioUnit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera/">Camera</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CaptureSession/">CaptureSession</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DB/">DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Encoder/">Encoder</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H264/">H264</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H265/">H265</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HEVC/">HEVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Masonry/">Masonry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyEclipse/">MyEclipse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PCM/">PCM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rotate/">Rotate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SizeClass/">SizeClass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TableViewGroup/">TableViewGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VPN/">VPN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crop/">crop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS-API/">iOS API</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sampleBuffer/">sampleBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/video/">video</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yuv/">yuv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/传值/">传值</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/富文本/">富文本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小东邪/">小东邪</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机/">相机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组成结构/">组成结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/队列/">队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音视频/">音视频</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音量柱/">音量柱</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/App-extension/" style="font-size: 10px;">App extension</a> <a href="/tags/Audio/" style="font-size: 10px;">Audio</a> <a href="/tags/AudioQueue/" style="font-size: 10px;">AudioQueue</a> <a href="/tags/AudioUnit/" style="font-size: 10px;">AudioUnit</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Camera/" style="font-size: 10px;">Camera</a> <a href="/tags/CaptureSession/" style="font-size: 10px;">CaptureSession</a> <a href="/tags/DB/" style="font-size: 10px;">DB</a> <a href="/tags/Data-Structure/" style="font-size: 10px;">Data Structure</a> <a href="/tags/Encoder/" style="font-size: 10px;">Encoder</a> <a href="/tags/H264/" style="font-size: 16.67px;">H264</a> <a href="/tags/H265/" style="font-size: 10px;">H265</a> <a href="/tags/HEVC/" style="font-size: 13.33px;">HEVC</a> <a href="/tags/Masonry/" style="font-size: 10px;">Masonry</a> <a href="/tags/MyEclipse/" style="font-size: 10px;">MyEclipse</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Orientation/" style="font-size: 10px;">Orientation</a> <a href="/tags/PCM/" style="font-size: 10px;">PCM</a> <a href="/tags/Rotate/" style="font-size: 10px;">Rotate</a> <a href="/tags/SizeClass/" style="font-size: 10px;">SizeClass</a> <a href="/tags/TableViewGroup/" style="font-size: 10px;">TableViewGroup</a> <a href="/tags/VPN/" style="font-size: 10px;">VPN</a> <a href="/tags/crop/" style="font-size: 10px;">crop</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/iOS-API/" style="font-size: 10px;">iOS API</a> <a href="/tags/ios/" style="font-size: 13.33px;">ios</a> <a href="/tags/sampleBuffer/" style="font-size: 10px;">sampleBuffer</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/video/" style="font-size: 10px;">video</a> <a href="/tags/yuv/" style="font-size: 10px;">yuv</a> <a href="/tags/传值/" style="font-size: 10px;">传值</a> <a href="/tags/富文本/" style="font-size: 10px;">富文本</a> <a href="/tags/小东邪/" style="font-size: 10px;">小东邪</a> <a href="/tags/相机/" style="font-size: 10px;">相机</a> <a href="/tags/组成结构/" style="font-size: 10px;">组成结构</a> <a href="/tags/队列/" style="font-size: 10px;">队列</a> <a href="/tags/音视频/" style="font-size: 10px;">音视频</a> <a href="/tags/音量柱/" style="font-size: 10px;">音量柱</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/10/18/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/23/20180623_vpn_extension/">App extension实战 - Personal VPN 连接并捕获packet</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/25/yuv/">What is YUV ?</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/24/ios_cacheQueue/">利用C++ 设计缓存队列实现高效传输相机数据</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/24/deviceOrientation/">iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

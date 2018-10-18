@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>利用C++ 设计缓存队列实现高效传输相机数据 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作(Crop, Scale, 美颜等)但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。">
+<meta name="keywords" content="iOS,C++,相机,音视频,队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用C++ 设计缓存队列实现高效传输相机数据">
+<meta property="og:url" content="http://yoursite.com/2018/02/24/ios_cacheQueue/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作(Crop, Scale, 美颜等)但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-c9f1f354c1654de7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-02-24T09:41:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用C++ 设计缓存队列实现高效传输相机数据">
+<meta name="twitter:description" content="在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作(Crop, Scale, 美颜等)但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-c9f1f354c1654de7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ios_cacheQueue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/24/ios_cacheQueue/" class="article-date">
+  <time datetime="2018-02-24T09:41:22.000Z" itemprop="datePublished">2018-02-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      利用C++ 设计缓存队列实现高效传输相机数据
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
+<ul>
+<li>在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作(Crop, Scale, 美颜等)但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。<a id="more"></a><the rest="" of="" contents="" |="" 余下全文="">
+
+</the></li>
+</ul>
+<h2 id="利用C-设计缓存队列实现高效传输相机数据"><a href="#利用C-设计缓存队列实现高效传输相机数据" class="headerlink" title="利用C++ 设计缓存队列实现高效传输相机数据"></a>利用C++ 设计缓存队列实现高效传输相机数据</h2><h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h2><h5 id="在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作-Crop-Scale-美颜等-但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。"><a href="#在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作-Crop-Scale-美颜等-但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。" class="headerlink" title="在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作(Crop, Scale, 美颜等)但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。"></a>在做例如直播功能，有时我们可能要对相机捕获的图像数据做一些额外操作(Crop, Scale, 美颜等)但由于某些操作算法本身很耗时，以fps为30为例，如果某一帧处理较慢将可能会掉帧，所以设计一个缓冲队列先将捕获到的相机数据放入空闲队列中，随后程序中如果需要使用到相机数据则从工作队列中取出需要的数据。</h5><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="适用情况"><a href="#适用情况" class="headerlink" title="适用情况"></a>适用情况</h4><ul>
+<li>在相机回调中对每一帧图像进行耗时操作(Crop, Scale…)</li>
+<li>提升处理图像的效率</li>
+<li>高效处理其他大数据量工作</li>
+</ul>
+<h4 id="注意：本例通过设计使用C-队列来实现相机SampleBuffer的缓存工作，需要使用Objective-C-与-C-混编。"><a href="#注意：本例通过设计使用C-队列来实现相机SampleBuffer的缓存工作，需要使用Objective-C-与-C-混编。" class="headerlink" title="注意：本例通过设计使用C++ 队列来实现相机SampleBuffer的缓存工作，需要使用Objective-C 与 C++混编。"></a>注意：本例通过设计使用C++ 队列来实现相机SampleBuffer的缓存工作，需要使用Objective-C 与 C++混编。</h4><h3 id="——————————————————–-2"><a href="#——————————————————–-2" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="GitHub地址-附代码-C-缓存队列"><a href="#GitHub地址-附代码-C-缓存队列" class="headerlink" title="GitHub地址(附代码) : C++缓存队列"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/WorkQueue_FreeQueue_HandleSampleBuffer" target="_blank" rel="noopener">C++缓存队列</a></h4><h4 id="简书地址-C-缓存队列"><a href="#简书地址-C-缓存队列" class="headerlink" title="简书地址   : C++缓存队列"></a>简书地址   : <a href="https://www.jianshu.com/p/d6cd32acdc71" target="_blank" rel="noopener">C++缓存队列</a></h4><h4 id="博客地址-C-缓存队列"><a href="#博客地址-C-缓存队列" class="headerlink" title="博客地址   : C++缓存队列"></a>博客地址   : <a href="https://chengyangli.github.io/2018/02/24/ios_cacheQueue/" target="_blank" rel="noopener">C++缓存队列</a></h4><h4 id="掘金地址-C-缓存队列"><a href="#掘金地址-C-缓存队列" class="headerlink" title="掘金地址   : C++缓存队列"></a>掘金地址   : <a href="https://juejin.im/post/5a91315c6fb9a063395c8944" target="_blank" rel="noopener">C++缓存队列</a></h4><h3 id="——————————————————–-3"><a href="#——————————————————–-3" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="总体流程："><a href="#总体流程：" class="headerlink" title="总体流程："></a>总体流程：</h2><ul>
+<li>设置始终横屏，初始化相机参数设置代理</li>
+<li>在捕捉相机数据的回调中将samplebuffer放入空闲队列</li>
+<li>开启一条线程每隔10ms从工作队列中取出samplebuffer可在此对数据处理，处理完后将结点放回空闲队列</li>
+</ul>
+<h3 id="——————————————————–-4"><a href="#——————————————————–-4" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="队列实现及解析"><a href="#队列实现及解析" class="headerlink" title="队列实现及解析"></a>队列实现及解析</h2><h5 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理"></a>1.原理</h5><p>初始化固定数量的结点装入空闲队列，当相机回调产生数据后，从空闲队列头部取出一个结点将产生的每一帧图像buffer装入，然后入队到工作队列的尾部，处理buffer的线程从工作队列的头部取出一个结点中的Buffer进行处理，处理完成后会将装有次buffer的结点中data置空并重新放入空闲队列的头部以供下次使用。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-c9f1f354c1654de7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="原理.png"></p>
+<blockquote>
+<p>解析</p>
+<ul>
+<li>我们将空闲队列设计为头进头出，影响不大，因为我们每次只需要从空闲队列中取出一个空结点以供我们装入相机数据，所以没必要按照尾进头出的方式保证结点的顺序。</li>
+<li>我们将工作队列设计为尾进头出，因为我们要确保从相机中捕获的数据是连续的，以便后期我们播放出来的画面也是连续的，所以工作队列必须保证尾进头出。</li>
+<li>这样做我们相当于实现了用空闲队列当做缓冲队列，在正常情况下(fps=30,即每秒产生30帧数据，大约每33ms产生一帧数据)，如果在33ms内对数据进行的操作可以正常完成，则工作队列会保持始终为0或1，但是如果长期工作或遇到某一帧数据处理较慢的情况(即处理时间大于33ms)则工作队列的长度会增加，而正因为我们使用了这样的队列会保护那一帧处理慢的数据在仍然能够正常处理完。</li>
+</ul>
+</blockquote>
+<h5 id="注意：这种情景仅用于短时间内仅有几帧数据处理较慢，如果比如1s内有20几帧数据都处理很慢则可能导致工作队列太长，则提现不出此队列的优势。"><a href="#注意：这种情景仅用于短时间内仅有几帧数据处理较慢，如果比如1s内有20几帧数据都处理很慢则可能导致工作队列太长，则提现不出此队列的优势。" class="headerlink" title="注意：这种情景仅用于短时间内仅有几帧数据处理较慢，如果比如1s内有20几帧数据都处理很慢则可能导致工作队列太长，则提现不出此队列的优势。"></a>注意：这种情景仅用于短时间内仅有几帧数据处理较慢，如果比如1s内有20几帧数据都处理很慢则可能导致工作队列太长，则提现不出此队列的优势。</h5><h5 id="2-结构"><a href="#2-结构" class="headerlink" title="2.结构"></a>2.结构</h5><ul>
+<li>结点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct XDXCustomQueueNode &#123;</span><br><span class="line">    void    *data;</span><br><span class="line">    size_t  size;  // data size</span><br><span class="line">    long    index;</span><br><span class="line">    struct  XDXCustomQueueNode *next;</span><br><span class="line">&#125; XDXCustomQueueNode;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>结点中使用void *类型的data存放我们需要的sampleBuffer,使用index记录当前装入结点的sampleBuffer的索引，以便我们在取出结点时比较是否是按照顺序取出，结点中还装着同类型下一个结点的元素。</p>
+<ul>
+<li>队列类型<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct XDXCustomQueue &#123;</span><br><span class="line">    int size;</span><br><span class="line">    XDXCustomQueueType type;</span><br><span class="line">    XDXCustomQueueNode *front;</span><br><span class="line">    XDXCustomQueueNode *rear;</span><br><span class="line">&#125; XDXCustomQueue;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>队列中即为我们装载的结点数量，因为我们采用的是预先分配固定内存，所以工作队列与空闲队列的和始终不变(因为结点中的元素不在工作队列就在空闲队列)</p>
+<ul>
+<li>类的设计<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class XDXCustomQueueProcess &#123;</span><br><span class="line">    </span><br><span class="line">private:</span><br><span class="line">    pthread_mutex_t free_queue_mutex;</span><br><span class="line">    pthread_mutex_t work_queue_mutex;</span><br><span class="line">    </span><br><span class="line">public:</span><br><span class="line">    XDXCustomQueue *m_free_queue;</span><br><span class="line">    XDXCustomQueue *m_work_queue;</span><br><span class="line">    </span><br><span class="line">    XDXCustomQueueProcess();</span><br><span class="line">    ~XDXCustomQueueProcess();</span><br><span class="line">    </span><br><span class="line">    // Queue Operation</span><br><span class="line">    void InitQueue(XDXCustomQueue *queue,</span><br><span class="line">                   XDXCustomQueueType type);</span><br><span class="line">    void EnQueue(XDXCustomQueue *queue,</span><br><span class="line">                 XDXCustomQueueNode *node);</span><br><span class="line">    XDXCustomQueueNode *DeQueue(XDXCustomQueue *queue);</span><br><span class="line">    void ClearXDXCustomQueue(XDXCustomQueue *queue);</span><br><span class="line">    void FreeNode(XDXCustomQueueNode* node);</span><br><span class="line">    void ResetFreeQueue(XDXCustomQueue *workQueue, XDXCustomQueue *FreeQueue);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>因为涉及到异步操作，所以需要对结点的操作加锁，使用时需要先初始化队列，然后定义了入队，出队，清除队列中元素，释放结点，重置空闲队列等操作。</p>
+<h5 id="3-实现"><a href="#3-实现" class="headerlink" title="3.实现"></a>3.实现</h5><ul>
+<li>初始化队列<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">const int XDXCustomQueueSize = 3;</span><br><span class="line">XDXCustomQueueProcess::XDXCustomQueueProcess() &#123;</span><br><span class="line">    m_free_queue = (XDXCustomQueue *)malloc(sizeof(struct XDXCustomQueue));</span><br><span class="line">    m_work_queue = (XDXCustomQueue *)malloc(sizeof(struct XDXCustomQueue));</span><br><span class="line">    </span><br><span class="line">    InitQueue(m_free_queue, XDXCustomFreeQueue);</span><br><span class="line">    InitQueue(m_work_queue, XDXCustomWorkQueue);</span><br><span class="line">    </span><br><span class="line">    for (int i = 0; i &lt; XDXCustomQueueSize; i++) &#123;</span><br><span class="line">        XDXCustomQueueNode *node = (XDXCustomQueueNode *)malloc(sizeof(struct XDXCustomQueueNode));</span><br><span class="line">        node-&gt;data = NULL;</span><br><span class="line">        node-&gt;size = 0;</span><br><span class="line">        node-&gt;index= 0;</span><br><span class="line">        this-&gt;EnQueue(m_free_queue, node);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_init(&amp;free_queue_mutex, NULL);</span><br><span class="line">    pthread_mutex_init(&amp;work_queue_mutex, NULL);</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;XDXCustomQueueProcess Init finish !&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>假设空闲队列结点总数为3.首先为工作队列与空闲队列分配内存，其次对其分别进行初始化操作，具体过程可参考Demo,然后根据结点总数来为每个结点初始化分配内存，并将分配好内存的结点入队到空闲队列中。</p>
+<h5 id="注意：结点的重用，我们仅仅初始化几个固定数量的结点，因为处理数据量较大，没有必要让程序始终做malloc与free，为了优化我们这里的队列相当于一个静态链表，即结点的复用，因为当结点在工作队列中使用完成后会将其中的数据置空并重新入队到空闲队列中，所以结点的总数始终保持不变。"><a href="#注意：结点的重用，我们仅仅初始化几个固定数量的结点，因为处理数据量较大，没有必要让程序始终做malloc与free，为了优化我们这里的队列相当于一个静态链表，即结点的复用，因为当结点在工作队列中使用完成后会将其中的数据置空并重新入队到空闲队列中，所以结点的总数始终保持不变。" class="headerlink" title="注意：结点的重用，我们仅仅初始化几个固定数量的结点，因为处理数据量较大，没有必要让程序始终做malloc与free，为了优化我们这里的队列相当于一个静态链表，即结点的复用，因为当结点在工作队列中使用完成后会将其中的数据置空并重新入队到空闲队列中，所以结点的总数始终保持不变。"></a>注意：结点的重用，我们仅仅初始化几个固定数量的结点，因为处理数据量较大，没有必要让程序始终做malloc与free，为了优化我们这里的队列相当于一个静态链表，即结点的复用，因为当结点在工作队列中使用完成后会将其中的数据置空并重新入队到空闲队列中，所以结点的总数始终保持不变。</h5><ul>
+<li>入队Enqueue<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">void XDXCustomQueueProcess::EnQueue(XDXCustomQueue *queue, XDXCustomQueueNode *node) &#123;</span><br><span class="line">    if (queue == NULL) &#123;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess Enqueue : current queue is NULL&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (node==NULL) &#123;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess Enqueue : current node is NULL&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    node-&gt;next = NULL;</span><br><span class="line">    </span><br><span class="line">    if (XDXCustomFreeQueue == queue-&gt;type) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;free_queue_mutex);</span><br><span class="line">        </span><br><span class="line">        if (queue-&gt;front == NULL) &#123;</span><br><span class="line">            queue-&gt;front = node;</span><br><span class="line">            queue-&gt;rear  = node;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            /*</span><br><span class="line">             // tail in,head out</span><br><span class="line">             freeQueue-&gt;rear-&gt;next = node;</span><br><span class="line">             freeQueue-&gt;rear = node;</span><br><span class="line">             */</span><br><span class="line">            </span><br><span class="line">            // head in,head out</span><br><span class="line">            node-&gt;next = queue-&gt;front;</span><br><span class="line">            queue-&gt;front = node;</span><br><span class="line">        &#125;</span><br><span class="line">        queue-&gt;size += 1;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess Enqueue : free queue size=%d&quot;,queue-&gt;size);</span><br><span class="line">        pthread_mutex_unlock(&amp;free_queue_mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (XDXCustomWorkQueue == queue-&gt;type) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;work_queue_mutex);</span><br><span class="line">        //TODO</span><br><span class="line">        static long nodeIndex = 0;</span><br><span class="line">        node-&gt;index=(++nodeIndex);</span><br><span class="line">        if (queue-&gt;front == NULL) &#123;</span><br><span class="line">            queue-&gt;front = node;</span><br><span class="line">            queue-&gt;rear  = node;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            queue-&gt;rear-&gt;next   = node;</span><br><span class="line">            queue-&gt;rear         = node;</span><br><span class="line">        &#125;</span><br><span class="line">        queue-&gt;size += 1;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess Enqueue : work queue size=%d&quot;,queue-&gt;size);</span><br><span class="line">        pthread_mutex_unlock(&amp;work_queue_mutex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如上所述，入队操作如果是空闲队列，则使用头进的方式，即始终让入队的结点在队列的头部，具体代码实现即让当前结点的next指向空闲队列的头结点，然后将当前结点变为空闲队列的头结点；如果入队操作是工作队列，则使用尾进的方式，并对结点的index赋值，以便我们在取出结点时可以打印Index是否连续，如果连续则说明入队时始终保持顺序入队。</p>
+<blockquote>
+<p>这里使用了简单的数据结构中的知识，如有不懂可上网进行简单查阅</p>
+</blockquote>
+<ul>
+<li>出队<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">XDXCustomQueueNode* XDXCustomQueueProcess::DeQueue(XDXCustomQueue *queue) &#123;</span><br><span class="line">    if (queue == NULL) &#123;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess DeQueue : current queue is NULL&quot;);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    const char *type = queue-&gt;type == XDXCustomWorkQueue ? &quot;work queue&quot; : &quot;free queue&quot;;</span><br><span class="line">    pthread_mutex_t *queue_mutex = ((queue-&gt;type == XDXCustomWorkQueue) ? &amp;work_queue_mutex : &amp;free_queue_mutex);</span><br><span class="line">    XDXCustomQueueNode *element = NULL;</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_lock(queue_mutex);</span><br><span class="line">    element = queue-&gt;front;</span><br><span class="line">    if(element == NULL) &#123;</span><br><span class="line">        pthread_mutex_unlock(queue_mutex);</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess DeQueue : The node is NULL&quot;);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    queue-&gt;front = queue-&gt;front-&gt;next;</span><br><span class="line">    queue-&gt;size -= 1;</span><br><span class="line">    pthread_mutex_unlock(queue_mutex);</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;XDXCustomQueueProcess DeQueue : %s size=%d&quot;,type,queue-&gt;size);</span><br><span class="line">    return element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>出队操作无论空闲队列还是工作队列都是从头出，即取出当前队列头结点中的数据。</p>
+<h5 id="注意：该结点为空与该结点中的数据为空不可混为一谈，如果该结点为空则说明没有从队列中取出结点，即空结点没有内存地址，而结点中的数据则为node-gt-data-在本Demo中为相机产生的每一帧sampleBuffer数据。"><a href="#注意：该结点为空与该结点中的数据为空不可混为一谈，如果该结点为空则说明没有从队列中取出结点，即空结点没有内存地址，而结点中的数据则为node-gt-data-在本Demo中为相机产生的每一帧sampleBuffer数据。" class="headerlink" title="注意：该结点为空与该结点中的数据为空不可混为一谈，如果该结点为空则说明没有从队列中取出结点，即空结点没有内存地址，而结点中的数据则为node-&gt;data,在本Demo中为相机产生的每一帧sampleBuffer数据。"></a>注意：该结点为空与该结点中的数据为空不可混为一谈，如果该结点为空则说明没有从队列中取出结点，即空结点没有内存地址，而结点中的数据则为node-&gt;data,在本Demo中为相机产生的每一帧sampleBuffer数据。</h5><ul>
+<li>重置空闲队列数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">void XDXCustomQueueProcess::ResetFreeQueue(XDXCustomQueue *workQueue, XDXCustomQueue *freeQueue) &#123;</span><br><span class="line">    if (workQueue == NULL) &#123;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess ResetFreeQueue : The WorkQueue is NULL&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (freeQueue == NULL) &#123;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess ResetFreeQueue : The FreeQueue is NULL&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    int workQueueSize = workQueue-&gt;size;</span><br><span class="line">    if (workQueueSize &gt; 0) &#123;</span><br><span class="line">        for (int i = 0; i &lt; workQueueSize; i++) &#123;</span><br><span class="line">            XDXCustomQueueNode *node = DeQueue(workQueue);</span><br><span class="line">            CFRelease(node-&gt;data);</span><br><span class="line">            node-&gt;data = NULL;</span><br><span class="line">            EnQueue(freeQueue, node);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;XDXCustomQueueProcess ResetFreeQueue : The work queue size is %d, free queue size is %d&quot;,workQueue-&gt;size, freeQueue-&gt;size);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当我们将执行一些中断操作，例如从本View跳转到其他View，或进入后台等操作，我们需要将工作队列中的结点均置空然后重新放回空闲队列，这样可以保证我们最初申请的结点还均有效可用，保证结点不会丢失。</p>
+<h3 id="——————————————————–-5"><a href="#——————————————————–-5" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><h5 id="1-初始化相机相关参数"><a href="#1-初始化相机相关参数" class="headerlink" title="1.初始化相机相关参数"></a>1.初始化相机相关参数</h5><p>常规流程，Demo中有实现，在此不复述</p>
+<h5 id="2-将samplebuffer放入空闲队列"><a href="#2-将samplebuffer放入空闲队列" class="headerlink" title="2.将samplebuffer放入空闲队列"></a>2.将samplebuffer放入空闲队列</h5><p>设置相机代理后，在 <code>- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection</code> 方法中将samplebuffer装入空闲队列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (void)addBufferToWorkQueueWithSampleBuffer:(CMSampleBufferRef)sampleBuffer &#123;</span><br><span class="line">    XDXCustomQueueNode *node = _captureBufferQueue-&gt;DeQueue(_captureBufferQueue-&gt;m_free_queue);</span><br><span class="line">    if (node == NULL) &#123;</span><br><span class="line">        NSLog(@&quot;XDXCustomQueueProcess addBufferToWorkQueueWithSampleBuffer : Data in , the node is NULL !&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    CFRetain(sampleBuffer);</span><br><span class="line">    node-&gt;data = sampleBuffer;</span><br><span class="line">    _captureBufferQueue-&gt;EnQueue(_captureBufferQueue-&gt;m_work_queue, node);</span><br><span class="line"></span><br><span class="line">    NSLog(@&quot;XDXCustomQueueProcess addBufferToWorkQueueWithSampleBuffer : Data in ,  work size = %d, free size = %d !&quot;,_captureBufferQueue-&gt;m_work_queue-&gt;size, _captureBufferQueue-&gt;m_free_queue-&gt;size);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：因为相机回调中捕捉的sampleBuffer是有生命周期的所以需要手动CFRetain一下使我们队列中的结点持有它。</p>
+</blockquote>
+<h5 id="3-开启一条线程处理队列中的Buffer"><a href="#3-开启一条线程处理队列中的Buffer" class="headerlink" title="3.开启一条线程处理队列中的Buffer"></a>3.开启一条线程处理队列中的Buffer</h5><p>使用pthread创建一条线程，每隔10ms取一次数据,我们可以在此对取到的数据进行我们想要的操作，操作完成后再将清空释放sampleBuffer再将其装入空闲队列供我们循环使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (void)handleCacheThread &#123;</span><br><span class="line">    while (true) &#123;</span><br><span class="line">        // 从队列取出在相机回调中放入队列的线程</span><br><span class="line">        XDXCustomQueueNode *node = _captureBufferQueue-&gt;DeQueue(_captureBufferQueue-&gt;m_work_queue);</span><br><span class="line">        if (node == NULL) &#123;</span><br><span class="line">            NSLog(@&quot;Crop handleCropThread : Data node is NULL&quot;);</span><br><span class="line">            usleep(10*1000);</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        CMSampleBufferRef sampleBuffer     = (CMSampleBufferRef)node-&gt;data;</span><br><span class="line">        // 打印结点的index，如果连续则说明在相机回调中放入的samplebuffer是连续的</span><br><span class="line">        NSLog(@&quot;Test index : %ld&quot;,node-&gt;index);</span><br><span class="line">        </span><br><span class="line">        /* 可在此处理从队列中拿到的Buffer，用完后记得释放内存并将结点重新放回空闲队列</span><br><span class="line">         * ........</span><br><span class="line">         */</span><br><span class="line">        </span><br><span class="line">        CFRelease(sampleBuffer);</span><br><span class="line">        node-&gt;data = NULL;</span><br><span class="line">        _captureBufferQueue-&gt;EnQueue(_captureBufferQueue-&gt;m_free_queue, node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/02/24/ios_cacheQueue/" data-id="cjndxgpyg001dvvuezirp9fo1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/相机/">相机</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/队列/">队列</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/音视频/">音视频</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/25/yuv/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          What is YUV ?
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/24/deviceOrientation/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AAC/">AAC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/App-extension/">App extension</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Audio/">Audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioQueue/">AudioQueue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AudioUnit/">AudioUnit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Camera/">Camera</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CaptureSession/">CaptureSession</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DB/">DB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Encoder/">Encoder</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H264/">H264</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H265/">H265</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HEVC/">HEVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Masonry/">Masonry</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyEclipse/">MyEclipse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PCM/">PCM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rotate/">Rotate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SizeClass/">SizeClass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TableViewGroup/">TableViewGroup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VPN/">VPN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crop/">crop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS-API/">iOS API</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios/">ios</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sampleBuffer/">sampleBuffer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/video/">video</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yuv/">yuv</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/传值/">传值</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/富文本/">富文本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小东邪/">小东邪</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机/">相机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组成结构/">组成结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/队列/">队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音视频/">音视频</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/音量柱/">音量柱</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/App-extension/" style="font-size: 10px;">App extension</a> <a href="/tags/Audio/" style="font-size: 10px;">Audio</a> <a href="/tags/AudioQueue/" style="font-size: 10px;">AudioQueue</a> <a href="/tags/AudioUnit/" style="font-size: 10px;">AudioUnit</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Camera/" style="font-size: 10px;">Camera</a> <a href="/tags/CaptureSession/" style="font-size: 10px;">CaptureSession</a> <a href="/tags/DB/" style="font-size: 10px;">DB</a> <a href="/tags/Data-Structure/" style="font-size: 10px;">Data Structure</a> <a href="/tags/Encoder/" style="font-size: 10px;">Encoder</a> <a href="/tags/H264/" style="font-size: 16.67px;">H264</a> <a href="/tags/H265/" style="font-size: 10px;">H265</a> <a href="/tags/HEVC/" style="font-size: 13.33px;">HEVC</a> <a href="/tags/Masonry/" style="font-size: 10px;">Masonry</a> <a href="/tags/MyEclipse/" style="font-size: 10px;">MyEclipse</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Orientation/" style="font-size: 10px;">Orientation</a> <a href="/tags/PCM/" style="font-size: 10px;">PCM</a> <a href="/tags/Rotate/" style="font-size: 10px;">Rotate</a> <a href="/tags/SizeClass/" style="font-size: 10px;">SizeClass</a> <a href="/tags/TableViewGroup/" style="font-size: 10px;">TableViewGroup</a> <a href="/tags/VPN/" style="font-size: 10px;">VPN</a> <a href="/tags/crop/" style="font-size: 10px;">crop</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/iOS-API/" style="font-size: 10px;">iOS API</a> <a href="/tags/ios/" style="font-size: 13.33px;">ios</a> <a href="/tags/sampleBuffer/" style="font-size: 10px;">sampleBuffer</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/video/" style="font-size: 10px;">video</a> <a href="/tags/yuv/" style="font-size: 10px;">yuv</a> <a href="/tags/传值/" style="font-size: 10px;">传值</a> <a href="/tags/富文本/" style="font-size: 10px;">富文本</a> <a href="/tags/小东邪/" style="font-size: 10px;">小东邪</a> <a href="/tags/相机/" style="font-size: 10px;">相机</a> <a href="/tags/组成结构/" style="font-size: 10px;">组成结构</a> <a href="/tags/队列/" style="font-size: 10px;">队列</a> <a href="/tags/音视频/" style="font-size: 10px;">音视频</a> <a href="/tags/音量柱/" style="font-size: 10px;">音量柱</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/10/18/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/23/20180623_vpn_extension/">App extension实战 - Personal VPN 连接并捕获packet</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/25/yuv/">What is YUV ?</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/24/ios_cacheQueue/">利用C++ 设计缓存队列实现高效传输相机数据</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/24/deviceOrientation/">iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
