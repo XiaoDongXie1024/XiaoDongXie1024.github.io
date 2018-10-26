@@ -110,13 +110,13 @@
 
 
 
-  <meta name="description" content="本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K,4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS 11 之后，iPhone 7以上的设备可以支持新的编码器H26">
-<meta name="keywords" content="H264,HEVC,H265,Encoder">
+  <meta name="description" content="本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.">
+<meta name="keywords" content="H264, H265, Encoder, HEVC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="H264,H265 Encoder">
 <meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/02/23/H264H265Encoder/index.html">
 <meta property="og:site_name" content="小东邪 Show Time">
-<meta property="og:description" content="本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K,4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS 11 之后，iPhone 7以上的设备可以支持新的编码器H26">
+<meta property="og:description" content="本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Zs.FQtSqK3HEAV0KwhBWsd11gDVDBOGc6C8nEvLWvbI!/r/dLEAAAAAAAAA">
 <meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/0laaTVE7fYiJysspAOooBZ3fCdWlUxVfVNz66tO2jv4!/r/dBABAAAAAAAA">
@@ -126,10 +126,10 @@
 <meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/6LWUuXOk2xoelipoT3Lbu6qJQDTfOemFXg55YP1dh.U!/r/dDwBAAAAAAAA">
 <meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/dLoOAI2WwVn2yGsmI0W3nqkRQplUQzK0w5gl99vUYkU!/r/dOAAAAAAAAAA">
 <meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/wNFEFe7Lz7M5qCeNJNPrrSwyQjJdG3.J75X1vkszvn8!/r/dCsAAAAAAAAA">
-<meta property="og:updated_time" content="2018-02-23T09:58:04.000Z">
+<meta property="og:updated_time" content="2018-10-26T01:16:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="H264,H265 Encoder">
-<meta name="twitter:description" content="本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K,4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS 11 之后，iPhone 7以上的设备可以支持新的编码器H26">
+<meta name="twitter:description" content="本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.">
 <meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Zs.FQtSqK3HEAV0KwhBWsd11gDVDBOGc6C8nEvLWvbI!/r/dLEAAAAAAAAA">
 
 
@@ -263,14 +263,6 @@
         
         
           
-          <li class="menu-item menu-item-top">
-    <a href="/top/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-signal"></i> <br />top</a>
-  </li>
-        
-        
-        
-          
           <li class="menu-item menu-item-about">
     <a href="/about/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />About</a>
@@ -370,8 +362,49 @@
             
 
             
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-26 09:16:48" itemprop="dateModified" datetime="2018-10-26T09:16:48+08:00">2018-10-26</time>
+              
+            
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/编解码-Encode-Decode/" itemprop="url" rel="index"><span itemprop="name">编解码(Encode/Decode)</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -405,6 +438,8 @@
           
 
           
+              <div class="post-description">本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.</div>
+          
 
         </div>
       </header>
@@ -419,12 +454,9 @@
       
 
       
-        <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
-<ul>
-<li>本文需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.<br>比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K,4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS 11 之后，iPhone 7以上的设备可以支持新的编码器H265编码器，使得同等质量视频占用的存储空间更小。所以本例中可以使用两种方式实现视频数据的编码<a id="more"></a><the rest="" of="" contents="" |="" 余下全文="">
+        <p class="description"></p>
 
-</the></li>
-</ul>
+<a id="more"></a>
 <h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="本例需求：使用H264-H265实现视频数据的编码并录制开始200帧存为文件"><a href="#本例需求：使用H264-H265实现视频数据的编码并录制开始200帧存为文件" class="headerlink" title="本例需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件."></a>本例需求：使用H264, H265实现视频数据的编码并录制开始200帧存为文件.</h3><h5 id="原理：比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K-4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS-11-之后，iPhone-7以上的设备可以支持新的编码器H265编码器，使得同等质量视频占用的存储空间更小。所以本例中可以使用两种方式实现视频数据的编码"><a href="#原理：比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K-4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS-11-之后，iPhone-7以上的设备可以支持新的编码器H265编码器，使得同等质量视频占用的存储空间更小。所以本例中可以使用两种方式实现视频数据的编码" class="headerlink" title="原理：比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K,4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS 11 之后，iPhone 7以上的设备可以支持新的编码器H265编码器，使得同等质量视频占用的存储空间更小。所以本例中可以使用两种方式实现视频数据的编码"></a>原理：比如做直播功能，需要将客户端的视频数据传给服务器，如果分辨率过大如2K,4K则传输压力太大，所以需要对视频数据进行编码，传给服务器后再解码以实现大数据量的视频数据的传输，而利用硬件编码则可以极大限度减小CPU压力，当前主流使用H264进行编码，iOS 11 之后，iPhone 7以上的设备可以支持新的编码器H265编码器，使得同等质量视频占用的存储空间更小。所以本例中可以使用两种方式实现视频数据的编码</h5><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="最终效果如下-：-h264"><a href="#最终效果如下-：-h264" class="headerlink" title="最终效果如下 ： h264"></a>最终效果如下 ： h264</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Zs.FQtSqK3HEAV0KwhBWsd11gDVDBOGc6C8nEvLWvbI!/r/dLEAAAAAAAAA" alt="h264 编码"></p>
 <h4 id="h265"><a href="#h265" class="headerlink" title="h265 :"></a>h265 :</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/0laaTVE7fYiJysspAOooBZ3fCdWlUxVfVNz66tO2jv4!/r/dBABAAAAAAAA" alt="h265 编码"></p>
 <h3 id="——————————————————–-2"><a href="#——————————————————–-2" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="GitHub地址-附代码-H264-H265Encode"><a href="#GitHub地址-附代码-H264-H265Encode" class="headerlink" title="GitHub地址(附代码) : H264,H265Encode"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/XDXHardwareEncoder" target="_blank" rel="noopener">H264,H265Encode</a></h4><h4 id="简书地址-H264-H265Encode"><a href="#简书地址-H264-H265Encode" class="headerlink" title="简书地址     : H264,H265Encode"></a>简书地址     : <a href="http://www.jianshu.com/p/d783d4a209b6" target="_blank" rel="noopener">H264,H265Encode</a></h4><h4 id="博客地址-H264-H265Encode"><a href="#博客地址-H264-H265Encode" class="headerlink" title="博客地址     : H264,H265Encode"></a>博客地址     : <a href="https://chengyangli.github.io/2017/11/10/H264H265Encoder/" target="_blank" rel="noopener">H264,H265Encode</a></h4><h4 id="掘金地址-https-juejin-im-post-5a8fe3def265da4e8e78781b"><a href="#掘金地址-https-juejin-im-post-5a8fe3def265da4e8e78781b" class="headerlink" title="掘金地址     : https://juejin.im/post/5a8fe3def265da4e8e78781b"></a>掘金地址     : <a href="https://juejin.im/post/5a8fe3def265da4e8e78781b" target="_blank" rel="noopener">https://juejin.im/post/5a8fe3def265da4e8e78781b</a></h4><h3 id="——————————————————–-3"><a href="#——————————————————–-3" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="实现方式："><a href="#实现方式：" class="headerlink" title="实现方式："></a>实现方式：</h2><h3 id="1-H264-H264是当前主流编码标准，以高压缩高质量和支持多种网络的流媒体传输著称"><a href="#1-H264-H264是当前主流编码标准，以高压缩高质量和支持多种网络的流媒体传输著称" class="headerlink" title="1. H264 : H264是当前主流编码标准，以高压缩高质量和支持多种网络的流媒体传输著称"></a>1. H264 : H264是当前主流编码标准，以高压缩高质量和支持多种网络的流媒体传输著称</h3><h3 id="2-H265-：H264编码器的下一代，它的主要优点提供的压缩比高，相同质量的视频是H264的两倍。"><a href="#2-H265-：H264编码器的下一代，它的主要优点提供的压缩比高，相同质量的视频是H264的两倍。" class="headerlink" title="2. H265 ：H264编码器的下一代，它的主要优点提供的压缩比高，相同质量的视频是H264的两倍。"></a>2. H265 ：H264编码器的下一代，它的主要优点提供的压缩比高，相同质量的视频是H264的两倍。</h3><h3 id="——————————————————–-4"><a href="#——————————————————–-4" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="一-本文需要基本知识点"><a href="#一-本文需要基本知识点" class="headerlink" title="一.本文需要基本知识点"></a>一.本文需要基本知识点</h2><h4 id="注意-可以先通过H264-H265编码器介绍，H264-Data-Structure了解预备知识。"><a href="#注意-可以先通过H264-H265编码器介绍，H264-Data-Structure了解预备知识。" class="headerlink" title="注意:可以先通过H264,H265编码器介绍，H264 Data Structure了解预备知识。"></a>注意:可以先通过<a href="https://chengyangli.github.io/2017/10/15/codec/" target="_blank" rel="noopener">H264,H265编码器介绍</a>，<a href="https://chengyangli.github.io/2017/12/11/h264DataStructure/" target="_blank" rel="noopener">H264 Data Structure</a>了解预备知识。</h4><h4 id="1-软编与硬编概念"><a href="#1-软编与硬编概念" class="headerlink" title="1. 软编与硬编概念"></a>1. 软编与硬编概念</h4><ul>
@@ -605,13 +637,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/H264/" rel="tag"># H264</a>
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-            <a href="/tags/HEVC/" rel="tag"># HEVC</a>
-          
-            <a href="/tags/H265/" rel="tag"># H265</a>
-          
-            <a href="/tags/Encoder/" rel="tag"># Encoder</a>
+            <a href="/tags/编解码-Encode-Decode/" rel="tag"># 编解码(Encode/Decode)</a>
           
         </div>
       
@@ -710,7 +738,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -731,7 +759,23 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -770,63 +814,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">40</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -845,12 +833,12 @@
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-简书"></i>简书</a>
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
                   
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-掘金"></i>掘金</a>
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
                   
                 </span>
               

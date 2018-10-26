@@ -110,23 +110,23 @@
 
 
 
-  <meta name="description" content="本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,gi">
-<meta name="keywords" content="iOS,Audio,PCM,AAC,AudioQueue,AudioUnit">
+  <meta name="description" content="将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现.">
+<meta name="keywords" content="Audio, PCM, AAC, iOS, AudioQueue, AudioUnit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Audio -- PCM to AAC">
 <meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/02/23/record/index.html">
 <meta property="og:site_name" content="小东邪 Show Time">
-<meta property="og:description" content="本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,gi">
+<meta property="og:description" content="将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://d26dzxoao6i3hh.cloudfront.net/items/0n0S1T2O292o2k3V0l2c/Snip20170727_2.png">
 <meta property="og:image" content="https://cl.ly/30073m1G2s1Z/Snip20170727_3.png">
 <meta property="og:image" content="https://cl.ly/0D161n0C1T0u/Image%202017-07-28%20at%205.24.45%20PM.png">
 <meta property="og:image" content="https://cl.ly/0Y2O3r3Y0l42/Screen%20Shot%202017-05-03%20at%205.28.14%20PM.png">
-<meta property="og:updated_time" content="2018-06-23T07:29:37.000Z">
+<meta property="og:updated_time" content="2018-10-26T01:16:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Audio -- PCM to AAC">
-<meta name="twitter:description" content="本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,gi">
+<meta name="twitter:description" content="将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现.">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
@@ -260,14 +260,6 @@
         
         
           
-          <li class="menu-item menu-item-top">
-    <a href="/top/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-signal"></i> <br />top</a>
-  </li>
-        
-        
-        
-          
           <li class="menu-item menu-item-about">
     <a href="/about/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />About</a>
@@ -380,11 +372,36 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-06-23 15:29:37" itemprop="dateModified" datetime="2018-06-23T15:29:37+08:00">2018-06-23</time>
+                <time title="Modified: 2018-10-26 09:16:25" itemprop="dateModified" datetime="2018-10-26T09:16:25+08:00">2018-10-26</time>
               
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/音频-Audio/" itemprop="url" rel="index"><span itemprop="name">音频(Audio)</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -418,6 +435,8 @@
           
 
           
+              <div class="post-description">将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现.</div>
+          
 
         </div>
       </header>
@@ -432,13 +451,9 @@
       
 
       
-        <p><excerpt in="" index="" |="" 首页摘要=""> </excerpt></p>
-<ul>
-<li>本文需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式实现<br>由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式保存，然后在回调函数中将其转换为aac提供给C++API,github地址:<a href="https://github.com/ChengyangLi/XDXPCMToAACDemo" target="_blank" rel="noopener">原文代码</a><a id="more"></a>
-<the rest="" of="" contents="" |="" 余下全文="">
+        <p class="description"></p>
 
-</the></li>
-</ul>
+<a id="more"></a>
 <h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC"><a href="#本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC" class="headerlink" title="本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC."></a>本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC.</h3><h3 id="原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API"><a href="#原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API" class="headerlink" title="原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API"></a>原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API</h3><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><p><img src="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <h3 id="本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义"><a href="#本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义" class="headerlink" title="本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义."></a>本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义.</h3><h3 id="——————————————————–-2"><a href="#——————————————————–-2" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="GitHub地址-附代码-PCM-gt-AAC"><a href="#GitHub地址-附代码-PCM-gt-AAC" class="headerlink" title="GitHub地址(附代码) : PCM-&gt;AAC"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/XDXPCMToAACDemo" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h4 id="简书地址-PCM-gt-AAC"><a href="#简书地址-PCM-gt-AAC" class="headerlink" title="简书地址     : PCM-&gt;AAC"></a>简书地址     : <a href="http://www.jianshu.com/p/e2d072b9e4d8" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h4 id="博客地址-PCM-gt-AAC"><a href="#博客地址-PCM-gt-AAC" class="headerlink" title="博客地址     : PCM-&gt;AAC"></a>博客地址     : <a href="https://chengyangli.github.io/2017/03/24/record" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h4 id="掘金地址-PCM-gt-AAC"><a href="#掘金地址-PCM-gt-AAC" class="headerlink" title="掘金地址     : PCM-&gt;AAC"></a>掘金地址     : <a href="https://juejin.im/post/5a8fdd915188255de20105ef" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h3 id="——————————————————–-3"><a href="#——————————————————–-3" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="实现方式：（下文两种实现方式，挑选自己适合的）"><a href="#实现方式：（下文两种实现方式，挑选自己适合的）" class="headerlink" title="实现方式：（下文两种实现方式，挑选自己适合的）"></a>实现方式：（下文两种实现方式，挑选自己适合的）</h2><h3 id="1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式"><a href="#1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式" class="headerlink" title="1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式"></a>1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式</h3><h3 id="2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"><a href="#2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。" class="headerlink" title="2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"></a>2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。</h3><h3 id="AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。"><a href="#AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。" class="headerlink" title="AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。"></a>AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。</h3><h3 id="——————————————————–-4"><a href="#——————————————————–-4" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="一-本文需要基本知识点"><a href="#一-本文需要基本知识点" class="headerlink" title="一.本文需要基本知识点"></a>一.本文需要基本知识点</h2><h3 id="C语言相关函数："><a href="#C语言相关函数：" class="headerlink" title="C语言相关函数："></a>C语言相关函数：</h3><p>1.memset：<br>原型： void <em> memset(void </em> <strong>b, int </strong>c, size_t __len);<br>解释：将s中当前位置后面的n个字节(typedef unsigned int size_t) 用ch替换并返回s<br>作用：在一段内存块中填充某个特定的值，它是对较大的结构体或数组进行清零操作的一种最快方法。</p>
 <p>2.memcpy：<br>原型： void <em> memcpy(void </em> dest, const void * src, size_t n);<br>解释：从源src所指的内存地址的起始位置开始拷贝n个字节到目标dest所指的内存地址的起始位置中</p>
@@ -699,15 +714,7 @@
           
             <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-            <a href="/tags/Audio/" rel="tag"># Audio</a>
-          
-            <a href="/tags/PCM/" rel="tag"># PCM</a>
-          
-            <a href="/tags/AAC/" rel="tag"># AAC</a>
-          
-            <a href="/tags/AudioQueue/" rel="tag"># AudioQueue</a>
-          
-            <a href="/tags/AudioUnit/" rel="tag"># AudioUnit</a>
+            <a href="/tags/音频-Audio/" rel="tag"># 音频(Audio)</a>
           
         </div>
       
@@ -720,8 +727,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/25/group/" rel="next" title="代码隐藏GroupedTableView上边多余的间隔">
-                <i class="fa fa-chevron-left"></i> 代码隐藏GroupedTableView上边多余的间隔
+              <a href="/2016/10/25/sendValue/" rel="next" title="iOS控制器之间传值">
+                <i class="fa fa-chevron-left"></i> iOS控制器之间传值
               </a>
             
           </div>
@@ -806,7 +813,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -827,7 +834,23 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -866,63 +889,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">40</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -941,12 +908,12 @@
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-简书"></i>简书</a>
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
                   
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-掘金"></i>掘金</a>
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
                   
                 </span>
               
