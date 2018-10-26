@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="如果你还在为手写苹果提供的自动布局而烦恼,请点击这篇文章,本文将快速带你学习Masonry框架,图形界面的使用将不包含在内,可通过第一部分快速上手Masonry框架.">
+<meta name="keywords" content="iOS, Masonry">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS之Masonry快速上手">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2016/10/23/masonry/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="如果你还在为手写苹果提供的自动布局而烦恼,请点击这篇文章,本文将快速带你学习Masonry框架,图形界面的使用将不包含在内,可通过第一部分快速上手Masonry框架.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://xiaodongxie1024.github.io/img/masonry/2.png">
+<meta property="og:image" content="https://xiaodongxie1024.github.io/img/masonry/1.png">
+<meta property="og:updated_time" content="2018-10-25T09:33:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS之Masonry快速上手">
+<meta name="twitter:description" content="如果你还在为手写苹果提供的自动布局而烦恼,请点击这篇文章,本文将快速带你学习Masonry框架,图形界面的使用将不包含在内,可通过第一部分快速上手Masonry框架.">
+<meta name="twitter:image" content="https://xiaodongxie1024.github.io/img/masonry/2.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2016/10/23/masonry/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS之Masonry快速上手 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2016/10/23/masonry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS之Masonry快速上手
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-10-23 19:39:42" itemprop="dateCreated datePublished" datetime="2016-10-23T19:39:42+08:00">2016-10-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-25 17:33:37" itemprop="dateModified" datetime="2018-10-25T17:33:37+08:00">2018-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/UI/" itemprop="url" rel="index"><span itemprop="name">UI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/23/masonry/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2016/10/23/masonry/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/10/23/masonry/" class="leancloud_visitors" data-flag-title="iOS之Masonry快速上手">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">如果你还在为手写苹果提供的自动布局而烦恼,请点击这篇文章,本文将快速带你学习Masonry框架,图形界面的使用将不包含在内,可通过第一部分快速上手Masonry框架.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h2 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>Masonry是一个轻量级的布局框架，拥有自己的描述语法，采用更优雅的链式语法封装自动布局，同时支持 iOS 和 Max OS X。Masonry是一个用代码写iOS或OS界面的库，可以代替Auto layout。<br>Masonry的github地址：<a href="https://github.com/SnapKit/Masonry" target="_blank" rel="noopener">Masonry</a>!</p>
+<h3 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h3><ul>
+<li>推荐使用pods方式引入类库，pod ‘Masonry’，若不知道pod如何使用，自行谷歌</li>
+<li>引入头文件 #import “Masonry.h”</li>
+</ul>
+<h3 id="3-规则"><a href="#3-规则" class="headerlink" title="3.规则"></a>3.规则</h3><p>mas_makeConstraints 是给view添加约束，约束有几种，分别是边距，宽，高，左上右下距离，基准线。添加过约束后可以有修正，修正有offset（位移）修正和multipliedBy（倍率）修正。<br>语法一般是 make.equalTo or make.greaterThanOrEqualTo or make.lessThanOrEqualTo + 倍数和位移修正。</p>
+<h3 id="4-注意点"><a href="#4-注意点" class="headerlink" title="4.注意点"></a>4.注意点</h3><ul>
+<li>使用 mas_makeConstraints方法的元素必须事先添加到父元素的中，例如[self.view addSubview:view];</li>
+<li>masequalTo 和 equalTo 区别：<br>masequalTo 比 qualTo 多了类型转换操作，一般来说，大多数时候两个方法都是 通用的，但是对于数值元素使用mas_equalTo。对于对象或是多个属性的处理，使用equalTo。特别是多个属性时，必须使用equalTo,例如 make.left.and.right.equalTo(self.view);</li>
+</ul>
+<h3 id="5-实例"><a href="#5-实例" class="headerlink" title="5.实例"></a>5.实例</h3><pre><code class="bash">// exp1: 中心点与self.view相同，宽度为400*400
+-(void)exp1{
+    UIView *view = [UIView new];
+    [view setBackgroundColor:[UIColor redColor]];
+    [self.view addSubview:view];
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.center.equalTo(self.view);
+         make.size.mas_equalTo(CGSizeMake(400,400));
+    }];
+}
+//exp2: 上下左右边距都为10
+-(void)exp2{
+    UIView *view = [UIView new];
+    [view setBackgroundColor:[UIColor redColor]];
+    [self.view addSubview:view];
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).with.insets(UIEdgeInsetsMake(10, 10, 10, 10));
+        //  make.left.equalTo(self.view).with.offset(10);
+        //  make.right.equalTo(self.view).with.offset(-10);
+        //  make.top.equalTo(self.view).with.offset(10);
+        //  make.bottom.equalTo(self.view).with.offset(-10);
+    }];
+}
+//exp3 让两个高度为150的view垂直居中且等宽且等间隔排列 间隔为10
+-(void)exp3{
+    UIView *view1 = [UIView new];
+    [view1 setBackgroundColor:[UIColor redColor]];
+    [self.view addSubview:view1];
+    UIView *view2 = [UIView new];
+    [view2 setBackgroundColor:[UIColor redColor]];
+    [self.view addSubview:view2];
+    [view1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.view.mas_centerY);
+        make.height.mas_equalTo(150);
+        make.width.mas_equalTo(view2.mas_width);
+        make.left.mas_equalTo(self.view.mas_left).with.offset(10);
+        make.right.mas_equalTo(view2.mas_left).offset(-10);
+    }];
+    [view2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.view.mas_centerY);
+        make.height.mas_equalTo(150);
+        make.width.mas_equalTo(view1.mas_width);
+        make.left.mas_equalTo(view1.mas_right).with.offset(10);
+        make.right.equalTo(self.view.mas_right).offset(-10);
+    }];
+}
+</code></pre>
+<h2 id="详细介绍-简单属性不再介绍-不会可查字典"><a href="#详细介绍-简单属性不再介绍-不会可查字典" class="headerlink" title="详细介绍(简单属性不再介绍,不会可查字典)"></a>详细介绍(简单属性不再介绍,不会可查字典)</h2><h3 id="1-基本属性-Attribute"><a href="#1-基本属性-Attribute" class="headerlink" title="1.基本属性(Attribute)"></a>1.基本属性(Attribute)</h3><p>@property (nonatomic, strong, readonly) MASConstraint <em>left;<br>@property (nonatomic, strong, readonly) MASConstraint </em>top;<br>@property (nonatomic, strong, readonly) MASConstraint <em>right;<br>@property (nonatomic, strong, readonly) MASConstraint </em>bottom;<br>@property (nonatomic, strong, readonly) MASConstraint <em>leading;    左<br>@property (nonatomic, strong, readonly) MASConstraint </em>trailing;   右<br>@property (nonatomic, strong, readonly) MASConstraint <em>width;<br>@property (nonatomic, strong, readonly) MASConstraint </em>height;<br>@property (nonatomic, strong, readonly) MASConstraint <em>centerX;<br>@property (nonatomic, strong, readonly) MASConstraint </em>centerY;<br>@property (nonatomic, strong, readonly) MASConstraint *baseline;   基线</p>
+<p>#if (<strong>IPHONE_OS_VERSION_MIN_REQUIRED &gt;= 80000) || (</strong>TV_OS_VERSION_MIN_REQUIRED &gt;= 9000) || (__MAC_OS_X_VERSION_MIN_REQUIRED &gt;= 101100)</p>
+<p>@property (nonatomic, strong, readonly) MASConstraint <em>firstBaseline;<br>@property (nonatomic, strong, readonly) MASConstraint </em>lastBaseline;</p>
+<p>#endif</p>
+<p>#if TARGET_OS_IPHONE || TARGET_OS_TV</p>
+<p>@property (nonatomic, strong, readonly) MASConstraint <em>leftMargin;<br>@property (nonatomic, strong, readonly) MASConstraint </em>rightMargin;<br>@property (nonatomic, strong, readonly) MASConstraint <em>topMargin;<br>@property (nonatomic, strong, readonly) MASConstraint </em>bottomMargin;<br>@property (nonatomic, strong, readonly) MASConstraint <em>leadingMargin;<br>@property (nonatomic, strong, readonly) MASConstraint </em>trailingMargin;<br>@property (nonatomic, strong, readonly) MASConstraint <em>centerXWithinMargins;<br>@property (nonatomic, strong, readonly) MASConstraint </em>centerYWithinMargins;</p>
+<p>可参考下图学习<br><img src="/img/masonry/2.png" alt="Alt text"></p>
+<h3 id="2-Constant"><a href="#2-Constant" class="headerlink" title="2.Constant"></a>2.Constant</h3><ul>
+<li><p>(MASConstraint * (^)(MASEdgeInsets insets))insets;    与四边边距   </p>
+</li>
+<li><p>(MASConstraint * (^)(CGSize offset))sizeOffset;       </p>
+</li>
+<li><p>(MASConstraint * (^)(CGPoint offset))centerOffset;</p>
+</li>
+<li><p>(MASConstraint * (^)(CGFloat offset))offset;  —- 位移</p>
+</li>
+<li><p>(MASConstraint <em> (^)(NSValue </em>value))valueOffset; —- 以上值的组合</p>
+</li>
+</ul>
+<h3 id="3-Multiplier-倍率"><a href="#3-Multiplier-倍率" class="headerlink" title="3.Multiplier(倍率)"></a>3.Multiplier(倍率)</h3><p>(MASConstraint * (^)(CGFloat multiplier))multipliedBy;   与dividedBy互为倒数,方便计算</p>
+<ul>
+<li>(MASConstraint * (^)(CGFloat divider))dividedBy;</li>
+</ul>
+<h3 id="4-Priority-优先级"><a href="#4-Priority-优先级" class="headerlink" title="4.Priority(优先级)"></a>4.Priority(优先级)</h3><ul>
+<li><p>(MASConstraint * (^)(MASLayoutPriority priority))priority;</p>
+</li>
+<li><p>(MASConstraint * (^)())priorityLow;</p>
+</li>
+<li><p>(MASConstraint * (^)())priorityMedium;</p>
+</li>
+</ul>
+<p>(MASConstraint * (^)())priorityHigh;</p>
+<h3 id="5-intrinsicContentSize"><a href="#5-intrinsicContentSize" class="headerlink" title="5.intrinsicContentSize"></a>5.intrinsicContentSize</h3><p>(CGSize)intrinsicContentSize;  — 默认尺寸大小<br>(void)invalidateIntrinsicContentSize  — 使默认尺寸大小失效后重新计算</p>
+<h3 id="6-ContentPriority"><a href="#6-ContentPriority" class="headerlink" title="6.ContentPriority"></a>6.ContentPriority</h3><ul>
+<li>(UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis NS_AVAILABLE_IOS(6_0);</li>
+<li><p>(void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis NS_AVAILABLE_IOS(6_0);</p>
+</li>
+<li><p>(UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis NS_AVAILABLE_IOS(6_0);</p>
+</li>
+<li>(void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis NS_AVAILABLE_IOS(6_0);</li>
+</ul>
+<p>可参考下图理解<br><img src="/img/masonry/1.png" alt="Alt text"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/UI/" rel="tag"># UI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/23/hello/" rel="next" title="Welcome to 小东邪's world">
+                <i class="fa fa-chevron-left"></i> Welcome to 小东邪's world
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/25/sendValue/" rel="prev" title="iOS控制器之间传值">
+                iOS控制器之间传值 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速上手"><span class="nav-number">1.</span> <span class="nav-text">快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-number">1.1.</span> <span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-配置"><span class="nav-number">1.2.</span> <span class="nav-text">2.配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-规则"><span class="nav-number">1.3.</span> <span class="nav-text">3.规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-注意点"><span class="nav-number">1.4.</span> <span class="nav-text">4.注意点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-实例"><span class="nav-number">1.5.</span> <span class="nav-text">5.实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详细介绍-简单属性不再介绍-不会可查字典"><span class="nav-number">2.</span> <span class="nav-text">详细介绍(简单属性不再介绍,不会可查字典)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-基本属性-Attribute"><span class="nav-number">2.1.</span> <span class="nav-text">1.基本属性(Attribute)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Constant"><span class="nav-number">2.2.</span> <span class="nav-text">2.Constant</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Multiplier-倍率"><span class="nav-number">2.3.</span> <span class="nav-text">3.Multiplier(倍率)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Priority-优先级"><span class="nav-number">2.4.</span> <span class="nav-text">4.Priority(优先级)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-intrinsicContentSize"><span class="nav-number">2.5.</span> <span class="nav-text">5.intrinsicContentSize</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-ContentPriority"><span class="nav-number">2.6.</span> <span class="nav-text">6.ContentPriority</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

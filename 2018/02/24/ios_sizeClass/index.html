@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束.">
+<meta name="keywords" content="iOS,SizeClass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/02/24/ios_sizeClass/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-c5fecfd77f047472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-d4ff517d39a81c50.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-29026bb563bd1f2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-cb2c6107d94ecfc5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-abcf0c680122dd81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-0922b50659cf243f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-afb5473520ed0065.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-f079de5171faba58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-9210db386e5243e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-10-25T09:31:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况">
+<meta name="twitter:description" content="解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束.">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-c5fecfd77f047472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/02/24/ios_sizeClass/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/02/24/ios_sizeClass/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-02-24 13:49:21" itemprop="dateCreated datePublished" datetime="2018-02-24T13:49:21+08:00">2018-02-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-25 17:31:06" itemprop="dateModified" datetime="2018-10-25T17:31:06+08:00">2018-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/UI/" itemprop="url" rel="index"><span itemprop="name">UI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/24/ios_sizeClass/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/02/24/ios_sizeClass/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/02/24/ios_sizeClass/" class="leancloud_visitors" data-flag-title="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h2 id="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况"><a href="#iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况" class="headerlink" title="iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况"></a>iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况</h2><h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><h4 id="1-通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。"><a href="#1-通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。" class="headerlink" title="1. 通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。"></a>1. 通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。</h4><blockquote>
+<p>比如控件hello这个Label在横屏下为距离父控件顶部为0，横向垂直于父控件中心如图1，而在竖屏下如果按照自动适配则如图2，但是如果我们想要它在竖屏为图3的效果(即距离父控件左边距离为0，距离父控件上部距离为100)则需要重新设计不同屏幕状态下的约束。本例则为解决此类需求</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-c5fecfd77f047472.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Demo"></p>
+<h4 id="2-本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。"><a href="#2-本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。" class="headerlink" title="2. 本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。"></a>2. 本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。</h4><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="适用情况"><a href="#适用情况" class="headerlink" title="适用情况"></a>适用情况</h4><ul>
+<li>在iPad Pro上比iPhone SE上的文字字体更大</li>
+<li>同一个View在横竖屏布局差别较大</li>
+<li>iPad比iPhone多或者少一些控件及属性等</li>
+<li>当应用滑动或者处于分屏模式布局内容有所不同</li>
+</ul>
+<h4 id="注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。"><a href="#注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。" class="headerlink" title="注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。"></a>注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。</h4><h4 id="—————————————–"><a href="#—————————————–" class="headerlink" title="—————————————–"></a>—————————————–</h4><h4 id="GitHub地址-附代码-控件布局Demo"><a href="#GitHub地址-附代码-控件布局Demo" class="headerlink" title="GitHub地址(附代码) : 控件布局Demo"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/XDXScreenOrientationChangedDemo" target="_blank" rel="noopener">控件布局Demo</a></h4><h4 id="简书地址-控件布局"><a href="#简书地址-控件布局" class="headerlink" title="简书地址   : 控件布局"></a>简书地址   : <a href="https://www.jianshu.com/p/085ce8e59625" target="_blank" rel="noopener">控件布局</a></h4><h4 id="博客地址-控件布局"><a href="#博客地址-控件布局" class="headerlink" title="博客地址   : 控件布局"></a>博客地址   : <a href="https://chengyangli.github.io/2018/02/24/ios_sizeClass/" target="_blank" rel="noopener">控件布局</a></h4><h4 id="掘金地址-控件布局"><a href="#掘金地址-控件布局" class="headerlink" title="掘金地址   : 控件布局"></a>掘金地址   : <a href="https://juejin.im/post/5a90f91ef265da4e732ee564" target="_blank" rel="noopener">控件布局</a></h4><h4 id="—————————————–-1"><a href="#—————————————–-1" class="headerlink" title="—————————————–"></a>—————————————–</h4><h4 id="总体流程："><a href="#总体流程：" class="headerlink" title="总体流程："></a>总体流程：</h4><ul>
+<li>使用xib创建View并开启Autolayout功能</li>
+<li>xib中设置每个控件横竖屏下不同的约束</li>
+</ul>
+<h3 id="——————————————————–-2"><a href="#——————————————————–-2" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="Autolayout-Size-Class-简介"><a href="#Autolayout-Size-Class-简介" class="headerlink" title="Autolayout - Size Class 简介"></a>Autolayout - Size Class 简介</h2><blockquote>
+<p>在这里<a href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/AutolayoutPG/Size-ClassSpecificLayout.html#//apple_ref/doc/uid/TP40010853-CH26-SW1" target="_blank" rel="noopener">苹果官方文档</a>,<a href="https://medium.com/@craiggrummitt/size-classes-in-interface-builder-in-xcode-8-74f20a541195" target="_blank" rel="noopener">Size Class</a>有详细的介绍有关Autolayout-SizeClass的用法。</p>
+</blockquote>
+<blockquote>
+<p>在这里不对Autolayout的普通布局做详细介绍了，如果不会使用约束请先学会后再阅读。</p>
+</blockquote>
+<h4 id="Size-Class-基本功能"><a href="#Size-Class-基本功能" class="headerlink" title="Size Class 基本功能"></a>Size Class 基本功能</h4><ul>
+<li>(Install or uninstall)使用或者不使用一个View或control.</li>
+<li>(Install or uninstall)使用或者不使用一条约束</li>
+<li><p>设置选中属性的值(例如文字大小，布局等)</p>
+</li>
+<li><p>installed功能 : 当系统加载一个scene时，会先实例化所有的views, contorls 和 constraints(约束),然后仅仅当这些元素被installed(安装)才会显示在对应的视图结构中</p>
+</li>
+</ul>
+<blockquote>
+<p>注意：系统会保持对uninstalled元素的引用，因此该元素并没有被释放。</p>
+</blockquote>
+<h4 id="Regular-and-Compact"><a href="#Regular-and-Compact" class="headerlink" title="Regular and Compact"></a>Regular and Compact</h4><blockquote>
+<p>背景</p>
+</blockquote>
+<ul>
+<li><p>我们通常使用的布局为 wAny hAny 表示各种不同尺寸的机型均支持</p>
+</li>
+<li><p>在过去适配iPhone和iPad我们需要创建2个View当它们布局中控件差别较大，这样相当于有两个文件，但是比如控件的点击事件做的是同一个操作，这时我们相当于每改动一处代码都需要在iPhone和iPad上做出对应改变，但是随着机型大小的多变已经iOS 8引入的拆分视图控制器，以及iOS 9 引入分屏控制多任务模式使得操作十分繁琐。</p>
+</li>
+</ul>
+<blockquote>
+<p>目的</p>
+</blockquote>
+<ul>
+<li>为了简化这些操作，苹果提出了一种新的规范，比起考虑不同设备机型尺寸的布局，我们更加关注两种类型的宽度(compact and regular) 以及两种类型的高度(compact and regular).称他们为size classes.</li>
+</ul>
+<h5 id="以下为各种机型对应的Size-Class，我们可依据此对不同机型及横竖屏做适配"><a href="#以下为各种机型对应的Size-Class，我们可依据此对不同机型及横竖屏做适配" class="headerlink" title="以下为各种机型对应的Size Class，我们可依据此对不同机型及横竖屏做适配"></a>以下为各种机型对应的Size Class，我们可依据此对不同机型及横竖屏做适配</h5><p><img src="http://upload-images.jianshu.io/upload_images/5086522-d4ff517d39a81c50.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Size-Class.png"></p>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ul>
+<li>在横屏状态下，iPhone(除了Plus)仍然被当成compact widths.</li>
+<li>所有的iPad在横屏或竖屏模式中都被当成regular widths and heights，这也就意味着<br>iPad方向改变不会触发size class.</li>
+</ul>
+<blockquote>
+<p>Size Class 不是约束和自动布局的代替品，而是让它们更好的一起工作。</p>
+<ul>
+<li>调整Views视图或重新定位</li>
+<li>字体和颜色能够改变</li>
+<li>约束能够使用或者不使用(called installed and uninstalled)</li>
+<li>Views 能选择添加或移除 (also called installed and uninstalled).</li>
+</ul>
+</blockquote>
+<h3 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h3><h5 id="1-在xib中打开使用Autolayout功能"><a href="#1-在xib中打开使用Autolayout功能" class="headerlink" title="1. 在xib中打开使用Autolayout功能"></a>1. 在xib中打开使用Autolayout功能</h5><p><img src="http://upload-images.jianshu.io/upload_images/5086522-29026bb563bd1f2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="openAutoLayout.png"></p>
+<h5 id="2-使用Autolayout-设置xib中控件的布局"><a href="#2-使用Autolayout-设置xib中控件的布局" class="headerlink" title="2. 使用Autolayout 设置xib中控件的布局"></a>2. 使用Autolayout 设置xib中控件的布局</h5><ul>
+<li>以横竖屏为例，先添加横屏状态下Hello Label的一条约束，如图所示</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-cb2c6107d94ecfc5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hello_landscape.png"></p>
+<ul>
+<li>在添加完约束后默认是所有状态都支持此约束，则竖屏状态下默认仍遵守此规则，竖屏状态如图所示。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-abcf0c680122dd81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hello_portraitDefault.png"></p>
+<ul>
+<li>因此我们首先要将横屏状态的所有约束依次设置为只有横屏状态支持，而竖屏不支持，则按照图中所示操作即可。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-0922b50659cf243f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="onlyLandscapeSupport.png"></p>
+<ul>
+<li>然后再切换到竖屏状态重新添加竖屏状态需要的约束并设置每一条约束为仅竖屏状态支持。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-afb5473520ed0065.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="onlyPortrait.png"></p>
+<h3 id="注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究"><a href="#注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究" class="headerlink" title="注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究"></a>注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究</h3><h4 id="补充"><a href="#补充" class="headerlink" title="补充 :"></a>补充 :</h4><h4 id="1-为同一条约束赋不同的值"><a href="#1-为同一条约束赋不同的值" class="headerlink" title="1.为同一条约束赋不同的值"></a>1.为同一条约束赋不同的值</h4><p><img src="http://upload-images.jianshu.io/upload_images/5086522-f079de5171faba58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="DiffValue.png"></p>
+<h4 id="2-同一控件不同状态下的颜色，阴影，隐藏状态等等"><a href="#2-同一控件不同状态下的颜色，阴影，隐藏状态等等" class="headerlink" title="2.同一控件不同状态下的颜色，阴影，隐藏状态等等"></a>2.同一控件不同状态下的颜色，阴影，隐藏状态等等</h4><p><img src="http://upload-images.jianshu.io/upload_images/5086522-9210db386e5243e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="portraitOther.png"></p>
+<h4 id="参考文章：苹果官方文档，Size-Class"><a href="#参考文章：苹果官方文档，Size-Class" class="headerlink" title="参考文章：苹果官方文档，Size Class"></a>参考文章：<a href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/AutolayoutPG/Size-ClassSpecificLayout.html#//apple_ref/doc/uid/TP40010853-CH26-SW1" target="_blank" rel="noopener">苹果官方文档</a>，<a href="https://medium.com/@craiggrummitt/size-classes-in-interface-builder-in-xcode-8-74f20a541195" target="_blank" rel="noopener">Size Class</a></h4>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/UI/" rel="tag"># UI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/23/codec/" rel="next" title="硬件编码相关知识(H264,H265)">
+                <i class="fa fa-chevron-left"></i> 硬件编码相关知识(H264,H265)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/24/deviceOrientation/" rel="prev" title="iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate)">
+                iOS带有Camera 的View 手动及自动设置屏幕方向汇总(iOS orietation video rotate) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况"><span class="nav-number">1.</span> <span class="nav-text">iOS使用Autolayout-SizeClass解决横竖屏控件位置差别较大情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–"><span class="nav-number">1.1.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需求："><span class="nav-number">1.2.</span> <span class="nav-text">需求：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 通常横竖屏转换后如果使用约束会按照正常的横竖屏下同一个约束进行布局，但是如果某些APP中横竖屏控件位置差别较大时则显得不适用。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 本例主要使用Autolayout-SizeClass实现同一控件不同状态下的布局，好处是像iPhone横竖屏风格相差较大以及iPhone与iPad同一界面布局相差较大时我们不需要创建两个View，因为这两个View只是布局不同而功能是完全相同的，所以利用Autolayout可以帮助我们实现不同状态下控件的布局。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-1"><span class="nav-number">1.3.</span> <span class="nav-text">——————————————————–</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用情况"><span class="nav-number">1.3.1.</span> <span class="nav-text">适用情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。"><span class="nav-number">1.3.2.</span> <span class="nav-text">注意：如上说明，本例为解决横竖屏，iPhone及iPad布局相差较大的情况，所以同一控件的功能并没有改变，仅仅改变布局位置，本文默认你认为已会添加普通约束。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#—————————————–"><span class="nav-number">1.3.3.</span> <span class="nav-text">—————————————–</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-控件布局Demo"><span class="nav-number">1.3.4.</span> <span class="nav-text">GitHub地址(附代码) : 控件布局Demo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-控件布局"><span class="nav-number">1.3.5.</span> <span class="nav-text">简书地址   : 控件布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-控件布局"><span class="nav-number">1.3.6.</span> <span class="nav-text">博客地址   : 控件布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-控件布局"><span class="nav-number">1.3.7.</span> <span class="nav-text">掘金地址   : 控件布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#—————————————–-1"><span class="nav-number">1.3.8.</span> <span class="nav-text">—————————————–</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总体流程："><span class="nav-number">1.3.9.</span> <span class="nav-text">总体流程：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-2"><span class="nav-number">1.4.</span> <span class="nav-text">——————————————————–</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Autolayout-Size-Class-简介"><span class="nav-number">2.</span> <span class="nav-text">Autolayout - Size Class 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Size-Class-基本功能"><span class="nav-number">2.0.1.</span> <span class="nav-text">Size Class 基本功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Regular-and-Compact"><span class="nav-number">2.0.2.</span> <span class="nav-text">Regular and Compact</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#以下为各种机型对应的Size-Class，我们可依据此对不同机型及横竖屏做适配"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">以下为各种机型对应的Size Class，我们可依据此对不同机型及横竖屏做适配</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意："><span class="nav-number">2.0.3.</span> <span class="nav-text">注意：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用步骤"><span class="nav-number">2.1.</span> <span class="nav-text">使用步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-在xib中打开使用Autolayout功能"><span class="nav-number">2.1.0.1.</span> <span class="nav-text">1. 在xib中打开使用Autolayout功能</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-使用Autolayout-设置xib中控件的布局"><span class="nav-number">2.1.0.2.</span> <span class="nav-text">2. 使用Autolayout 设置xib中控件的布局</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究"><span class="nav-number">2.2.</span> <span class="nav-text">注意，当打开AutoLayout功能后，在xib中很多属性左边会有如上的加号按钮，这些即都可通过加号按钮控制不同状态下控件的一些属性，原理正如上所讲，其他情况可自行研究</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#补充"><span class="nav-number">2.2.1.</span> <span class="nav-text">补充 :</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-为同一条约束赋不同的值"><span class="nav-number">2.2.2.</span> <span class="nav-text">1.为同一条约束赋不同的值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-同一控件不同状态下的颜色，阴影，隐藏状态等等"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.同一控件不同状态下的颜色，阴影，隐藏状态等等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考文章：苹果官方文档，Size-Class"><span class="nav-number">2.2.4.</span> <span class="nav-text">参考文章：苹果官方文档，Size Class</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

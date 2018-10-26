@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="简单的说，App Extension 可以让开发者们拓展自定义的功能和内容到应用程序之外，并在用户与其他应用程序或系统交互时提供给用户.">
+<meta name="keywords" content="App extension">
+<meta property="og:type" content="article">
+<meta property="og:title" content="App extension 总结">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/04/12/appExtension/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="简单的说，App Extension 可以让开发者们拓展自定义的功能和内容到应用程序之外，并在用户与其他应用程序或系统交互时提供给用户.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4vWzin5fs4waaQU1RmxDaUC73Aw7i*e1RkAhOWtNLk4!/r/dFYBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/gxEHOZtV586dKxpk1sXLH0N7h*nbs1g6GXQ.U55ePy0!/r/dGEBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/6PMArVGxhApxt9dCC51fRSn2xnK.g66kNrMaqu2zJ10!/r/dEEBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/a.HLIUyHgO8Ilg4YPEX4rDC4HgsYZNUJRptPN7DeQPE!/r/dEUBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/YcHnRFM*gTlzbw9r6Oa0hpCZNvkdFQ0ArkmjN9mU74o!/r/dPIAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/mK*EPntPOHwHoY0EmhoYYKD.Z13SntFx*86d35RmkZk!/r/dGEBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uVoe0prn*J9l5vvXlaU3kXrl647XS2xfWYNMP0BLHqQ!/r/dDABAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/wln8Z4OMi3UoJljfNKLm89.6uykug.npVOhpmnL.K50!/r/dAQBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/9Mpn3RK6iPDIV8ByctR0GgvL1zK1bL2B5XJBPHupYoc!/r/dGEBAAAAAAAA">
+<meta property="og:updated_time" content="2018-10-24T10:28:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="App extension 总结">
+<meta name="twitter:description" content="简单的说，App Extension 可以让开发者们拓展自定义的功能和内容到应用程序之外，并在用户与其他应用程序或系统交互时提供给用户.">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4vWzin5fs4waaQU1RmxDaUC73Aw7i*e1RkAhOWtNLk4!/r/dFYBAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/04/12/appExtension/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>App extension 总结 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/04/12/appExtension/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">App extension 总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-04-12 15:03:58" itemprop="dateCreated datePublished" datetime="2018-04-12T15:03:58+08:00">2018-04-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-24 18:28:09" itemprop="dateModified" datetime="2018-10-24T18:28:09+08:00">2018-10-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/App-extension/" itemprop="url" rel="index"><span itemprop="name">App extension</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/12/appExtension/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/04/12/appExtension/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/04/12/appExtension/" class="leancloud_visitors" data-flag-title="App extension 总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">简单的说，App Extension 可以让开发者们拓展自定义的功能和内容到应用程序之外，并在用户与其他应用程序或系统交互时提供给用户.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h2 id="一-基本知识"><a href="#一-基本知识" class="headerlink" title="一. 基本知识"></a>一. 基本知识</h2><h4 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h4><p>简单的说，App Extension 可以让开发者们拓展自定义的功能和内容到应用程序之外，并在用户与其他应用程序或系统交互时提供给用户。</p>
+<h4 id="2-用途"><a href="#2-用途" class="headerlink" title="2. 用途"></a>2. 用途</h4><p>你可以创建一个app extension通过打开一个特殊的开关。例如</p>
+<ul>
+<li>Share extension： 让用户从浏览器分享至其他社交软件中。</li>
+<li>Today widget：为了让用户赶上去看喜欢的比赛你可以再通知中心中提供一个小部件显示比赛时间提醒等信息。</li>
+<li>甚至可以创建一个app extension 提供定制的键盘让用户可以使用它来代替系统的键盘。</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4vWzin5fs4waaQU1RmxDaUC73Aw7i*e1RkAhOWtNLk4!/r/dFYBAAAAAAAA" alt="app extension Demo"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/gxEHOZtV586dKxpk1sXLH0N7h*nbs1g6GXQ.U55ePy0!/r/dGEBAAAAAAAA" alt="app extension Demo"></p>
+<h4 id="3-类型"><a href="#3-类型" class="headerlink" title="3. 类型"></a>3. 类型</h4><p>extension point : 启用扩展的区域称为扩展点，也就是每一个具有特定功能具体的extension。</p>
+<blockquote>
+<p>每个扩展点提供了使用说明和API为开发者去创建一个app extension.</p>
+</blockquote>
+<p>下表是苹果官方提供的所有Extension point列表</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/6PMArVGxhApxt9dCC51fRSn2xnK.g66kNrMaqu2zJ10!/r/dEEBAAAAAAAA" alt="Extension point"></p>
+<h4 id="4-本质"><a href="#4-本质" class="headerlink" title="4.本质"></a>4.本质</h4><p>每一个extension都是一个独立的二进制文件，它独立于用于发布它的应用程序。我们必须使用一个app去包含并且发布你的extension。</p>
+<h2 id="二-主要概念区别-—-重点必读"><a href="#二-主要概念区别-—-重点必读" class="headerlink" title="二. 主要概念区别 — 重点必读"></a>二. 主要概念区别 — 重点必读</h2><ul>
+<li>app : 就是我们正常手机里的每个应用程序，即Xcode运行后生成的程序。一个app可以包含一个或多个target,每个target将产生一个product.</li>
+<li>app extension : 为了扩展特定app的功能并且依赖于一个特定的app的一条进程。</li>
+<li>containing app：一个app包含一个或多个extension称为containing app。</li>
+<li>target : 在项目中新建一个target来创建app extension.任意一个target指定了应用程序中构建product的设置信息和文件。</li>
+<li>host app : 包含app extension 并且能从中打开它(并不一定非要从此app内部打开，可以是app内部也可以是例如Today Widget外部控件)。</li>
+</ul>
+<p>host app : 我们可以把它理解为宿主的App，能够调起extension的app被称为host app，比如：Safari app 里面网页分享到微信,  Safari就是 host app ; widget的host app就是Today。</p>
+<blockquote>
+<p><a href="https://developer.apple.com/library/content/featuredarticles/XcodeConcepts/Concept-Targets.html#//apple_ref/doc/uid/TP40009328-CH4" target="_blank" rel="noopener">Xcode Target</a> 介绍</p>
+</blockquote>
+<ul>
+<li><p>我们通过Xcode新建一个target，Xcode会为每一种extension point提供一个模板，每种模板里会提供特定的源文件(源文件中会包含一些示例代码)和设置信息，build这个target将会生成一个指定的二进制文件被添加到app’s bundle中。</p>
+</li>
+<li><p>当我们要发布的APP中包含app extension,开发者需要提交a containg app到 App Store. 当用户安装了这个containg app，extensions也会被随之安装。如果要开启app extension功能，需要用户手动去触发它，触发的地方可能是containing app 内部也可能是外部，例如Today widget 这个extension 需要用户在通知中心点击编辑按钮去添加，还有比如需要在偏好设置中去管理的extensions等等.</p>
+</li>
+</ul>
+<h2 id="三-App-Extension-工作原理"><a href="#三-App-Extension-工作原理" class="headerlink" title="三. App Extension 工作原理"></a>三. App Extension 工作原理</h2><h4 id="1-本质"><a href="#1-本质" class="headerlink" title="1. 本质"></a>1. 本质</h4><p>app extension不是一个app, 它是为了实现了一个特定的的任务，不同的extension point定义了不同的任务。</p>
+<h4 id="2-生命周期-Life-Cycle"><a href="#2-生命周期-Life-Cycle" class="headerlink" title="2. 生命周期 (Life Cycle)"></a>2. 生命周期 (Life Cycle)</h4><p>因为app extension不是一个app,它的生命周期和app是不同的，在大多情况下，当用户从app的UI上或者其他活动视图控制器中选择开启extension功能的选项时将会开始执行。</p>
+<ul>
+<li><p>开始：A host app 定义了上下文提供给extension， 当它发送一个请求并且用户正确相应后开启extension的生命周期。</p>
+</li>
+<li><p>结束：通常会在完成host app收到的请求后立即终止。</p>
+</li>
+</ul>
+<blockquote>
+<p>例如，当用户从Host app 中选择一张图片然后长按图片点击分享按钮，用户可以从可分享的列表中进行选择，选择后将会完成分享的动作，此时分享的extension将会结束。</p>
+</blockquote>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/a.HLIUyHgO8Ilg4YPEX4rDC4HgsYZNUJRptPN7DeQPE!/r/dEUBAAAAAAAA" alt="app_extensions_lifecycle"></p>
+<h2 id="四-App-Extension-如何和-App-通讯"><a href="#四-App-Extension-如何和-App-通讯" class="headerlink" title="四. App Extension 如何和 App 通讯"></a>四. App Extension 如何和 App 通讯</h2><h4 id="1-简单交互"><a href="#1-简单交互" class="headerlink" title="1. 简单交互"></a>1. 简单交互</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/YcHnRFM*gTlzbw9r6Oa0hpCZNvkdFQ0ArkmjN9mU74o!/r/dPIAAAAAAAAA" alt="simple_communication"></p>
+<ul>
+<li><p>app extension 和 containing app将不能够直接交互，典型的，containing app可能还没有开始运行然而它包含的app extension已经在运行了。（例如，一个天气的app,当你还没有打开它时，你可以在Today Widget中看到今天天气的信息）</p>
+</li>
+<li><p>在一个典型的请求响应事务中，系统代表的host app打开app extension, 通过host提供的extension上下文(context)传递数据, 这个extension通过界面的展示来执行一些任务，如果适用于extension的目的，返回数据给host.</p>
+</li>
+<li><p>上图的虚线代表了app extension 和 containing app之间有限的交互。例如Today widget(只有 Today Extension 才支持通过调用其他不可以) 通过调用 NSExtensionContext类中<code>openURL:completionHandler:</code>方法来要求系统去打开它的containing app.</p>
+</li>
+</ul>
+<h4 id="2-具体交互"><a href="#2-具体交互" class="headerlink" title="2. 具体交互"></a>2. 具体交互</h4><p>正如下图的读写箭头所示，任意一个app extension和它的containing app能够在一个私有的shared container中分享数据。下图展示了containing app , app extension 和 host app之间完整的交互方式。</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/mK*EPntPOHwHoY0EmhoYYKD.Z13SntFx*86d35RmkZk!/r/dGEBAAAAAAAA" alt="detailed_communication"></p>
+<blockquote>
+<p>注意：系统使用进程间通信来确保host app和app extension可以一起工作从而实现一个完整的体验。在你的代码中，你不必考虑它们之间潜在的通信规则，因为你使用了extension point 和 系统提供的上层API。</p>
+</blockquote>
+<h2 id="五-App-Extensions-不可用的API"><a href="#五-App-Extensions-不可用的API" class="headerlink" title="五. App Extensions 不可用的API"></a>五. App Extensions 不可用的API</h2><h4 id="app-extension不能够像containing-app一样直接进行一些动作，它包括如下："><a href="#app-extension不能够像containing-app一样直接进行一些动作，它包括如下：" class="headerlink" title="app extension不能够像containing app一样直接进行一些动作，它包括如下："></a>app extension不能够像containing app一样直接进行一些动作，它包括如下：</h4><ul>
+<li>不能使用 sharedApplication 对象及其其中的方法。</li>
+<li>使用NS_EXTENSION_UNAVAILABLE 宏在头文件中标记的任意API或类似的不可用的宏或API在一个不可用的框架中。例如，在iOS 8.0中，the HealthKit framework and EventKit UI framework 将不能使用app extension.</li>
+<li>不能在iOS设备中使用相机和麦克风(不像其他app extensions，iMessage app可以访问这些资源，只有它正确的配置 NSCameraUsageDescription and NSMicrophoneUsageDescription Info.plist 文件中的Key)。</li>
+<li>不能长期运行后台任务，该限制的具体细节因平台而异。(一个app extension能够使用NSURLSession对象启动一个上传或下载并将这些操作的结果返回给containing app)</li>
+<li>不能使用Air Drop接收数据(一个app extension能够像一个正常的app一样通过UIActivityViewController class去使用AirDrop发送数据)</li>
+</ul>
+<h2 id="六-创建App-Extension"><a href="#六-创建App-Extension" class="headerlink" title="六. 创建App Extension"></a>六. 创建App Extension</h2><h4 id="1-选择Extension-Point"><a href="#1-选择Extension-Point" class="headerlink" title="1. 选择Extension Point"></a>1. 选择Extension Point</h4><p>每个extension point都针对一个特定的用户场景。你的第一步是选择支持你计划交付功能的extension point.这个选择将决定你你能够使用哪些API以及在特定情景下API的使用方式。</p>
+<blockquote>
+<p>在iOS 和 OS X 中支持extension points, NSExtensionPointIdentifier中描述了它们的info.plist 中extension point中标识符的key.</p>
+</blockquote>
+<h4 id="2-在Xcode项目中新建target"><a href="#2-在Xcode项目中新建target" class="headerlink" title="2. 在Xcode项目中新建target"></a>2. 在Xcode项目中新建target</h4><p>为你需要使用的app extension 选择一个合适的extension point, 之后需要添加一个新的target在你的containing app中。使用Xcode template是最简单的方式来添加一个app extension为你的extension point提供预先配置好的target。</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uVoe0prn*J9l5vvXlaU3kXrl647XS2xfWYNMP0BLHqQ!/r/dDABAAAAAAAA" alt="Create extension1"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/wln8Z4OMi3UoJljfNKLm89.6uykug.npVOhpmnL.K50!/r/dAQBAAAAAAAA" alt="Create extension"></p>
+<h4 id="3-具体步骤"><a href="#3-具体步骤" class="headerlink" title="3. 具体步骤"></a>3. 具体步骤</h4><ul>
+<li>在Xcode项目设置信息的Capabilities中打开某些extension point必需的开关，注意部分需要在apple developer后台中将app id中权限放开。</li>
+<li>打开Xcode,上方工具栏选择File-&gt;New-&gt;Target.</li>
+<li>在新弹出的对话框中选择Application Extension中你需要的extension point.</li>
+<li>完成后将自动添加一个target在你的项目中，并且包含一些示例代码。</li>
+<li>当你build一个extension模板时，如果成功将生成一个以.appex结尾的extension bundle文件。</li>
+</ul>
+<h4 id="4-注意："><a href="#4-注意：" class="headerlink" title="4. 注意："></a>4. 注意：</h4><ul>
+<li>app extension target 在项目配置build setttings的Architectures选项下必须包含arm64(iOS) 或x86_64(OS X)架构，否则发布时将被App Store拒绝。一般来说，当你新建一个app extension target 时Xcode将包含适合的64位带有“Standard architectures” 的architecture。</li>
+<li>如果containing app target链接时嵌入一个framework,那么必须包含64位 architecture否则发布也将被拒。</li>
+<li>你可以在<a href="https://developer.apple.com/library/content/documentation/General/Conceptual/CocoaTouch64BitGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013501" target="_blank" rel="noopener">About 64-Bit Cocoa Touch Apps</a>这篇文章中你将能够了解更多依靠你的target平台有关64位development信息。</li>
+</ul>
+<h2 id="七-检查App-extension默认模板"><a href="#七-检查App-extension默认模板" class="headerlink" title="七. 检查App extension默认模板"></a>七. 检查App extension默认模板</h2><h4 id="1-模板结构"><a href="#1-模板结构" class="headerlink" title="1. 模板结构"></a>1. 模板结构</h4><p>每个app extension模板都包含一些配置文件如Info.plist,一个view controller class和一个默认的user interface，所有的这些将都由extension point定义。默认的view controller class可以包含你要实现的extension point方法。</p>
+<h4 id="2-Info-plist介绍"><a href="#2-Info-plist介绍" class="headerlink" title="2. Info.plist介绍"></a>2. Info.plist介绍</h4><p>app extension target的Info.plist文件可以标识extension point,并制定extension的详细信息。这个文件至少要包含NSExtension这个key和这个extension point指定的含有键值对的字典。例如，NSExtensionPointIdentifier key将需要一个值来展示extension point反向DNS的名字，例如com.apple.widget-extension。下面列举了一些在NSExtension字典中的键值对。</p>
+<ul>
+<li>NSExtensionAttributes：extension point特定的一些属性，如Photo Editing extension中的PHSupportedMediaTypes</li>
+<li>NSExtensionPrincipalClass: 模板创建的view controller class的名字(例如SharingViewController)，当一个host app调用extension,这个extension point将实例化这个类。</li>
+<li>NSExtensionMainStoryboard: the extension默认的storyboard文件，通常被命名为MainInterface。</li>
+</ul>
+<h4 id="3-其他设置"><a href="#3-其他设置" class="headerlink" title="3. 其他设置"></a>3. 其他设置</h4><p>除了plist文件中的设置，默认情况下，模板可能会设置一些功能。每个extension point能够定义capabilities使extension point支持的任务类型变得有意义。例如，iOS 文档Provider extension包含com.apple.security.application-groups entitlement.</p>
+<p>OS X app extension 所有的模板将默认包含App Sandbox 和 com.apple.security.files.user-selected.read-only entitlements。如果需要去做一些其他事情例如访问网络或者访问照片，联系人等信息时你需要定义额外的capabilities对于extension。</p>
+<h2 id="八-响应-Host-App-的请求"><a href="#八-响应-Host-App-的请求" class="headerlink" title="八. 响应 Host App 的请求"></a>八. 响应 Host App 的请求</h2><h4 id="1-触发"><a href="#1-触发" class="headerlink" title="1. 触发"></a>1. 触发</h4><p>在用户接受一个带有host app请求的app extension时app extension将被打开。app extension在收到请求后会打开帮助用户执行特定任务，具体是完成或者取消任务取决于用户在UI界面上的动作。例如，Share Extension收到一个host app请求之后通过弹出一个分享的view作为响应。用户将可以通过这个View上选择分享的目标或者是取消本次分享。</p>
+<p>当一个host app发送一个请求给app extension,它将指定一个extension context.对于大部分extensions,context最重要的部分是在extension中设置用户想要的items工作。例如，OS X  Share extension 的 context可能包含一个用户想要发送的文本选择信息。</p>
+<h4 id="2-步骤"><a href="#2-步骤" class="headerlink" title="2. 步骤"></a>2. 步骤</h4><ul>
+<li>发请求</li>
+</ul>
+<p>一旦Host app 发出请求(通常调用<code>beginRequestWithExtensionContext:</code>方法)，app extension可以使用 extensionContext属性在主view controller中获取这个context.子view controllers也能通过链接访问该属性。</p>
+<ul>
+<li>获取Context</li>
+</ul>
+<p>你可以使用 NSExtensionContext类去检查这个context并且得到它的items。它可以很好地在视图控制器的loadView方法中后去这个context和Items以便在你的视图中展示需要的信息。代码如下 <code>NSExtensionContext *myExtensionContext = self.extensionContext;</code></p>
+<ul>
+<li>获取Items</li>
+</ul>
+<p>context 对象的inputItems属性中包含了extension 需要使用的所有items。 <code>NSArray *inputItems = myExtensionContext.inputItems;</code></p>
+<p>每个NSExtensionItem对象包含了该tiem各方面的很多属性，例如它的title, content text, attachments, and user info.</p>
+<blockquote>
+<p>注意attachments属性包含了与item关联的media data数组。例如，在关联sharing request的item中，attachments 属性包含了用户想要去分享网页的信息。</p>
+</blockquote>
+<ul>
+<li>完成或取消任务</li>
+</ul>
+<p>app extension给用户一个选择去完成或取消此次任务。我们可以通过<code>completeRequestReturningItems:completionHandler:</code>方法来选择返回NSExtensionItem对象给host app,或者<code>cancelRequestWithError:</code>方法，返回一个错误代码</p>
+<blockquote>
+<p>注意：如果app extension调用<code>completeRequestReturningItems:completionHandler:</code>方法将提供一个completionHandler回调，系统要求你至少应该暂停app extension。</p>
+</blockquote>
+<h4 id="3-注意"><a href="#3-注意" class="headerlink" title="3.注意"></a>3.注意</h4><ul>
+<li><p>在iOS系统中，app extension 可能需要更多时间来完成一个潜在的耗时任务。例如上传一个网页的内容。在这种情况下，你可以使用NSURLSession class在后台进行传输。因为后台传输使用一个独立的进程，传输会继续，作为一个低优先级的任务，extension 的进程在完成host app请求后应该被终止。</p>
+</li>
+<li><p>尽管我们可以在后台完成上传或下载的任务，但是其他后台任务例如支持VOIP或者后台播放音乐等在extensions中不能被实现。如果app extension的Info.plist文件中包含UIBackgroundModes，发布时将会被拒。</p>
+</li>
+</ul>
+<h2 id="九-性能优化"><a href="#九-性能优化" class="headerlink" title="九. 性能优化"></a>九. 性能优化</h2><h4 id="1-设计简洁的UI"><a href="#1-设计简洁的UI" class="headerlink" title="1. 设计简洁的UI"></a>1. 设计简洁的UI</h4><p>用户感觉灵活轻便。设计您的extension，以便在一秒钟内完成目标。启动速度过慢的扩展由系统终止。</p>
+<p>原则：简单，集中完成一个单一的任务。</p>
+<blockquote>
+<p>注意：extension 的图标要与app保持一致。</p>
+</blockquote>
+<h4 id="2-内存"><a href="#2-内存" class="headerlink" title="2. 内存"></a>2. 内存</h4><p>运行extension的内存限制远小于前台应用程序的内存限制。在这两个平台上，系统可能会主动终止extension，因为用户希望返回主机应用程序中的host app。某些extension可能比其他extension的内存限制更低，例如widgets必须特别高效，因为用户可能同时打开多个widgets。</p>
+<h4 id="3-运行"><a href="#3-运行" class="headerlink" title="3. 运行"></a>3. 运行</h4><p>app extension 一旦开启后是一条独立的进程，不在containing app 主运行循环中，如果extension的回调在主运行循环，它可能有一个较差的用户体验在另一个extension或app.</p>
+<blockquote>
+<p>注意：app才是系统资源的主要使用者，extension只是辅助。</p>
+</blockquote>
+<h2 id="十-iOS-App-extension-测试"><a href="#十-iOS-App-extension-测试" class="headerlink" title="十. iOS App extension 测试"></a>十. iOS App extension 测试</h2><h4 id="1-Debug-Profile-and-Test-Your-App-Extension"><a href="#1-Debug-Profile-and-Test-Your-App-Extension" class="headerlink" title="1. Debug, Profile, and Test Your App Extension"></a>1. Debug, Profile, and Test Your App Extension</h4><ul>
+<li><p>你必须为containing app 和 它的app extensions提供各自签名信息(即创建不同的apple id但extension的app id 是app的子id).</p>
+</li>
+<li><p>使用Xcode去debug一个app extension就像去degbug其他进程一样，不同的是，在extension scheme 运行阶段，你要指定一个host app作为可执行文件。指定完成后，Xcode调试器将附加到该extension。</p>
+</li>
+<li><p>当你将Xcode运行的target选择到你的extension时，在运行时将会弹出选择一个app去运行，如果你想要每次都选用一个指定的，你需要进行一下的操作</p>
+</li>
+<li>编辑scheme,在弹出菜单中选择Run,在右侧的Info信息中将Executable选择到我们的host app.</li>
+</ul>
+<h4 id="2-注意"><a href="#2-注意" class="headerlink" title="2.注意"></a>2.注意</h4><ul>
+<li><p>在你build或run app extension之前，确保选择了正确的extension’s scheme去调试。如果你直接去调试containing app scheme，Xcode不会将你的app extension附加上去除非你从containing app 中调用它。</p>
+</li>
+<li><p>在Xcode debug控制台的日志中，app extension的二进制文件可能与CFBundleIdentifier属性的值相关联，而不是CFBundleDisplayName属性的值。</p>
+</li>
+<li><p>如果直接运行containing app在控制台Log信息中看不到extension 文件中打印的信息。</p>
+</li>
+</ul>
+<h2 id="十一-过审须知"><a href="#十一-过审须知" class="headerlink" title="十一. 过审须知"></a>十一. 过审须知</h2><h4 id="1-发布App时为了过审，containing-app必须提供基本功能给用户，同时不能只有app-extensions"><a href="#1-发布App时为了过审，containing-app必须提供基本功能给用户，同时不能只有app-extensions" class="headerlink" title="1. 发布App时为了过审，containing app必须提供基本功能给用户，同时不能只有app extensions."></a>1. 发布App时为了过审，containing app必须提供基本功能给用户，同时不能只有app extensions.</h4><h4 id="2-为了过审，无论你为containing-app选择哪种目标设备系列，都必须为您的应用扩展程序指定“iPhone-iPad”（有时称为universal）作为目标设备系列。"><a href="#2-为了过审，无论你为containing-app选择哪种目标设备系列，都必须为您的应用扩展程序指定“iPhone-iPad”（有时称为universal）作为目标设备系列。" class="headerlink" title="2.为了过审，无论你为containing app选择哪种目标设备系列，都必须为您的应用扩展程序指定“iPhone / iPad”（有时称为universal）作为目标设备系列。"></a>2.为了过审，无论你为containing app选择哪种目标设备系列，都必须为您的应用扩展程序指定“iPhone / iPad”（有时称为universal）作为目标设备系列。</h4><h2 id="十二-处理常见场景"><a href="#十二-处理常见场景" class="headerlink" title="十二. 处理常见场景"></a>十二. 处理常见场景</h2><h4 id="1-打包包含extension代码Framework"><a href="#1-打包包含extension代码Framework" class="headerlink" title="1. 打包包含extension代码Framework"></a>1. 打包包含extension代码Framework</h4><p>我们可以创建一个framework在containing app 和app extension之间共享代码。</p>
+<ul>
+<li><p>我们需要在包含extension的Target build setting中将“Require Only App-Extension-Safe API”设置为YES。如果你不这么设置，Xcode会提醒你“linking against dylib not safe for use in application extensions”.</p>
+</li>
+<li><p>为了确保你的framework不包含app extensions不可用的API,如果您有一个包含此类API的自定义框架，您可以从containing app中安全地链接到该框架，但不能与该应用程序包含的extensions共享该代码。</p>
+</li>
+</ul>
+<p>当配置Xcode的project时，在Copy Files build phase中你必须选择“Frameworks”作为destination在你的framework中。</p>
+<p><a href="https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW3" target="_blank" rel="noopener">Deploying a Containing App to Older Versions of iOS</a></p>
+<p><a href="https://developer.apple.com/videos/wwdc2014/#416" target="_blank" rel="noopener">Building Modern Frameworks</a></p>
+<h4 id="2-Containing-App中分享数据"><a href="#2-Containing-App中分享数据" class="headerlink" title="2.  Containing App中分享数据"></a>2.  Containing App中分享数据</h4><h5 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h5><p>app extension 和 containing app 之间不能直接访问彼此的存储数据的容器。</p>
+<p>但我们可以共享数据。</p>
+<blockquote>
+<p>注意：app extension 的target工程不可以直接访问应用程序沙盒。</p>
+</blockquote>
+<h5 id="共享数据"><a href="#共享数据" class="headerlink" title="共享数据"></a>共享数据</h5><p>为了使用数据共享功能，我们需要在当前Target设置中的Capabilities中，打开App Group开关，并且在apple developer中创建APP Group,并向我们当前target和containing app的app id中打开并配置app group功能。<br><a href="https://developer.apple.com/library/content/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW19" target="_blank" rel="noopener"> Adding an App to an App Group</a></p>
+<ul>
+<li>APP group : 允许单个开发团队生成的多个app共享对一个特定的group container访问。这个容器不适合面向用户，例如共享缓存或数据库。</li>
+</ul>
+<p>配置成功后，app extension和containing app可以使用 NSUserDefaults API共享一个容器来同步需要交互的数据。我们可以使用下面的API</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Create and share access to an NSUserDefaults object</span><br><span class="line">NSUserDefaults *mySharedDefaults = [[NSUserDefaults alloc] initWithSuiteName: @&quot;com.example.domain.MyShareExtension&quot;];</span><br><span class="line"></span><br><span class="line">// Use the shared user defaults object to update the user account</span><br><span class="line">[mySharedDefaults setObject:@&quot;Hello World!&quot; forKey:@&quot;小东邪&quot;];</span><br><span class="line"></span><br><span class="line">[shared synchronize];</span><br></pre></td></tr></table></figure>
+<p>可以通过下面的方法从shared container中读取存入的数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (NSString *)readDataFromNSUserDefaults &#123; </span><br><span class="line">NSUserDefaults *shared = [[NSUserDefaults alloc] initWithSuiteName:@&quot;group.wangzz&quot;]; </span><br><span class="line"></span><br><span class="line">NSString *value = [shared valueForKey:@&quot;小东邪&quot;]; </span><br><span class="line"></span><br><span class="line">　return value; </span><br><span class="line">　&#125;</span><br></pre></td></tr></table></figure>
+<p>　<br>　下图展示了containing app ， extension 与shared container之间的关系。<br>　<br>　<img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/9Mpn3RK6iPDIV8ByctR0GgvL1zK1bL2B5XJBPHupYoc!/r/dGEBAAAAAAAA" alt="share container"><br>　<br>　&gt; 注意：当我们建立好一个共享容器时，containing app 和 每个app extension 都具有对容器读写的权限，所以我们必须要考虑数据同步的问题。<br>　<br>　- 保存数据的时候必须指明group id；<br>　<br>　- 而且要注意NSUserDefaults能够处理的数据只能是可plist化的对象，详情见Property List Programming Guide。<br>　<br>　- 为了防止出现数据同步问题，不要忘记调用[shared synchronize];<br>　<br>　#### 3. 访问网页<br>　<br>　在Share extension 和 Action extension(仅iOS)中，可以让用户访问web内容通过请求Safari运行JavaScript文件并将结果返回到扩展名。<br>　<br>　#### 4. 执行上传和下载<br>　<br>　#### 5. 声明支持的数据类型<br>　<br>　#### 6. 将Containing app 部署到老版本的应用中<br>　<br>　&gt; 3-6的具体步骤可参考<a href="https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/" target="_blank" rel="noopener">苹果官方文档</a><br>　<br>　#### 总结：本文是我在阅读APP官方文档后将官方文档中不易理解的一些东西图形化并针对例如app,extension,host app, containing app等混淆概念统一对比，更易于理解，在做每一种具体的extension中肯定会遇到不同的问题，所以整体先了解extension的工作原理及注意点还是十分必要的，关于更多内容请参考<a href="https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/" target="_blank" rel="noopener">苹果官方文档</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/25/extern_C/" rel="next" title="extern_C解析">
+                <i class="fa fa-chevron-left"></i> extern_C解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/23/20180623_vpn_extension/" rel="prev" title="App extension实战 - Personal VPN 连接并捕获packet">
+                App extension实战 - Personal VPN 连接并捕获packet <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-基本知识"><span class="nav-number">1.</span> <span class="nav-text">一. 基本知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-定义"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-用途"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-类型"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. 类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-本质"><span class="nav-number">1.0.4.</span> <span class="nav-text">4.本质</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-主要概念区别-—-重点必读"><span class="nav-number">2.</span> <span class="nav-text">二. 主要概念区别 — 重点必读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-App-Extension-工作原理"><span class="nav-number">3.</span> <span class="nav-text">三. App Extension 工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-本质"><span class="nav-number">3.0.1.</span> <span class="nav-text">1. 本质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-生命周期-Life-Cycle"><span class="nav-number">3.0.2.</span> <span class="nav-text">2. 生命周期 (Life Cycle)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-App-Extension-如何和-App-通讯"><span class="nav-number">4.</span> <span class="nav-text">四. App Extension 如何和 App 通讯</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-简单交互"><span class="nav-number">4.0.1.</span> <span class="nav-text">1. 简单交互</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-具体交互"><span class="nav-number">4.0.2.</span> <span class="nav-text">2. 具体交互</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-App-Extensions-不可用的API"><span class="nav-number">5.</span> <span class="nav-text">五. App Extensions 不可用的API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#app-extension不能够像containing-app一样直接进行一些动作，它包括如下："><span class="nav-number">5.0.1.</span> <span class="nav-text">app extension不能够像containing app一样直接进行一些动作，它包括如下：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-创建App-Extension"><span class="nav-number">6.</span> <span class="nav-text">六. 创建App Extension</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-选择Extension-Point"><span class="nav-number">6.0.1.</span> <span class="nav-text">1. 选择Extension Point</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-在Xcode项目中新建target"><span class="nav-number">6.0.2.</span> <span class="nav-text">2. 在Xcode项目中新建target</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-具体步骤"><span class="nav-number">6.0.3.</span> <span class="nav-text">3. 具体步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-注意："><span class="nav-number">6.0.4.</span> <span class="nav-text">4. 注意：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七-检查App-extension默认模板"><span class="nav-number">7.</span> <span class="nav-text">七. 检查App extension默认模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-模板结构"><span class="nav-number">7.0.1.</span> <span class="nav-text">1. 模板结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Info-plist介绍"><span class="nav-number">7.0.2.</span> <span class="nav-text">2. Info.plist介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-其他设置"><span class="nav-number">7.0.3.</span> <span class="nav-text">3. 其他设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八-响应-Host-App-的请求"><span class="nav-number">8.</span> <span class="nav-text">八. 响应 Host App 的请求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-触发"><span class="nav-number">8.0.1.</span> <span class="nav-text">1. 触发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-步骤"><span class="nav-number">8.0.2.</span> <span class="nav-text">2. 步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-注意"><span class="nav-number">8.0.3.</span> <span class="nav-text">3.注意</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九-性能优化"><span class="nav-number">9.</span> <span class="nav-text">九. 性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-设计简洁的UI"><span class="nav-number">9.0.1.</span> <span class="nav-text">1. 设计简洁的UI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-内存"><span class="nav-number">9.0.2.</span> <span class="nav-text">2. 内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-运行"><span class="nav-number">9.0.3.</span> <span class="nav-text">3. 运行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十-iOS-App-extension-测试"><span class="nav-number">10.</span> <span class="nav-text">十. iOS App extension 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Debug-Profile-and-Test-Your-App-Extension"><span class="nav-number">10.0.1.</span> <span class="nav-text">1. Debug, Profile, and Test Your App Extension</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-注意"><span class="nav-number">10.0.2.</span> <span class="nav-text">2.注意</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十一-过审须知"><span class="nav-number">11.</span> <span class="nav-text">十一. 过审须知</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-发布App时为了过审，containing-app必须提供基本功能给用户，同时不能只有app-extensions"><span class="nav-number">11.0.1.</span> <span class="nav-text">1. 发布App时为了过审，containing app必须提供基本功能给用户，同时不能只有app extensions.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-为了过审，无论你为containing-app选择哪种目标设备系列，都必须为您的应用扩展程序指定“iPhone-iPad”（有时称为universal）作为目标设备系列。"><span class="nav-number">11.0.2.</span> <span class="nav-text">2.为了过审，无论你为containing app选择哪种目标设备系列，都必须为您的应用扩展程序指定“iPhone / iPad”（有时称为universal）作为目标设备系列。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十二-处理常见场景"><span class="nav-number">12.</span> <span class="nav-text">十二. 处理常见场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-打包包含extension代码Framework"><span class="nav-number">12.0.1.</span> <span class="nav-text">1. 打包包含extension代码Framework</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Containing-App中分享数据"><span class="nav-number">12.0.2.</span> <span class="nav-text">2.  Containing App中分享数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#关系"><span class="nav-number">12.0.2.1.</span> <span class="nav-text">关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#共享数据"><span class="nav-number">12.0.2.2.</span> <span class="nav-text">共享数据</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
