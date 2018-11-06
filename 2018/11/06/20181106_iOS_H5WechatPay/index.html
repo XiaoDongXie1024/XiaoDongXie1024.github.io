@@ -119,7 +119,7 @@
 <meta property="og:description" content="需求：iOS客户端实现嵌入H5进行微信支付跳转到微信客户端，支付完成后再跳转回我们的APP,解决WKWebView无法跳转回APP的BUG.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/K.iUfeM4HwITvO9QHalGq4nE0YUH9Y56fcXe4CAhPFM!/r/dDYBAAAAAAAA">
-<meta property="og:updated_time" content="2018-11-06T07:27:21.000Z">
+<meta property="og:updated_time" content="2018-11-06T08:16:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS WKWebView H5微信支付跳转">
 <meta name="twitter:description" content="需求：iOS客户端实现嵌入H5进行微信支付跳转到微信客户端，支付完成后再跳转回我们的APP,解决WKWebView无法跳转回APP的BUG.">
@@ -351,7 +351,7 @@
                 
               
 
-              <time title="Created: 2018-11-06 15:24:51 / Modified: 15:27:21" itemprop="dateCreated datePublished" datetime="2018-11-06T15:24:51+08:00">2018-11-06</time>
+              <time title="Created: 2018-11-06 15:24:51 / Modified: 16:16:04" itemprop="dateCreated datePublished" datetime="2018-11-06T15:24:51+08:00">2018-11-06</time>
             
 
             
@@ -455,7 +455,7 @@
 <li><strong>公司或个人已经在微信后台注册了一级域名</strong></li>
 </ul>
 <hr>
-<h4 id="GitHub地址-附代码-iOS-WKWebView-H5微信支付跳转"><a href="#GitHub地址-附代码-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="GitHub地址(附代码) : iOS WKWebView H5微信支付跳转"></a>GitHub地址(附代码) : <a href="">iOS WKWebView H5微信支付跳转</a></h4><h4 id="简书地址-iOS-WKWebView-H5微信支付跳转"><a href="#简书地址-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="简书地址     : iOS WKWebView H5微信支付跳转"></a>简书地址     : <a href="https://www.jianshu.com/p/66d2c0ff51c6" target="_blank" rel="noopener">iOS WKWebView H5微信支付跳转</a></h4><h4 id="博客地址-iOS-WKWebView-H5微信支付跳转"><a href="#博客地址-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="博客地址     : iOS WKWebView H5微信支付跳转"></a>博客地址     : <a href="">iOS WKWebView H5微信支付跳转</a></h4><h4 id="掘金地址-iOS-WKWebView-H5微信支付跳转"><a href="#掘金地址-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="掘金地址     : iOS WKWebView H5微信支付跳转"></a>掘金地址     : <a href="">iOS WKWebView H5微信支付跳转</a></h4><hr>
+<h4 id="GitHub地址-附代码-iOS-WKWebView-H5微信支付跳转"><a href="#GitHub地址-附代码-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="GitHub地址(附代码) : iOS WKWebView H5微信支付跳转"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXWeChatPayJumpClientDemo" target="_blank" rel="noopener">iOS WKWebView H5微信支付跳转</a></h4><h4 id="简书地址-iOS-WKWebView-H5微信支付跳转"><a href="#简书地址-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="简书地址     : iOS WKWebView H5微信支付跳转"></a>简书地址     : <a href="https://www.jianshu.com/p/66d2c0ff51c6" target="_blank" rel="noopener">iOS WKWebView H5微信支付跳转</a></h4><h4 id="博客地址-iOS-WKWebView-H5微信支付跳转"><a href="#博客地址-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="博客地址     : iOS WKWebView H5微信支付跳转"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2018/11/06/20181106_iOS_H5WechatPay/">iOS WKWebView H5微信支付跳转</a></h4><h4 id="掘金地址-iOS-WKWebView-H5微信支付跳转"><a href="#掘金地址-iOS-WKWebView-H5微信支付跳转" class="headerlink" title="掘金地址     : iOS WKWebView H5微信支付跳转"></a>掘金地址     : <a href="https://juejin.im/post/5be14b3af265da61542d1801" target="_blank" rel="noopener">iOS WKWebView H5微信支付跳转</a></h4><hr>
 <h3 id="注意：如对WKWebView基本的初始化代理方法不了解可自行百度谷歌，解释众多，本文只针对了解基础后实现。"><a href="#注意：如对WKWebView基本的初始化代理方法不了解可自行百度谷歌，解释众多，本文只针对了解基础后实现。" class="headerlink" title="注意：如对WKWebView基本的初始化代理方法不了解可自行百度谷歌，解释众多，本文只针对了解基础后实现。"></a>注意：如对WKWebView基本的初始化代理方法不了解可自行百度谷歌，解释众多，本文只针对了解基础后实现。</h3><h4 id="1-在项目的Info-plist中添加一个URL-Schemes（用于跳回我们项目），如下图所示"><a href="#1-在项目的Info-plist中添加一个URL-Schemes（用于跳回我们项目），如下图所示" class="headerlink" title="1.在项目的Info.plist中添加一个URL Schemes（用于跳回我们项目），如下图所示"></a>1.在项目的Info.plist中添加一个URL Schemes（用于跳回我们项目），如下图所示</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/K.iUfeM4HwITvO9QHalGq4nE0YUH9Y56fcXe4CAhPFM!/r/dDYBAAAAAAAA" alt="URL Schemes"></p>
 <p>其中我们只要关心URL Schemes中item的名字例如 xdx.xiaodongxie.cn</p>
 <ul>
