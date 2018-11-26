@@ -110,31 +110,25 @@
 
 
 
-  <meta name="description" content="在比如做移动客户端开发中(iOS,安卓)，我们在直播中要将本地视频推流到服务器，如何将本地相机采集的数据表示出来，或者比如我们要对采集到视频做旋转，裁剪，美颜等操作，如何能高效的完成以上动作，我们都不得不好好了解清楚图像的结构，以至于我们能用代码的形式将它表示出来.">
-<meta name="keywords" content="yuv,video">
+  <meta name="description" content="拆分iOS中体积较大的第三方静态库以实现软件瘦身.">
+<meta name="keywords" content="iOS,lib,thin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="What is YUV ?">
-<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/03/25/yuv/index.html">
+<meta property="og:title" content="iOS拆分，合并静态库以压缩打包空间">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/11/26/20181126_iOS_thinLib/index.html">
 <meta property="og:site_name" content="小东邪 Show Time">
-<meta property="og:description" content="在比如做移动客户端开发中(iOS,安卓)，我们在直播中要将本地视频推流到服务器，如何将本地相机采集的数据表示出来，或者比如我们要对采集到视频做旋转，裁剪，美颜等操作，如何能高效的完成以上动作，我们都不得不好好了解清楚图像的结构，以至于我们能用代码的形式将它表示出来.">
+<meta property="og:description" content="拆分iOS中体积较大的第三方静态库以实现软件瘦身.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/KbcvSTtOW1B1RFmnHDZ*fg.47LnrsqZ*hPoyqYFkgN4!/r/dEUBAAAAAAAA">
-<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/AGEXy4s6LZidmJedeqN00AyuNExs5BgP7OPDKvWgHGI!/r/dEEBAAAAAAAA">
-<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/OTDiLNXDX3hwRpaqBCYtPskBrp8DGwxvmgtcTPGzDh8!/r/dEUBAAAAAAAA">
-<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/I.SsLDmhvPreNe5g58EeLCFOhX1PbcHrx.wYI2Qnt2Q!/r/dEUBAAAAAAAA">
-<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Sv52AMGJn3YGIs8DN0XAEJu..xMmYGBf5rIiE2QVRbg!/r/dEEBAAAAAAAA">
-<meta property="og:updated_time" content="2018-10-25T09:36:21.000Z">
+<meta property="og:updated_time" content="2018-11-26T04:26:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="What is YUV ?">
-<meta name="twitter:description" content="在比如做移动客户端开发中(iOS,安卓)，我们在直播中要将本地视频推流到服务器，如何将本地相机采集的数据表示出来，或者比如我们要对采集到视频做旋转，裁剪，美颜等操作，如何能高效的完成以上动作，我们都不得不好好了解清楚图像的结构，以至于我们能用代码的形式将它表示出来.">
-<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/KbcvSTtOW1B1RFmnHDZ*fg.47LnrsqZ*hPoyqYFkgN4!/r/dEUBAAAAAAAA">
+<meta name="twitter:title" content="iOS拆分，合并静态库以压缩打包空间">
+<meta name="twitter:description" content="拆分iOS中体积较大的第三方静态库以实现软件瘦身.">
 
 
 
 
 
 
-  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/03/25/yuv/"/>
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/11/26/20181126_iOS_thinLib/"/>
 
 
 
@@ -144,7 +138,7 @@
   };
 </script>
 
-  <title>What is YUV ? | 小东邪 Show Time</title>
+  <title>iOS拆分，合并静态库以压缩打包空间 | 小东邪 Show Time</title>
   
 
 
@@ -313,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/03/25/yuv/">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/11/26/20181126_iOS_thinLib/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="小东邪 - Demon">
@@ -330,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">What is YUV ?
+          <h1 class="post-title" itemprop="name headline">iOS拆分，合并静态库以压缩打包空间
               
             
           </h1>
@@ -355,25 +349,9 @@
                 
               
 
-              <time title="Created: 2018-03-25 15:29:25" itemprop="dateCreated datePublished" datetime="2018-03-25T15:29:25+08:00">2018-03-25</time>
+              <time title="Created: 2018-11-26 12:26:41" itemprop="dateCreated datePublished" datetime="2018-11-26T12:26:41+08:00">2018-11-26</time>
             
 
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-10-25 17:36:21" itemprop="dateModified" datetime="2018-10-25T17:36:21+08:00">2018-10-25</time>
-              
             
           </span>
 
@@ -393,13 +371,6 @@
 
                 
                 
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/视频-Video/" itemprop="url" rel="index"><span itemprop="name">视频(Video)</span></a></span>
-
-                
-                
               
             </span>
           
@@ -411,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/03/25/yuv/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/03/25/yuv/" itemprop="commentsCount"></span>
+                <a href="/2018/11/26/20181126_iOS_thinLib/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/11/26/20181126_iOS_thinLib/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -420,7 +391,7 @@
 
           
           
-             <span id="/2018/03/25/yuv/" class="leancloud_visitors" data-flag-title="What is YUV ?">
+             <span id="/2018/11/26/20181126_iOS_thinLib/" class="leancloud_visitors" data-flag-title="iOS拆分，合并静态库以压缩打包空间">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -445,7 +416,7 @@
           
 
           
-              <div class="post-description">在比如做移动客户端开发中(iOS,安卓)，我们在直播中要将本地视频推流到服务器，如何将本地相机采集的数据表示出来，或者比如我们要对采集到视频做旋转，裁剪，美颜等操作，如何能高效的完成以上动作，我们都不得不好好了解清楚图像的结构，以至于我们能用代码的形式将它表示出来.</div>
+              <div class="post-description">拆分iOS中体积较大的第三方静态库以实现软件瘦身.</div>
           
 
         </div>
@@ -464,76 +435,35 @@
         <p class="description"></p>
 
 <a id="more"></a>
-<h3 id="开发中用途"><a href="#开发中用途" class="headerlink" title="开发中用途"></a>开发中用途</h3><p>在比如做移动客户端开发中(iOS,安卓)，我们在直播中要将本地视频推流到服务器，如何将本地相机采集的数据表示出来，或者比如我们要对采集到视频做旋转，裁剪，美颜等操作，如何能高效的完成以上动作，我们都不得不好好了解清楚图像的结构，以至于我们能用代码的形式将它表示出来。</p>
-<h3 id="What-is-YUV"><a href="#What-is-YUV" class="headerlink" title="What is YUV ?"></a>What is YUV ?</h3><ol>
-<li><p>YUV是一种颜色编码方式，主要用于电视系统以及模拟视频领域，它将亮度信息(Y)与色彩信息(UV)分离，没有UV信息一样可以显示完整的图像，只不过是黑白的，这样的设计很好地解决了彩色电视机与黑白电视兼容的问题。</p>
-</li>
-<li><p>YUV不像传统RGB那样要求三个独立的视频信号同时传输，因此YUV方式传输视频占用较少带宽。</p>
-</li>
-</ol>
-<h4 id="概念区分"><a href="#概念区分" class="headerlink" title="概念区分"></a>概念区分</h4><ul>
-<li><p>Y’UV, YUV, YCbCr, YPbPr, etc.</p>
-<p>这几个词乍一看十分相似.</p>
-<ul>
-<li><p>在过去，YUV 和 Y’UV被用作电视系统中颜色信息的特定模拟信息编码。而YCbCr被用作颜色信息的数字编码，通常适用于视频和静态图像的压缩和传输（MPEG, JPEG）。</p>
-</li>
-<li><p>今天，YUV通常用被用在计算机行业描述使用YCbCr编码的文件格式。</p>
-</li>
+<h3 id="需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身"><a href="#需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身" class="headerlink" title="需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身."></a>需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身.</h3><hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>了解各种架构的静态库含义</li>
+<li>了解如何使用Terminal</li>
 </ul>
-</li>
-<li><p>Y：表示明亮度(Luminance,Luma),也就是灰度值</p>
-</li>
-<li>U和V：色度(Chrominance,Chroma),描述影像色彩及饱和度。</li>
-</ul>
-<h4 id="1-采集方式-实心圆圈代表Y-空心圆圈代表UV"><a href="#1-采集方式-实心圆圈代表Y-空心圆圈代表UV" class="headerlink" title="1. 采集方式(实心圆圈代表Y,空心圆圈代表UV)"></a>1. 采集方式(实心圆圈代表Y,空心圆圈代表UV)</h4><ul>
-<li>YUV4:4:4 (每一个Y对应一组UV分量)</li>
-</ul>
-<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/KbcvSTtOW1B1RFmnHDZ*fg.47LnrsqZ*hPoyqYFkgN4!/r/dEUBAAAAAAAA" alt="YUV4:4:4"></p>
-<ul>
-<li>YUV4:2:2 (每两个Y共用一组UV分量)</li>
-</ul>
-<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/AGEXy4s6LZidmJedeqN00AyuNExs5BgP7OPDKvWgHGI!/r/dEEBAAAAAAAA" alt="YUV4:2:2"></p>
-<ul>
-<li>YUV4:2:0 (每四个Y共用一组UV分量)</li>
-</ul>
-<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj4gQyTr/OTDiLNXDX3hwRpaqBCYtPskBrp8DGwxvmgtcTPGzDh8!/r/dEUBAAAAAAAA" alt="YUV4:2:0"></p>
-<h4 id="2-存储方式"><a href="#2-存储方式" class="headerlink" title="2.存储方式"></a>2.存储方式</h4><blockquote>
-<p>了解了以上三幅图的YUV采集方式后，我们来重点说一下YUV的数据是如何存储的。</p>
-</blockquote>
-<p>在以上三张图中，实心圆圈代表一个Y分量，空心圆圈代表一个UV分量，而因为又分三种不同的采集方式，即1个Y对应一组UV分量，2个Y共用一组UV分量，4个Y共用一组UV分量，</p>
-<p>以YUV4:2:0为例，它又被分为YUV420P与YUV420SP,它们都是YUV420格式。</p>
-<ul>
-<li>YUV420P, Plane模式(Y,U,V三个plane)将Y,U,V分量分别打包，依次存储。下图为I420.<ul>
-<li>I420 : YYYYYYYY UU VV   </li>
-<li>YV12 : YYYYYYYY VV UU    </li>
-</ul>
-</li>
-</ul>
-<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/I.SsLDmhvPreNe5g58EeLCFOhX1PbcHrx.wYI2Qnt2Q!/r/dEUBAAAAAAAA" alt="YUV420p - I420"></p>
-<ul>
-<li>YUV420SP(NV12/NV21): two-plane模式，即Y和UV分为两个Plane,但是UV（CbCr）为交错存储，而不是分为三个plane. 下图为NV12<ul>
-<li>NV12: YYYYYYYY UVUV</li>
-<li>NV21: YYYYYYYY VUVU     </li>
-</ul>
-</li>
-</ul>
-<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Sv52AMGJn3YGIs8DN0XAEJu..xMmYGBf5rIiE2QVRbg!/r/dEEBAAAAAAAA" alt="YUV420sp"></p>
-<p>根据以上两幅图，我们以分辨率为640<em>480的图片为例，则它的大小为  Y : width(640) </em> height(480) 可认为每个Y即为每个像素点，又因为每4个Y共用一组UV,所以，U和V的大小都为： width(640) <em> height(480) </em> (1 / 4 ). 所以图片真正的大小为 Y+U+V = 3 / 2 <em> (width(640) </em> height(480)).</p>
+<hr>
+<h4 id="简书地址"><a href="#简书地址" class="headerlink" title="简书地址     : "></a>简书地址     : <a href="https://www.jianshu.com/p/636b63529971" target="_blank" rel="noopener"></a></h4><h4 id="博客地址"><a href="#博客地址" class="headerlink" title="博客地址     : "></a>博客地址     : <a href=""></a></h4><h4 id="掘金地址"><a href="#掘金地址" class="headerlink" title="掘金地址     : "></a>掘金地址     : <a href="https://juejin.im/post/5bfb752851882528c4467c52" target="_blank" rel="noopener"></a></h4><hr>
+<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>一般静态库中支持真机和模拟器多种CPU架构，比如(armv6, armv7,armv7s, arm64, i386, x86_64)。</p>
+<p>但比如APP打包上架时可能希望更小的安装包，所以我们可以对项目中的静态库进行拆分，因为对用户而言只是使用真机环境，所以包含模拟器的静态库其实是多余的。</p>
 <blockquote>
-<p>知道了YUV像素的排列方式以及如何求图像真正大小后我们便可以开始我们真正的工作。</p>
+<p>注意：APP上架时不能包含i386、x86_64的架构, 否则将编译将报错.</p>
 </blockquote>
-<p>在程序中，比如一张图片的分辨率为640*480,如果该图片的格式为YUV420P,则我们可以很轻松的算出这张图片的Y,U,V三个分量。<br>我们用数组来存储该图像的大小byte[] src<br>则(I420)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Y = src[width * height];</span><br><span class="line">U = Y + scr[1/4 * width * height];</span><br><span class="line">V = U + scr[1/4 * width * height];</span><br></pre></td></tr></table></figure></p>
+<h3 id="静态库基本操作"><a href="#静态库基本操作" class="headerlink" title="静态库基本操作"></a>静态库基本操作</h3><h4 id="1-查看静态库信息"><a href="#1-查看静态库信息" class="headerlink" title="1. 查看静态库信息"></a>1. 查看静态库信息</h4><p>首先在Terminal中进入当前静态库所在的位置，然后使用下面指令查看当前静态库包含的架构的信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -info ./xxx.a</span><br></pre></td></tr></table></figure>
+<p>此时终端会显示类似如下语句, 即该静态库包含的所有架构信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Architectures in the fat file: ./xxx.a are: i386 x86_64 armv7 arm64</span><br></pre></td></tr></table></figure>
+<h4 id="2-拆分静态库"><a href="#2-拆分静态库" class="headerlink" title="2. 拆分静态库"></a>2. 拆分静态库</h4><p>使用以下命令可以实现将xxx.a中的armv7架构分离为新的 xxx_armv7.a 静态库(该静态库只包含armv7架构).<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo ./xxx.a -thin armv7 -output xxx_armv7.a</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-合并静态库"><a href="#3-合并静态库" class="headerlink" title="3. 合并静态库"></a>3. 合并静态库</h4><p>使用下面命令可实现将xxx_armv7.a与xxx_arm64.a合并为一个新的静态库new.a.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -create xxx_armv7.a xxx_arm64.a -output new.a</span><br></pre></td></tr></table></figure></p>
+<h3 id="附-利用脚本实现剥离整个文件夹下的所有静态库"><a href="#附-利用脚本实现剥离整个文件夹下的所有静态库" class="headerlink" title="附: 利用脚本实现剥离整个文件夹下的所有静态库"></a>附: 利用脚本实现剥离整个文件夹下的所有静态库</h3><p>例如，如下实现了将libs文件夹下所有文件剥离为只包含arm64的静态库(覆盖之前文件)</p>
 <blockquote>
-<p>注意，计算的结果是通过不同格式来求的，所以不再一一介绍。</p>
+<p>如有其它需求可稍作改动</p>
 </blockquote>
-<p> YUV格式可分为两大类：打包(packed) , 平面(planar)</p>
-<ul>
-<li>打包(packed) : 将YUV分量存放在同一个数组中，通常是几个相邻的像素组成的一个宏像素(macro-pixel);</li>
-<li>平面(planar) : 使用三个数组分开存放YUV三个分量，就像一个三维平面。</li>
-</ul>
-<p>在以后的开发中，假如我们要对视频流中的图片做一些特殊处理，比如Crop, Rotate, Scale, 美颜等等，如果想高效实现我们必须了解YUV的格式这样我们才能做出正确处理。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文为YUV的基础知识，帮助初学者或在工作中接触音视频开发后因概念难以理解造成困惑无法继续开发的开发人员，只有我们了解了YUV的组成才能在代码中进行灵活应用，包括使用例如libyuv等优秀的第三方库。</p>
-<h4 id="参考-详解YUV数据格式-图文详解YUV420数据格式-YUV"><a href="#参考-详解YUV数据格式-图文详解YUV420数据格式-YUV" class="headerlink" title="参考: 详解YUV数据格式,图文详解YUV420数据格式,YUV"></a>参考: <a href="http://wentao1213.com/2016/11/28/linux-yuv-study/" target="_blank" rel="noopener">详解YUV数据格式</a>,<a href="https://www.cnblogs.com/azraelly/archive/2013/01/01/2841269.html" target="_blank" rel="noopener">图文详解YUV420数据格式</a>,<a href="https://en.wikipedia.org/wiki/YUV" target="_blank" rel="noopener">YUV</a></h4>
+<p>以下是apart.sh脚本文件中的所有内容，该脚本将当前目录下的Libs文件夹中所有静态库剥离为只包含arm64的静态库并替换原先静态库.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">set -x</span><br><span class="line"></span><br><span class="line"># Make all libs to arm64</span><br><span class="line">cd libs</span><br><span class="line">for file in `ls`</span><br><span class="line">do</span><br><span class="line">  lipo $file -thin arm64 -output $file</span><br><span class="line">done</span><br><span class="line">cd ..</span><br></pre></td></tr></table></figure>
+<p>而我们只需要在该脚本所在路径使用以下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./apart.sh</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>如果libs中有的静态库已经只是arm64会跑错，可忽略(错误信息:must be a fat file when the -thin option is specified)</p>
+</blockquote>
+<h4 id="注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中-否则请根据需求自行修改脚本文件"><a href="#注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中-否则请根据需求自行修改脚本文件" class="headerlink" title="注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中.否则请根据需求自行修改脚本文件."></a>注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中.否则请根据需求自行修改脚本文件.</h4>
       
     </div>
 
@@ -584,8 +514,6 @@
           
             <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-            <a href="/tags/视频-Video/" rel="tag"># 视频(Video)</a>
-          
         </div>
       
 
@@ -597,8 +525,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/24/ios_cacheQueue/" rel="next" title="利用C++ 设计缓存队列实现高效传输相机数据">
-                <i class="fa fa-chevron-left"></i> 利用C++ 设计缓存队列实现高效传输相机数据
+              <a href="/2018/11/23/20181123_iOS_SDKBundle/" rel="next" title="SDK中使用资源文件">
+                <i class="fa fa-chevron-left"></i> SDK中使用资源文件
               </a>
             
           </div>
@@ -606,10 +534,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/25/extern_C/" rel="prev" title="extern_C解析">
-                extern_C解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -856,7 +780,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发中用途"><span class="nav-number">1.</span> <span class="nav-text">开发中用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-is-YUV"><span class="nav-number">2.</span> <span class="nav-text">What is YUV ?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念区分"><span class="nav-number">2.1.</span> <span class="nav-text">概念区分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-采集方式-实心圆圈代表Y-空心圆圈代表UV"><span class="nav-number">2.2.</span> <span class="nav-text">1. 采集方式(实心圆圈代表Y,空心圆圈代表UV)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-存储方式"><span class="nav-number">2.3.</span> <span class="nav-text">2.存储方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考-详解YUV数据格式-图文详解YUV420数据格式-YUV"><span class="nav-number">3.1.</span> <span class="nav-text">参考: 详解YUV数据格式,图文详解YUV420数据格式,YUV</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身"><span class="nav-number">1.</span> <span class="nav-text">需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址"><span class="nav-number">2.1.</span> <span class="nav-text">简书地址     : </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址"><span class="nav-number">2.2.</span> <span class="nav-text">博客地址     : </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址"><span class="nav-number">2.3.</span> <span class="nav-text">掘金地址     : </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-number">3.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态库基本操作"><span class="nav-number">4.</span> <span class="nav-text">静态库基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-查看静态库信息"><span class="nav-number">4.1.</span> <span class="nav-text">1. 查看静态库信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-拆分静态库"><span class="nav-number">4.2.</span> <span class="nav-text">2. 拆分静态库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-合并静态库"><span class="nav-number">4.3.</span> <span class="nav-text">3. 合并静态库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附-利用脚本实现剥离整个文件夹下的所有静态库"><span class="nav-number">5.</span> <span class="nav-text">附: 利用脚本实现剥离整个文件夹下的所有静态库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中-否则请根据需求自行修改脚本文件"><span class="nav-number">5.1.</span> <span class="nav-text">注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中.否则请根据需求自行修改脚本文件.</span></a></li></ol></li></ol></div>
             
 
           </div>
