@@ -118,7 +118,7 @@
 <meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="拆分iOS中体积较大的第三方静态库以实现软件瘦身.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-26T04:26:41.000Z">
+<meta property="og:updated_time" content="2018-11-26T04:29:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS拆分，合并静态库以压缩打包空间">
 <meta name="twitter:description" content="拆分iOS中体积较大的第三方静态库以实现软件瘦身.">
@@ -349,7 +349,7 @@
                 
               
 
-              <time title="Created: 2018-11-26 12:26:41" itemprop="dateCreated datePublished" datetime="2018-11-26T12:26:41+08:00">2018-11-26</time>
+              <time title="Created: 2018-11-26 12:29:41" itemprop="dateCreated datePublished" datetime="2018-11-26T12:29:41+08:00">2018-11-26</time>
             
 
             
@@ -441,7 +441,7 @@
 <li>了解如何使用Terminal</li>
 </ul>
 <hr>
-<h4 id="简书地址"><a href="#简书地址" class="headerlink" title="简书地址     : "></a>简书地址     : <a href="https://www.jianshu.com/p/636b63529971" target="_blank" rel="noopener"></a></h4><h4 id="博客地址"><a href="#博客地址" class="headerlink" title="博客地址     : "></a>博客地址     : <a href=""></a></h4><h4 id="掘金地址"><a href="#掘金地址" class="headerlink" title="掘金地址     : "></a>掘金地址     : <a href="https://juejin.im/post/5bfb752851882528c4467c52" target="_blank" rel="noopener"></a></h4><hr>
+<h4 id="简书地址-拆分iOS静态库"><a href="#简书地址-拆分iOS静态库" class="headerlink" title="简书地址     : 拆分iOS静态库"></a>简书地址     : <a href="https://www.jianshu.com/p/636b63529971" target="_blank" rel="noopener">拆分iOS静态库</a></h4><h4 id="博客地址-拆分iOS静态库"><a href="#博客地址-拆分iOS静态库" class="headerlink" title="博客地址     : 拆分iOS静态库"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2018/11/26/20181126_iOS_thinLib/">拆分iOS静态库</a></h4><h4 id="掘金地址-拆分iOS静态库"><a href="#掘金地址-拆分iOS静态库" class="headerlink" title="掘金地址     : 拆分iOS静态库"></a>掘金地址     : <a href="https://juejin.im/post/5bfb752851882528c4467c52" target="_blank" rel="noopener">拆分iOS静态库</a></h4><hr>
 <h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>一般静态库中支持真机和模拟器多种CPU架构，比如(armv6, armv7,armv7s, arm64, i386, x86_64)。</p>
 <p>但比如APP打包上架时可能希望更小的安装包，所以我们可以对项目中的静态库进行拆分，因为对用户而言只是使用真机环境，所以包含模拟器的静态库其实是多余的。</p>
 <blockquote>
@@ -780,7 +780,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身"><span class="nav-number">1.</span> <span class="nav-text">需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址"><span class="nav-number">2.1.</span> <span class="nav-text">简书地址     : </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址"><span class="nav-number">2.2.</span> <span class="nav-text">博客地址     : </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址"><span class="nav-number">2.3.</span> <span class="nav-text">掘金地址     : </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-number">3.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态库基本操作"><span class="nav-number">4.</span> <span class="nav-text">静态库基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-查看静态库信息"><span class="nav-number">4.1.</span> <span class="nav-text">1. 查看静态库信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-拆分静态库"><span class="nav-number">4.2.</span> <span class="nav-text">2. 拆分静态库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-合并静态库"><span class="nav-number">4.3.</span> <span class="nav-text">3. 合并静态库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附-利用脚本实现剥离整个文件夹下的所有静态库"><span class="nav-number">5.</span> <span class="nav-text">附: 利用脚本实现剥离整个文件夹下的所有静态库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中-否则请根据需求自行修改脚本文件"><span class="nav-number">5.1.</span> <span class="nav-text">注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中.否则请根据需求自行修改脚本文件.</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身"><span class="nav-number">1.</span> <span class="nav-text">需求：拆分iOS中体积较大的第三方静态库以实现软件瘦身.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-拆分iOS静态库"><span class="nav-number">2.1.</span> <span class="nav-text">简书地址     : 拆分iOS静态库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-拆分iOS静态库"><span class="nav-number">2.2.</span> <span class="nav-text">博客地址     : 拆分iOS静态库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-拆分iOS静态库"><span class="nav-number">2.3.</span> <span class="nav-text">掘金地址     : 拆分iOS静态库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-number">3.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态库基本操作"><span class="nav-number">4.</span> <span class="nav-text">静态库基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-查看静态库信息"><span class="nav-number">4.1.</span> <span class="nav-text">1. 查看静态库信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-拆分静态库"><span class="nav-number">4.2.</span> <span class="nav-text">2. 拆分静态库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-合并静态库"><span class="nav-number">4.3.</span> <span class="nav-text">3. 合并静态库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附-利用脚本实现剥离整个文件夹下的所有静态库"><span class="nav-number">5.</span> <span class="nav-text">附: 利用脚本实现剥离整个文件夹下的所有静态库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中-否则请根据需求自行修改脚本文件"><span class="nav-number">5.1.</span> <span class="nav-text">注意：脚本所在路径下必须包含名为libs的文件夹，并将静态库放入其中.否则请根据需求自行修改脚本文件.</span></a></li></ol></li></ol></div>
             
 
           </div>
