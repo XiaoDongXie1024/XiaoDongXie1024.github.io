@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求.">
+<meta name="keywords" content="iOS,C,pThread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS封装C语言P Thread">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/12/04/20181204_iOS_PThread/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-04T08:59:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS封装C语言P Thread">
+<meta name="twitter:description" content="iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求.">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/12/04/20181204_iOS_PThread/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS封装C语言P Thread | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/12/04/20181204_iOS_PThread/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS封装C语言P Thread
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-12-04 16:57:04 / Modified: 16:59:33" itemprop="dateCreated datePublished" datetime="2018-12-04T16:57:04+08:00">2018-12-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/线程/" itemprop="url" rel="index"><span itemprop="name">线程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/04/20181204_iOS_PThread/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/12/04/20181204_iOS_PThread/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/12/04/20181204_iOS_PThread/" class="leancloud_visitors" data-flag-title="iOS封装C语言P Thread">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求：iOS封装C语言P-Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求。"><a href="#需求：iOS封装C语言P-Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求。" class="headerlink" title="需求：iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求。"></a>需求：iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求。</h3><hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>了解p thread基本用法</li>
+<li>了解iOS端线程基本概念</li>
+<li>了解线程加锁基本原理</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-iOS封装C语言P-Thread"><a href="#GitHub地址-附代码-iOS封装C语言P-Thread" class="headerlink" title="GitHub地址(附代码) : iOS封装C语言P Thread"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXiOSEncapsulatePThread" target="_blank" rel="noopener">iOS封装C语言P Thread</a></h4><h4 id="简书地址-iOS封装C语言P-Thread"><a href="#简书地址-iOS封装C语言P-Thread" class="headerlink" title="简书地址     : iOS封装C语言P Thread"></a>简书地址     : <a href="https://www.jianshu.com/p/f46b60ada640" target="_blank" rel="noopener">iOS封装C语言P Thread</a></h4><h4 id="博客地址-iOS封装C语言P-Thread"><a href="#博客地址-iOS封装C语言P-Thread" class="headerlink" title="博客地址     : iOS封装C语言P Thread"></a>博客地址     : <a href="">iOS封装C语言P Thread</a></h4><h4 id="掘金地址-iOS封装C语言P-Thread"><a href="#掘金地址-iOS封装C语言P-Thread" class="headerlink" title="掘金地址     : iOS封装C语言P Thread"></a>掘金地址     : <a href="https://juejin.im/post/5c063fb1e51d451dd05ac571" target="_blank" rel="noopener">iOS封装C语言P Thread</a></h4><hr>
+<h2 id="一-基类的写法"><a href="#一-基类的写法" class="headerlink" title="一. 基类的写法"></a>一. 基类的写法</h2><h3 id="1-所需变量"><a href="#1-所需变量" class="headerlink" title="1.所需变量"></a>1.所需变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@interface XDXPThreadHandler ()</span><br><span class="line">&#123;</span><br><span class="line">    pthread_t           _baseThread;            // 即我们主要控制的线程</span><br><span class="line">    bool                _isStopBaseThread;      // 是否停止线程的标志</span><br><span class="line">    bool                _isPauseBaseThread;     // 是否暂停线程的标志</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_t     _baseThreadMutex;       // 线程的锁</span><br><span class="line">    pthread_cond_t      _baseThreadCond;        // 暂停与唤醒线程的变量</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h3 id="2-初始化"><a href="#2-初始化" class="headerlink" title="2.初始化"></a>2.初始化</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)initBaseThread &#123;</span><br><span class="line">    _isStopBaseThread  = false;</span><br><span class="line">    _isPauseBaseThread = false;</span><br><span class="line">    pthread_mutex_init(&amp;_baseThreadMutex, NULL);</span><br><span class="line">    pthread_cond_init(&amp;_baseThreadCond, NULL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-开启线程"><a href="#3-开启线程" class="headerlink" title="3.开启线程"></a>3.开启线程</h3><p>pthread_create 即为使用C语言的方式创建一条线程</p>
+<ul>
+<li>第一个参数 : 创建的线程对象</li>
+<li>第二个参数 : 属性，可填空</li>
+<li>第三个参数 : 该线程创建完成后触发的方法(C语言的函数，非OC的方法)，即该方法内即为在该线程内</li>
+<li>第四个参数 : 向第三个方法中传递的参数(我们在这里需要将该类的对象的实例传过去，否则在函数内无法调用本类相关的方法和属性)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int pthread_create(pthread_t * __restrict,</span><br><span class="line">		const pthread_attr_t * _Nullable __restrict,</span><br><span class="line">		void *(* _Nonnull)(void *), void * _Nullable __restrict);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (void)startBaseThreadTask &#123;</span><br><span class="line">    [self initBaseThread];</span><br><span class="line">    pthread_create(&amp;_baseThread, NULL, doBaseThreadTask, (__bridge_retained void *)self);</span><br><span class="line">    log4cplus_error(&quot;XDXPThreadHandler&quot;, &quot;%s - Start send BaseThread info thread !&quot;,ModuleName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void * doBaseThreadTask(void *param);  // 函数声明</span><br><span class="line"></span><br><span class="line">void * doBaseThreadTask(void *param) &#123;</span><br><span class="line">    XDXPThreadHandler *instance = (__bridge_transfer XDXPThreadHandler *)param;</span><br><span class="line">    pthread_setname_np(instance.baseThreadName.UTF8String);</span><br><span class="line">    </span><br><span class="line">    while (instance-&gt;_isStopBaseThread == false) &#123;</span><br><span class="line">        if (true == instance-&gt;_isPauseBaseThread) &#123;</span><br><span class="line">            pthread_mutex_lock(&amp;instance-&gt;_baseThreadMutex);</span><br><span class="line">            pthread_cond_wait(&amp;instance-&gt;_baseThreadCond,&amp;instance-&gt;_baseThreadMutex);</span><br><span class="line">            pthread_mutex_unlock(&amp;instance-&gt;_baseThreadMutex);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            [instance doBaseThreadTask];</span><br><span class="line">            usleep(XDXUSleepOneSec);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)doBaseThreadTask &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>pthread_setname_np : 设置线程的名称</li>
+</ul>
+<h4 id="线程解析"><a href="#线程解析" class="headerlink" title="线程解析"></a>线程解析</h4><ul>
+<li>因为我们要模拟类似OC NSTimer每隔多少秒执行一次任务，即我们需要一个while循环不断执行，执行一次sleep指定时间</li>
+<li>其次我们需要通过是否停止flag来控制是否需要退出循环，好让其他线程能够销毁掉此线程(调用pthread_join的原理为等线程结束任务后将线程杀掉)</li>
+<li>如果需要暂停线程，我们需要借助pthread_cond_wait函数来暂停线程，注意暂停恢复操作需要加锁处理</li>
+<li>如果不需要上述两个flag我们则进行线程正常的操作，每隔指定秒数循环一次，这样子类只需要重写doBaseThreadTask即可使用该线程</li>
+</ul>
+<h3 id="4-停止线程"><a href="#4-停止线程" class="headerlink" title="4.停止线程"></a>4.停止线程</h3><blockquote>
+<p>注意：停止线程时，我们必须先将该线程的任务停止下来，即使循环停止，所以在<code>- (void)freeResource</code>中我们先将<code>_isStopBaseThread = true;</code></p>
+</blockquote>
+<ul>
+<li>pthread_join : 即为等待线程任务结束后，杀死指定线程。 注意此函数只能在非自身线程执行！</li>
+<li><code>_baseThread  = NULL;</code>此操作必须在最后执行，否则无法执行<code>pthread_join</code>函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (void)stopBaseThreadTaskThread &#123;</span><br><span class="line">    if (_baseThread) &#123;</span><br><span class="line">        log4cplus_error(&quot;XDXPThreadHandler&quot;, &quot;%s - Stop send BaseThread thread !&quot;,ModuleName);</span><br><span class="line">        [self freeResource];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        log4cplus_error(&quot;XDXPThreadHandler&quot;, &quot;%s - Stop send BaseThread thread Failed, The base thread was destoryed!&quot;,ModuleName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)freeResource &#123;</span><br><span class="line">    _isStopBaseThread = true;</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_destroy(&amp;_baseThreadMutex);</span><br><span class="line">    pthread_cond_destroy(&amp;_baseThreadCond);</span><br><span class="line">    </span><br><span class="line">    int err = pthread_join(_baseThread, NULL);</span><br><span class="line">    if (err != 0) &#123;</span><br><span class="line">        log4cplus_error(&quot;XDXPThreadHandler&quot;, &quot;%s - Destory send BaseThread thread faild. status : %d&quot;,ModuleName,err);</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        log4cplus_error(&quot;XDXPThreadHandler&quot;, &quot;%s - Destory send BaseThread thread !&quot;,ModuleName);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _baseThread  = NULL;</span><br><span class="line">    _isStopBaseThread  = false;</span><br><span class="line">    _isPauseBaseThread = false;</span><br><span class="line">    </span><br><span class="line">    log4cplus_error(&quot;XDXPThreadHandler&quot;, &quot;%s - Free send BaseThread info thread !&quot;,ModuleName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-暂停与恢复线程"><a href="#5-暂停与恢复线程" class="headerlink" title="5.暂停与恢复线程"></a>5.暂停与恢复线程</h3><p>暂停与恢复线程的原理即利用<code>_isPauseBaseThread</code>该flag让线程执行暂停与执行所对应的函数</p>
+<ul>
+<li>pthread_cond_broadcast : 唤醒某条线程</li>
+<li>pthread_cond_wait : 使某条线程sleep</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- (void)pauseBaseThread &#123;</span><br><span class="line">    if (_isPauseBaseThread == false) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;_baseThreadMutex);</span><br><span class="line">        _isPauseBaseThread = true;</span><br><span class="line">        pthread_mutex_unlock(&amp;_baseThreadMutex);</span><br><span class="line">        log4cplus_info(&quot;Crop&quot;, &quot;Suspend send BaseThread info Thread !&quot;);</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        log4cplus_error(&quot;Crop&quot;, &quot;The send BaseThread info thread had Suspend!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (void)continueBaseThread &#123;</span><br><span class="line">    if (_isPauseBaseThread == true) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;_baseThreadMutex);</span><br><span class="line">        _isPauseBaseThread = false;</span><br><span class="line">        pthread_cond_broadcast(&amp;_baseThreadCond);</span><br><span class="line">        pthread_mutex_unlock(&amp;_baseThreadMutex);</span><br><span class="line">        log4cplus_info(&quot;Crop&quot;, &quot;Resume send BaseThread info Thread !&quot;);</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        log4cplus_error(&quot;Crop&quot;, &quot;The send BaseThread info Thread is running!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="二-子类继承基类"><a href="#二-子类继承基类" class="headerlink" title="二. 子类继承基类"></a>二. 子类继承基类</h2><p>有了第一步中的操作，我们的父类线程已经写好，子类只要继承父类并实现<code>- (void)doBaseThreadTask</code>即可做到每隔指定秒数完成某项任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@interface XDXTestPThreadHandler : XDXPThreadHandler</span><br><span class="line">- (void)setBaseThreadName:(NSString *)name;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation XDXTestPThreadHandler</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (void)doBaseThreadTask &#123;</span><br><span class="line">    [super doBaseThreadTask];</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;Hello&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h2 id="三-程序中调用"><a href="#三-程序中调用" class="headerlink" title="三. 程序中调用"></a>三. 程序中调用</h2><p>我们在主程序中可以设置线程名称以及线程每次等待时间等等，然后调用start,stop,pause,continue即可看到控制台上关于线程的打印，证明线程的功能已经实现完毕。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view, typically from a nib.</span><br><span class="line">    </span><br><span class="line">    // 非单例</span><br><span class="line">    self.testThread = [[XDXTestPThreadHandler alloc] init];</span><br><span class="line">    self.testThread.baseThreadName = @&quot;World&quot;;</span><br><span class="line"></span><br><span class="line">    // 单例</span><br><span class="line">    self.testAThread= [XDXTestAPThreadHandler getInstance];</span><br><span class="line">    self.testAThread.baseThreadName = @&quot;Hello&quot;;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#pragma mark test</span><br><span class="line">- (IBAction)startBtnClicked:(id)sender &#123;</span><br><span class="line">    [self.testThread startBaseThreadTask];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/线程/" rel="tag"># 线程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/26/20181126_iOS_thinLib/" rel="next" title="iOS拆分，合并静态库以压缩打包空间">
+                <i class="fa fa-chevron-left"></i> iOS拆分，合并静态库以压缩打包空间
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：iOS封装C语言P-Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求。"><span class="nav-number">1.</span> <span class="nav-text">需求：iOS封装C语言P Thread以实现开始，结束，暂停，继续，指定线程名称，任务等的需求。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS封装C语言P-Thread"><span class="nav-number">2.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS封装C语言P Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS封装C语言P-Thread"><span class="nav-number">2.2.</span> <span class="nav-text">简书地址     : iOS封装C语言P Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS封装C语言P-Thread"><span class="nav-number">2.3.</span> <span class="nav-text">博客地址     : iOS封装C语言P Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS封装C语言P-Thread"><span class="nav-number">2.4.</span> <span class="nav-text">掘金地址     : iOS封装C语言P Thread</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-基类的写法"><span class="nav-number"></span> <span class="nav-text">一. 基类的写法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-所需变量"><span class="nav-number">1.</span> <span class="nav-text">1.所需变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-初始化"><span class="nav-number">2.</span> <span class="nav-text">2.初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-开启线程"><span class="nav-number">3.</span> <span class="nav-text">3.开启线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程解析"><span class="nav-number">3.1.</span> <span class="nav-text">线程解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-停止线程"><span class="nav-number">4.</span> <span class="nav-text">4.停止线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-暂停与恢复线程"><span class="nav-number">5.</span> <span class="nav-text">5.暂停与恢复线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-子类继承基类"><span class="nav-number"></span> <span class="nav-text">二. 子类继承基类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-程序中调用"><span class="nav-number"></span> <span class="nav-text">三. 程序中调用</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
