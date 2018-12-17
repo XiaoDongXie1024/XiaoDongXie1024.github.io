@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务.">
+<meta name="keywords" content="iOS,后台模式,位置更新, 后台任务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS后台模式借助位置更新实现">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/12/17/20181217_iOS_BackgroundMode/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4X5qiQnVAbeRlwtIG9oUqfAwvlwaccCcRZvYkdDQZC4!/r/dL4AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/bC0it.iU0sRAWqQUS83WHiMfdLj7rep4dFWjPDqc1A8!/r/dDUBAAAAAAAA">
+<meta property="og:updated_time" content="2018-12-17T11:14:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS后台模式借助位置更新实现">
+<meta name="twitter:description" content="需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务.">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4X5qiQnVAbeRlwtIG9oUqfAwvlwaccCcRZvYkdDQZC4!/r/dL4AAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/12/17/20181217_iOS_BackgroundMode/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS后台模式借助位置更新实现 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/12/17/20181217_iOS_BackgroundMode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS后台模式借助位置更新实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-12-17 19:07:56 / Modified: 19:14:24" itemprop="dateCreated datePublished" datetime="2018-12-17T19:07:56+08:00">2018-12-17</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/17/20181217_iOS_BackgroundMode/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/12/17/20181217_iOS_BackgroundMode/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/12/17/20181217_iOS_BackgroundMode/" class="leancloud_visitors" data-flag-title="iOS后台模式借助位置更新实现">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求：iOS系统下使我们的app在后台下-点击Home键进入后台-仍能继续运行任务"><a href="#需求：iOS系统下使我们的app在后台下-点击Home键进入后台-仍能继续运行任务" class="headerlink" title="需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务."></a>需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务.</h3><hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>了解后台任务机制</li>
+<li>了解获取位置基本原理</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-iOS后台模式借助位置更新实现"><a href="#GitHub地址-附代码-iOS后台模式借助位置更新实现" class="headerlink" title="GitHub地址(附代码) : iOS后台模式借助位置更新实现"></a>GitHub地址(附代码) : <a href="https://github.com/" target="_blank" rel="noopener">iOS后台模式借助位置更新实现</a></h4><h4 id="简书地址-iOS后台模式借助位置更新实现"><a href="#简书地址-iOS后台模式借助位置更新实现" class="headerlink" title="简书地址     : iOS后台模式借助位置更新实现"></a>简书地址     : <a href="https://www.jianshu.com/p/99f4821136d0" target="_blank" rel="noopener">iOS后台模式借助位置更新实现</a></h4><h4 id="博客地址-iOS后台模式借助位置更新实现"><a href="#博客地址-iOS后台模式借助位置更新实现" class="headerlink" title="博客地址     : iOS后台模式借助位置更新实现"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2018/12/17/20181217_iOS_BackgroundMode/">iOS后台模式借助位置更新实现</a></h4><h4 id="掘金地址-iOS后台模式借助位置更新实现"><a href="#掘金地址-iOS后台模式借助位置更新实现" class="headerlink" title="掘金地址     : iOS后台模式借助位置更新实现"></a>掘金地址     : <a href="https://juejin.im/post/5c1784c0f265da6167203bb3" target="_blank" rel="noopener">iOS后台模式借助位置更新实现</a></h4><hr>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>iOS下默认app中所有线程在进入后台后(点击Home键或上滑退出)所有线程处于挂起状态，即不支持后台运行程序,当再次点击进入app后,所有线程恢复运行,因此，如果要实现后台模式,即所有线程在进入后台后仍处于活跃状态。</p>
+<p>苹果官方提供了打开后台模式开关的操作，但是需要说明使用后台模式的场景，如下项目配置图1中所示,但我们不能平白无故使用例如后台播放音乐，VOIP等等功能(否则会上架被拒)，综合考虑，我们可以选用后台实时更新位置以实现支持后台模式，因为位置可以作为app的数据分析统计等等。</p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><ul>
+<li>实现获取地理位置信息（必须给予app始终允许的位置权限）</li>
+<li>开启后台模式-更新地理位置信息</li>
+<li>进入后台后轮循开始后台任务(1个后台任务有效时间为3分钟)</li>
+</ul>
+<h2 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h2><p>实现后台模式需要借助例如位置更新,后台播放音乐，VOIP等等功能以实现后台app处于活跃状态</p>
+<ul>
+<li><p>开启后台模式:Project -&gt; Capabilities -&gt; Background Modes -&gt; Location updates<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4X5qiQnVAbeRlwtIG9oUqfAwvlwaccCcRZvYkdDQZC4!/r/dL4AAAAAAAAA" alt="Background_Mode"></p>
+</li>
+<li><p>plist文件中添加位置权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;key&gt;NSLocationAlwaysAndWhenInUseUsageDescription&lt;/key&gt;</span><br><span class="line">&lt;string&gt;Give me location authority&lt;/string&gt;</span><br><span class="line">&lt;key&gt;NSLocationWhenInUseUsageDescription&lt;/key&gt;</span><br><span class="line">&lt;string&gt;Give me location authority&lt;/string&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/bC0it.iU0sRAWqQUS83WHiMfdLj7rep4dFWjPDqc1A8!/r/dDUBAAAAAAAA" alt="location_authority"></p>
+<ul>
+<li>导入静态库CoreLocation.framework, 然后在需要的文件中导入头文件#import &lt;CoreLocation/CoreLocation.h&gt;与#import &lt;CoreLocation/CLLocation.h&gt;</li>
+<li>在启动app时给予始终允许的权限(否则无法支持后台模式)</li>
+</ul>
+<p>Note : 因为我们是通过后台任务来实时获取地理位置以实现后台模式，所以如果不给予app始终允许的位置权限则无法实时在后台获取地理位置,也无法实现我们的需求。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="1-实现获取地理位置-CoreLocation"><a href="#1-实现获取地理位置-CoreLocation" class="headerlink" title="1.实现获取地理位置(CoreLocation)"></a>1.实现获取地理位置(CoreLocation)</h3><h4 id="1-1-初始化并配置locationManager对象"><a href="#1-1-初始化并配置locationManager对象" class="headerlink" title="1.1 初始化并配置locationManager对象"></a>1.1 初始化并配置locationManager对象</h4><p>遵循CLLocationManagerDelegate协议，按照如下设置完成后即可在回调函数中获取经纬度等位置信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) CLLocationManager   *locationManager;</span><br><span class="line"></span><br><span class="line">    _locationManager = [[CLLocationManager alloc] init];</span><br><span class="line">    _locationManager.delegate                           = self;</span><br><span class="line">    _locationManager.desiredAccuracy                    = kCLLocationAccuracyBestForNavigation;</span><br><span class="line">    _locationManager.pausesLocationUpdatesAutomatically = NO;</span><br><span class="line">    self.locationManager.distanceFilter                 = kCLDistanceFilterNone; // 不移动也可以后台刷新回调</span><br><span class="line">    </span><br><span class="line">    if([[UIDevice currentDevice].systemVersion floatValue]&gt;= 8.0) &#123;</span><br><span class="line">        [self.locationManager requestAlwaysAuthorization];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    [self.locationManager startUpdatingLocation];</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-2-回调函数中获取地理位置信息"><a href="#1-2-回调函数中获取地理位置信息" class="headerlink" title="1.2 回调函数中获取地理位置信息"></a>1.2 回调函数中获取地理位置信息</h4><p>如果开启后台模式，我们需要使用_isCollectLocation标记当前是否正在定位，如果当前停止定位我们则需要重启定位功能，我们在这里设置120秒后开启一个后台任务并在10秒后停止一个后台任务，因为一个后台任务的有效时间为3分钟，我们就让前一个后台任务执行到2分钟左右时停止掉(以防时间控制本身不精确所以设置2分钟)，然后开启一个新的后台任务，不断循环改过程，即可实现后台模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray&lt;CLLocation *&gt; *)locations &#123;</span><br><span class="line">    CLLocation *location = [locations lastObject];    //当前位置信息</span><br><span class="line">    </span><br><span class="line">    self.longitude = location.coordinate.longitude;</span><br><span class="line">    self.latitude  = location.coordinate.latitude;</span><br><span class="line">    </span><br><span class="line">    if (self.isSupportBGMode) &#123;</span><br><span class="line">        //如果正在10秒定时收集的时间，不需要执行延时开启和关闭定位</span><br><span class="line">        if (_isCollectLocation) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        [self performSelector:@selector(restartLocation) withObject:nil afterDelay:120];</span><br><span class="line">        [self performSelector:@selector(stopLocation)    withObject:nil afterDelay:10];</span><br><span class="line">        _isCollectLocation = YES;//标记正在定位</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)restartLocation &#123;</span><br><span class="line">    self.locationManager.delegate       = self;</span><br><span class="line">    self.locationManager.distanceFilter = kCLDistanceFilterNone; // 不移动也可以后台刷新回调</span><br><span class="line">    if ([[UIDevice currentDevice].systemVersion floatValue]&gt;= 8.0) &#123;</span><br><span class="line">        [self.locationManager requestAlwaysAuthorization];</span><br><span class="line">    &#125;</span><br><span class="line">    [self.locationManager startUpdatingLocation];</span><br><span class="line">    [self.bgModeManager beginNewBackgroundTask];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)stopLocation &#123;</span><br><span class="line">    log4cplus_debug(&quot;XDXBGModeManager&quot;, &quot;%s - Stop Background Mode Location service !&quot;,ModuleName);</span><br><span class="line">    _isCollectLocation = NO;</span><br><span class="line">    [self.locationManager stopUpdatingLocation];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-3-开启与关闭后台模式"><a href="#1-3-开启与关闭后台模式" class="headerlink" title="1.3 开启与关闭后台模式"></a>1.3 开启与关闭后台模式</h4><p>停止后台模式即停止位置更新，delegate也失效同时停止当前所有的后台任务，停止监听app进入后台的通知<br>开启后台模式即重新设置代理并开始位置更新，同时注册用户进入后台的通知以便在用户进入后台后开启轮循的后台任务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">- (void)openBGMode &#123;</span><br><span class="line">    self.isSupportBGMode = YES;</span><br><span class="line">    // Note : You need to open background mode in the project setting, Otherwise the app will crash.</span><br><span class="line">    _locationManager.allowsBackgroundLocationUpdates = YES;</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)closeBGMode &#123;</span><br><span class="line">    self.isSupportBGMode = NO;</span><br><span class="line">    [self.bgModeManager endAllBGTask];</span><br><span class="line">    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)applicationEnterBackground &#123;</span><br><span class="line">    [self startBGLocationService];</span><br><span class="line">    [self.bgModeManager beginNewBackgroundTask];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)startBGLocationService &#123;</span><br><span class="line">    if ([CLLocationManager locationServicesEnabled] == NO) &#123;</span><br><span class="line">        log4cplus_error(&quot;XDXBGModeManager&quot;, &quot;%s - You currently have all location services for this device disabled&quot;, ModuleName);</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];</span><br><span class="line">        </span><br><span class="line">        if(authorizationStatus == kCLAuthorizationStatusDenied || authorizationStatus == kCLAuthorizationStatusRestricted) &#123;</span><br><span class="line">            log4cplus_error(&quot;XDXBGModeManager&quot;, &quot;%s - AuthorizationStatus failed&quot;,ModuleName);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            log4cplus_info(&quot;XDXBGModeManager&quot;, &quot;%s - Start Background Mode Location service !&quot;,ModuleName);</span><br><span class="line">            self.locationManager.distanceFilter = kCLDistanceFilterNone;</span><br><span class="line">            </span><br><span class="line">            if([[UIDevice currentDevice].systemVersion floatValue]&gt;= 8.0) &#123;</span><br><span class="line">                [self.locationManager requestAlwaysAuthorization];</span><br><span class="line">            &#125;</span><br><span class="line">            [self.locationManager startUpdatingLocation];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-4-处理获取地理位置失败的情况"><a href="#1-4-处理获取地理位置失败的情况" class="headerlink" title="1.4 处理获取地理位置失败的情况"></a>1.4 处理获取地理位置失败的情况</h4><p>当用户拒绝提供位置权限或当前网络故障时，应该给予用户提示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">- (void)locationManager: (CLLocationManager *)manager didFailWithError: (NSError *)error &#123;</span><br><span class="line">    log4cplus_error(&quot;XDXBGModeManager&quot;, &quot;%s - locationManager error:%s&quot;,ModuleName, [NSString stringWithFormat:@&quot;%@&quot;,error].UTF8String);</span><br><span class="line">    </span><br><span class="line">    self.latitude  = 0;</span><br><span class="line">    self.longitude = 0;</span><br><span class="line">    </span><br><span class="line">    switch([error code])</span><br><span class="line">    &#123;</span><br><span class="line">        case kCLErrorNetwork:</span><br><span class="line">            log4cplus_error(&quot;XDXBGModeManager&quot;, &quot;%s - %s : Please check the network connection !&quot;,ModuleName, __func__);</span><br><span class="line">            </span><br><span class="line">            static dispatch_once_t onceToken;</span><br><span class="line">            dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@&quot;Location Warning&quot; message:</span><br><span class="line">                                            @&quot;Please check the network connection&quot; preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@&quot;OK&quot; style:</span><br><span class="line">                                               UIAlertActionStyleCancel handler:nil];</span><br><span class="line">                [alert addAction:cancelAction];</span><br><span class="line">                UIViewController *vc = [UIApplication sharedApplication].windows[0].rootViewController;</span><br><span class="line">                [vc presentViewController:alert animated:YES completion:nil];</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">            break;</span><br><span class="line">        case kCLErrorDenied:</span><br><span class="line">        &#123;</span><br><span class="line">            log4cplus_error(&quot;XDXBGModeManager&quot;, &quot;%s - %s : Please open location authority on the setting if you want to use our service!&quot;,ModuleName, __func__);</span><br><span class="line">            </span><br><span class="line">            static dispatch_once_t onceToken2;</span><br><span class="line">            dispatch_once(&amp;onceToken2, ^&#123;</span><br><span class="line">                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@&quot;Location Warning&quot; message:</span><br><span class="line">                                            @&quot;Please allow our app access the location always on the setting-&gt;Privacy-&gt;Location Services !&quot; preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@&quot;OK&quot; style:</span><br><span class="line">                                               UIAlertActionStyleCancel handler:nil];</span><br><span class="line">                [alert addAction:cancelAction];</span><br><span class="line">                UIViewController *vc = [UIApplication sharedApplication].windows[0].rootViewController;</span><br><span class="line">                [vc presentViewController:alert animated:YES completion:nil];</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-实现后台任务的轮循"><a href="#2-实现后台任务的轮循" class="headerlink" title="2.实现后台任务的轮循"></a>2.实现后台任务的轮循</h3><h4 id="2-1-基本配置"><a href="#2-1-基本配置" class="headerlink" title="2.1 基本配置"></a>2.1 基本配置</h4><p>使用bgTaskIdList记录当前所有后台任务的列表，使用masterTaskId记录当前正在执行的后台任务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong)   NSMutableArray             *bgTaskIdList;</span><br><span class="line">@property (assign)              UIBackgroundTaskIdentifier masterTaskId;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-2-开启后台任务"><a href="#2-2-开启后台任务" class="headerlink" title="2.2 开启后台任务"></a>2.2 开启后台任务</h4><p><code>beginBackgroundTaskWithExpirationHandler</code>调用此方法可实现开启一个后台任务，我们需要将此后台任务放入我们记录的数组中并将其设置为masterTaskId,当然，如果上次记录的后台记录已经失效，就记录新任务为主任务，如果上次开启的后台任务还没结束，就提前关闭，使用最新的后台任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-(void)restartLocation &#123;</span><br><span class="line">    [self beginNewBackgroundTask];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(UIBackgroundTaskIdentifier)beginNewBackgroundTask &#123;</span><br><span class="line">    UIApplication *application = [UIApplication sharedApplication];</span><br><span class="line">    __block UIBackgroundTaskIdentifier bgTaskId = UIBackgroundTaskInvalid;</span><br><span class="line">    if([application respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) &#123;</span><br><span class="line">        bgTaskId = [application beginBackgroundTaskWithExpirationHandler:^&#123;</span><br><span class="line">            log4cplus_warn(&quot;XDXBGModeManager&quot;, &quot;%s - bg Task (%lu) expired !&quot;,ModuleName,bgTaskId);</span><br><span class="line">            [self.bgTaskIdList removeObject:@(bgTaskId)];//过期任务从后台数组删除</span><br><span class="line">            bgTaskId = UIBackgroundTaskInvalid;</span><br><span class="line">            [application endBackgroundTask:bgTaskId];</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">    //如果上次记录的后台任务已经失效了，就记录最新的任务为主任务</span><br><span class="line">    if (_masterTaskId == UIBackgroundTaskInvalid) &#123;</span><br><span class="line">        self.masterTaskId = bgTaskId;</span><br><span class="line">        log4cplus_warn(&quot;XDXBGModeManager&quot;, &quot;%s - Start bg task : %lu&quot;,ModuleName,(unsigned long)bgTaskId);</span><br><span class="line">    &#125;else &#123; //如果上次开启的后台任务还未结束，就提前关闭了，使用最新的后台任务</span><br><span class="line">        //add this id to our list</span><br><span class="line">        log4cplus_warn(&quot;XDXBGModeManager&quot;, &quot;%s - Keep bg task %lu&quot;,ModuleName,(unsigned long)bgTaskId);</span><br><span class="line">        [self.bgTaskIdList addObject:@(bgTaskId)];</span><br><span class="line">        [self endInvalidBGTaskWithIsEndAll:NO];//留下最新创建的后台任务</span><br><span class="line">    &#125;</span><br><span class="line">    return bgTaskId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-结束后台任务"><a href="#2-3-结束后台任务" class="headerlink" title="2.3 结束后台任务"></a>2.3 结束后台任务</h4><p>如果仅仅结束其他后台任务，只保留当前主任务即将数组中除了最后一个元素外都删除，并通过遍历结束所有无效后台任务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">- (void)endAllBGTask &#123;</span><br><span class="line">    [self endInvalidBGTaskWithIsEndAll:YES];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)endInvalidBGTaskWithIsEndAll:(BOOL)isEndAll</span><br><span class="line">&#123;</span><br><span class="line">    UIApplication *application = [UIApplication sharedApplication];</span><br><span class="line">    //如果为all 清空后台任务数组</span><br><span class="line">    //不为all 留下数组最后一个后台任务,也就是最新开启的任务</span><br><span class="line">    if ([application respondsToSelector:@selector(endBackGroundTask:)]) &#123;</span><br><span class="line">        for (int i = 0; i &lt; (isEndAll ? _bgTaskIdList.count :_bgTaskIdList.count -1); i++) &#123;</span><br><span class="line">            UIBackgroundTaskIdentifier bgTaskId = [self.bgTaskIdList[0]integerValue];</span><br><span class="line">            log4cplus_debug(&quot;XDXBGModeManager&quot;, &quot;%s - Close bg task %lu&quot;,ModuleName,(unsigned long)bgTaskId);</span><br><span class="line">            [application endBackgroundTask:bgTaskId];</span><br><span class="line">            [self.bgTaskIdList removeObjectAtIndex:0];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ///如果数组大于0 所有剩下最后一个后台任务正在跑</span><br><span class="line">    if(self.bgTaskIdList.count &gt; 0) &#123;</span><br><span class="line">        log4cplus_debug(&quot;XDXBGModeManager&quot;, &quot;%s - The bg task is running %lu!&quot;,ModuleName,(long)[_bgTaskIdList[0]integerValue]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if(isEndAll) &#123;</span><br><span class="line">        [application endBackgroundTask:self.masterTaskId];</span><br><span class="line">        self.masterTaskId = UIBackgroundTaskInvalid;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        log4cplus_debug(&quot;XDXBGModeManager&quot;, &quot;%s - Kept master background task id : %lu&quot;,ModuleName,(unsigned long)self.masterTaskId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>后台模式在特定情况下会app被系统自动杀死<br>例如：息屏后放置较长时间或app占用大量CPU资源</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>运行Demo程序，打开后台开关，进入后台观察控制台仍有打印，证明后台模式启用成功</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/04/20181204_iOS_PThread/" rel="next" title="iOS封装C语言P Thread">
+                <i class="fa fa-chevron-left"></i> iOS封装C语言P Thread
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：iOS系统下使我们的app在后台下-点击Home键进入后台-仍能继续运行任务"><span class="nav-number">1.</span> <span class="nav-text">需求：iOS系统下使我们的app在后台下(点击Home键进入后台)仍能继续运行任务.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS后台模式借助位置更新实现"><span class="nav-number">2.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS后台模式借助位置更新实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS后台模式借助位置更新实现"><span class="nav-number">2.2.</span> <span class="nav-text">简书地址     : iOS后台模式借助位置更新实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS后台模式借助位置更新实现"><span class="nav-number">2.3.</span> <span class="nav-text">博客地址     : iOS后台模式借助位置更新实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS后台模式借助位置更新实现"><span class="nav-number">2.4.</span> <span class="nav-text">掘金地址     : iOS后台模式借助位置更新实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number"></span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程"><span class="nav-number"></span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目配置"><span class="nav-number"></span> <span class="nav-text">项目配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number"></span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实现获取地理位置-CoreLocation"><span class="nav-number">1.</span> <span class="nav-text">1.实现获取地理位置(CoreLocation)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-初始化并配置locationManager对象"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 初始化并配置locationManager对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-回调函数中获取地理位置信息"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 回调函数中获取地理位置信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-开启与关闭后台模式"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 开启与关闭后台模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-处理获取地理位置失败的情况"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 处理获取地理位置失败的情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实现后台任务的轮循"><span class="nav-number">2.</span> <span class="nav-text">2.实现后台任务的轮循</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-基本配置"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 基本配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-开启后台任务"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 开启后台任务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-结束后台任务"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 结束后台任务</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number"></span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果"><span class="nav-number"></span> <span class="nav-text">结果</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
