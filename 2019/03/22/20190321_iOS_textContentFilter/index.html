@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在文本框中限制输入表情，长度限制.">
+<meta name="keywords" content="iOS,UITextFiled,UITextView,emoji">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOSTextFiled,TextView过滤表情,限制长度">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/03/22/20190321_iOS_textContentFilter/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="在文本框中限制输入表情，长度限制.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-22T01:22:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOSTextFiled,TextView过滤表情,限制长度">
+<meta name="twitter:description" content="在文本框中限制输入表情，长度限制.">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/03/22/20190321_iOS_textContentFilter/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOSTextFiled,TextView过滤表情,限制长度 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/03/22/20190321_iOS_textContentFilter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOSTextFiled,TextView过滤表情,限制长度
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-22 09:22:57" itemprop="dateCreated datePublished" datetime="2019-03-22T09:22:57+08:00">2019-03-22</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/UI/" itemprop="url" rel="index"><span itemprop="name">UI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/22/20190321_iOS_textContentFilter/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/03/22/20190321_iOS_textContentFilter/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/03/22/20190321_iOS_textContentFilter/" class="leancloud_visitors" data-flag-title="iOSTextFiled,TextView过滤表情,限制长度">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">在文本框中限制输入表情，长度限制.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求：在文本框中限制输入表情，长度限制"><a href="#需求：在文本框中限制输入表情，长度限制" class="headerlink" title="需求：在文本框中限制输入表情，长度限制"></a>需求：在文本框中限制输入表情，长度限制</h3><hr>
+<h3 id="实现原理-通过这两个控件的代理与通知实现"><a href="#实现原理-通过这两个控件的代理与通知实现" class="headerlink" title="实现原理: 通过这两个控件的代理与通知实现"></a>实现原理: 通过这两个控件的代理与通知实现</h3><hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>由于搜狗等不断改善，可能小部分表情未能限制</li>
+<li>原理较为简单，不再讲解</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-iOS-TextFiled-TextView-长度限制，表情限制"><a href="#GitHub地址-附代码-iOS-TextFiled-TextView-长度限制，表情限制" class="headerlink" title="GitHub地址(附代码) : iOS TextFiled,TextView 长度限制，表情限制"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXTextContentHandler" target="_blank" rel="noopener">iOS TextFiled,TextView 长度限制，表情限制</a></h4><h4 id="简书地址-iOS-TextFiled-TextView-长度限制，表情限制"><a href="#简书地址-iOS-TextFiled-TextView-长度限制，表情限制" class="headerlink" title="简书地址     : iOS TextFiled,TextView 长度限制，表情限制"></a>简书地址     : <a href="https://www.jianshu.com/p/888161c3b52d" target="_blank" rel="noopener">iOS TextFiled,TextView 长度限制，表情限制</a></h4><h4 id="博客地址-iOS-TextFiled-TextView-长度限制，表情限制"><a href="#博客地址-iOS-TextFiled-TextView-长度限制，表情限制" class="headerlink" title="博客地址     : iOS TextFiled,TextView 长度限制，表情限制"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/03/21/20190321_iOS_textContentFilter/">iOS TextFiled,TextView 长度限制，表情限制</a></h4><h4 id="掘金地址-iOS-TextFiled-TextView-长度限制，表情限制"><a href="#掘金地址-iOS-TextFiled-TextView-长度限制，表情限制" class="headerlink" title="掘金地址     : iOS TextFiled,TextView 长度限制，表情限制"></a>掘金地址     : <a href="https://juejin.im/post/5c9382f7f265da60df41074e" target="_blank" rel="noopener">iOS TextFiled,TextView 长度限制，表情限制</a></h4><hr>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ol>
+<li>可以根据需求自行更改提示样式等等</li>
+<li>可以根据需求自行优化过滤算法</li>
+<li>好处：我们只需要有这样一个类，以后项目中所有需要限制的地方仅仅需要直接导入头文件，引用类方法即可</li>
+</ol>
+<hr>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法:"></a>使用方法:</h3><h4 id="1-导入头文件"><a href="#1-导入头文件" class="headerlink" title="1. 导入头文件"></a>1. 导入头文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;XDXTextContentHandler.h&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="2-直接在对应的代理或通知中对用头文件即可"><a href="#2-直接在对应的代理或通知中对用头文件即可" class="headerlink" title="2. 直接在对应的代理或通知中对用头文件即可"></a>2. 直接在对应的代理或通知中对用头文件即可</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view, typically from a nib.</span><br><span class="line">    </span><br><span class="line">    self.testTextFiled.delegate = self;</span><br><span class="line">    self.testTextView.delegate  = self;</span><br><span class="line">    </span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self</span><br><span class="line">                                             selector:@selector(textFiledEditChanged:)</span><br><span class="line">                                                 name:@&quot;UITextFieldTextDidChangeNotification&quot;</span><br><span class="line">                                               object:self.testTextFiled];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#pragma mark - Notification</span><br><span class="line">- (void)textFiledEditChanged:(NSNotification *)obj &#123;</span><br><span class="line">    [XDXTextContentHandler handleTextFiledEditChangedWithNotification:obj textMaxLength:kTitleTextMaxLength isShowTip:YES];</span><br><span class="line">&#125;</span><br><span class="line">#pragma mark - Delegate</span><br><span class="line"></span><br><span class="line">#pragma mark TextFiled</span><br><span class="line">- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string &#123;</span><br><span class="line">    return [XDXTextContentHandler handleTextFiledShouldChangeTextInRangeWithTextFiled:textField range:range replacementText:string isShowTip:YES];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark TextView</span><br><span class="line">- (void)textViewDidChange:(UITextView *)textView &#123;</span><br><span class="line">    [XDXTextContentHandler handleTextViewDidChangeWithTextView:textView textMaxLength:kTitleTextMaxLength isShowTip:YES];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text &#123;</span><br><span class="line">    return [XDXTextContentHandler handleTextViewShouldChangeTextInRangeWithTextView:textView range:range replacementText:text isShowTip:YES];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现:"></a>具体实现:</h3><ul>
+<li>长度限制：即检测到超过设定长度后截取字符串</li>
+<li>表情限制：检测是苹果自带还是第三方，过滤关键字<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br></pre></td><td class="code"><pre><span class="line">@implementation XDXTextContentHandler</span><br><span class="line"></span><br><span class="line">#pragma mark - Public Main Func</span><br><span class="line"></span><br><span class="line">+ (void)handleTextFiledEditChangedWithNotification:(NSNotification *)notification textMaxLength:(int)textMaxLength isShowTip:(BOOL)isShowTip &#123;</span><br><span class="line">    UITextField *textField  = (UITextField *)notification.object;</span><br><span class="line">    if ([textField isFirstResponder]) &#123;</span><br><span class="line">        NSString *toBeString = textField.text;</span><br><span class="line">        if (toBeString.length &gt; textMaxLength) &#123;</span><br><span class="line">            textField.text = [toBeString substringToIndex:textMaxLength];</span><br><span class="line">            </span><br><span class="line">            if (isShowTip) &#123;</span><br><span class="line">                [self showAlertVCWithTitle:@&quot;Warning&quot; message:[NSString stringWithFormat:@&quot;Text max length is %d&quot;,textMaxLength]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)handleTextViewDidChangeWithTextView:(UITextView *)textView textMaxLength:(int)textMaxLength isShowTip:(BOOL)isShowTip &#123;</span><br><span class="line">    if ([textView isFirstResponder]) &#123;</span><br><span class="line">        if (textView.text.length &gt; textMaxLength) &#123;</span><br><span class="line">            textView.text = [textView.text substringToIndex:textMaxLength];</span><br><span class="line">            if (isShowTip) &#123;</span><br><span class="line">                [self showAlertVCWithTitle:@&quot;Warning&quot; message:[NSString stringWithFormat:@&quot;Text max length is %d&quot;,textMaxLength]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSString *toBeString = textView.text;</span><br><span class="line">    </span><br><span class="line">    if (![self isInputRuleAndBlank:toBeString]) &#123;</span><br><span class="line">        textView.text = [self disable_emoji:toBeString];</span><br><span class="line">        </span><br><span class="line">        if (isShowTip) &#123;</span><br><span class="line">            [self showAlertVCWithTitle:@&quot;Warning&quot; message:[NSString stringWithFormat:@&quot;Not input emoji&quot;]];</span><br><span class="line">        &#125;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSString *lang = [[textView textInputMode] primaryLanguage]; // 获取当前键盘输入模式</span><br><span class="line">    NSLog(@&quot;%@&quot;,lang);</span><br><span class="line">    if([lang isEqualToString:@&quot;zh-Hans&quot;]) &#123; //简体中文输入,第三方输入法（搜狗）所有模式下都会显示“zh-Hans”</span><br><span class="line">        UITextRange *selectedRange = [textView markedTextRange];</span><br><span class="line">        //获取高亮部分</span><br><span class="line">        UITextPosition *position = [textView positionFromPosition:selectedRange.start offset:0];</span><br><span class="line">        //没有高亮选择的字，则对已输入的文字进行字数统计和限制</span><br><span class="line">        if(!position) &#123;</span><br><span class="line">            NSString *getStr = [self getSubString:toBeString textMaxLength:textMaxLength];</span><br><span class="line">            if(getStr &amp;&amp; getStr.length &gt; 0) &#123;</span><br><span class="line">                textView.text = getStr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else&#123;</span><br><span class="line">        NSString *getStr = [self getSubString:toBeString textMaxLength:textMaxLength];</span><br><span class="line">        if(getStr &amp;&amp; getStr.length &gt; 0) &#123;</span><br><span class="line">            textView.text= getStr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (BOOL)handleTextViewShouldChangeTextInRangeWithTextView:(UITextView *)textView range:(NSRange)range replacementText:(NSString *)text isShowTip:(BOOL)isShowTip &#123;</span><br><span class="line">    if ([textView isFirstResponder]) &#123;</span><br><span class="line">        if ([[[textView textInputMode] primaryLanguage] isEqualToString:@&quot;emoji&quot;] || ![[textView textInputMode] primaryLanguage]) &#123;</span><br><span class="line">            return NO;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //判断键盘是不是九宫格键盘</span><br><span class="line">        if ([self isNineKeyBoard:text])&#123;</span><br><span class="line">            return YES;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            if ([self hasEmoji:text] || [self stringContainsEmoji:text])&#123;</span><br><span class="line">                if (isShowTip) &#123;</span><br><span class="line">                    [self showAlertVCWithTitle:@&quot;Warning&quot; message:[NSString stringWithFormat:@&quot;Not input emoji&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return NO;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (BOOL)handleTextFiledShouldChangeTextInRangeWithTextFiled:(UITextField *)textFiled range:(NSRange)range replacementText:(NSString *)text isShowTip:(BOOL)isShowTip &#123;</span><br><span class="line">    if ([textFiled isFirstResponder]) &#123;</span><br><span class="line">        if ([[[textFiled textInputMode] primaryLanguage] isEqualToString:@&quot;emoji&quot;] || ![[textFiled textInputMode] primaryLanguage]) &#123;</span><br><span class="line">            if (isShowTip) &#123;</span><br><span class="line">                [self showAlertVCWithTitle:@&quot;Warning&quot; message:[NSString stringWithFormat:@&quot;Not input emoji&quot;]];</span><br><span class="line">            &#125;</span><br><span class="line">            return NO;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //判断键盘是不是九宫格键盘</span><br><span class="line">        if ([self isNineKeyBoard:text])&#123;</span><br><span class="line">            return YES;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            if ([self hasEmoji:text] || [self stringContainsEmoji:text])&#123;</span><br><span class="line">                if (isShowTip) &#123;</span><br><span class="line">                    [self showAlertVCWithTitle:@&quot;Warning&quot; message:[NSString stringWithFormat:@&quot;Not input emoji&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return NO;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - Private</span><br><span class="line">#pragma mark TextView禁止表情相关</span><br><span class="line">// 字母、数字、中文常用字符正则判断（不包括空格）</span><br><span class="line">+ (BOOL)isInputRuleNotBlank:(NSString *)str &#123;</span><br><span class="line">    NSString *pattern = @&quot;^[a-zA-Z,.!@#$%^:;\\=+-_()￥。“、\u4E00-\u9FA5\\d\\n]*$&quot;;</span><br><span class="line">    NSPredicate *pred = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, pattern];</span><br><span class="line">    BOOL isMatch = [pred evaluateWithObject:str];</span><br><span class="line">    return isMatch;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 字母、数字、中文正则判断（包括空格）（在系统输入法中文输入时会出现拼音之间有空格，需要忽略，当按return键时会自动用字母替换，按空格输入响应汉字）</span><br><span class="line">+ (BOOL)isInputRuleAndBlank:(NSString *)str &#123;</span><br><span class="line">    NSString *pattern = @&quot;^[a-zA-Z\u4E00-\u9FA5\\d\\s]*$&quot;;</span><br><span class="line">    NSPredicate *pred = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, pattern];</span><br><span class="line">    BOOL isMatch = [pred evaluateWithObject:str];</span><br><span class="line">    return isMatch;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获得 kIntroTextViewMaxLength长度的字符</span><br><span class="line">+ (NSString *)getSubString:(NSString*)string textMaxLength:(int)textMaxLength &#123;</span><br><span class="line">    NSStringEncoding encoding   = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);</span><br><span class="line">    NSData           *data      = [string dataUsingEncoding:encoding];</span><br><span class="line">    NSInteger        length     = [data length];</span><br><span class="line">    if (length &gt; textMaxLength) &#123;</span><br><span class="line">        NSData *data1 = [data subdataWithRange:NSMakeRange(0, textMaxLength)];</span><br><span class="line">        NSString *content = [[NSString alloc] initWithData:data1 encoding:encoding];//注意：当截取kIntroTextViewMaxLength长度字符时把中文字符截断返回的content会是nil</span><br><span class="line">        if (!content || content.length == 0) &#123;</span><br><span class="line">            data1 = [data subdataWithRange:NSMakeRange(0, textMaxLength - 1)];</span><br><span class="line">            content =  [[NSString alloc] initWithData:data1 encoding:encoding];</span><br><span class="line">        &#125;</span><br><span class="line">        return content;</span><br><span class="line">    &#125;</span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (NSString *)disable_emoji:(NSString *)text &#123;</span><br><span class="line">    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@&quot;[^\\u0020-\\u007E\\u00A0-\\u00BE\\u2E80-\\uA4CF\\uF900-\\uFAFF\\uFE30-\\uFE4F\\uFF00-\\uFFEF\\u0080-\\u009F\\u2000-\\u201f\r\n]&quot; options:NSRegularExpressionCaseInsensitive error:nil];</span><br><span class="line">    NSString *modifiedString = [regex stringByReplacingMatchesInString:text</span><br><span class="line">                                                               options:0</span><br><span class="line">                                                                 range:NSMakeRange(0, [text length])</span><br><span class="line">                                                          withTemplate:@&quot;&quot;];</span><br><span class="line">    return modifiedString;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  判断字符串中是否存在emoji</span><br><span class="line"> * @param string 字符串</span><br><span class="line"> * @return YES(含有表情)</span><br><span class="line"> */</span><br><span class="line">- (BOOL)stringContainsEmoji:(NSString *)string &#123;</span><br><span class="line">    __block BOOL returnValue = NO;</span><br><span class="line">    [string enumerateSubstringsInRange:NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:</span><br><span class="line">     ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) &#123;</span><br><span class="line">         </span><br><span class="line">         const unichar hs = [substring characterAtIndex:0];</span><br><span class="line">         // surrogate pair</span><br><span class="line">         if (0xd800 &lt;= hs &amp;&amp; hs &lt;= 0xdbff) &#123;</span><br><span class="line">             if (substring.length &gt; 1) &#123;</span><br><span class="line">                 const unichar ls = [substring characterAtIndex:1];</span><br><span class="line">                 const int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;</span><br><span class="line">                 if (0x1d000 &lt;= uc &amp;&amp; uc &lt;= 0x1f77f) &#123;</span><br><span class="line">                     returnValue = YES;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; else if (substring.length &gt; 1) &#123;</span><br><span class="line">             const unichar ls = [substring characterAtIndex:1];</span><br><span class="line">             if (ls == 0x20e3) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125;</span><br><span class="line">             </span><br><span class="line">         &#125; else &#123;</span><br><span class="line">             // non surrogate</span><br><span class="line">             if (0x2100 &lt;= hs &amp;&amp; hs &lt;= 0x27ff) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (0x2B05 &lt;= hs &amp;&amp; hs &lt;= 0x2b07) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (0x2934 &lt;= hs &amp;&amp; hs &lt;= 0x2935) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (0x3297 &lt;= hs &amp;&amp; hs &lt;= 0x3299) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (hs == 0xa9 || hs == 0xae || hs == 0x303d || hs == 0x3030 || hs == 0x2b55 || hs == 0x2b1c || hs == 0x2b1b || hs == 0x2b50) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;];</span><br><span class="line">    </span><br><span class="line">    return returnValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> 判断是不是九宫格</span><br><span class="line"> @param string  输入的字符</span><br><span class="line"> @return YES(是九宫格拼音键盘)</span><br><span class="line"> */</span><br><span class="line">-(BOOL)isNineKeyBoard:(NSString *)string &#123;</span><br><span class="line">    NSString *other = @&quot;➋➌➍➎➏➐➑➒&quot;;</span><br><span class="line">    int len = (int)string.length;</span><br><span class="line">    for(int i=0;i&lt;len;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if(!([other rangeOfString:string].location != NSNotFound))</span><br><span class="line">            return NO;</span><br><span class="line">    &#125;</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  判断字符串中是否存在emoji</span><br><span class="line"> * @param string 字符串</span><br><span class="line"> * @return YES(含有表情)</span><br><span class="line"> */</span><br><span class="line">- (BOOL)hasEmoji:(NSString*)string &#123;</span><br><span class="line">    NSString *pattern = @&quot;[^\\u0020-\\u007E\\u00A0-\\u00BE\\u2E80-\\uA4CF\\uF900-\\uFAFF\\uFE30-\\uFE4F\\uFF00-\\uFFEF\\u0080-\\u009F\\u2000-\\u201f\r\n]&quot;;</span><br><span class="line">    NSPredicate *pred = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, pattern];</span><br><span class="line">    BOOL isMatch = [pred evaluateWithObject:string];</span><br><span class="line">    return isMatch;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> 判断是不是九宫格</span><br><span class="line"> @param string  输入的字符</span><br><span class="line"> @return YES(是九宫格拼音键盘)</span><br><span class="line"> */</span><br><span class="line">+ (BOOL)isNineKeyBoard:(NSString *)string &#123;</span><br><span class="line">    NSString *other = @&quot;➋➌➍➎➏➐➑➒&quot;;</span><br><span class="line">    int len = (int)string.length;</span><br><span class="line">    for(int i=0;i&lt;len;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if(!([other rangeOfString:string].location != NSNotFound))</span><br><span class="line">            return NO;</span><br><span class="line">    &#125;</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  判断字符串中是否存在emoji</span><br><span class="line"> * @param string 字符串</span><br><span class="line"> * @return YES(含有表情)</span><br><span class="line"> */</span><br><span class="line">+ (BOOL)hasEmoji:(NSString*)string &#123;</span><br><span class="line">    NSString *pattern = @&quot;[^\\u0020-\\u007E\\u00A0-\\u00BE\\u2E80-\\uA4CF\\uF900-\\uFAFF\\uFE30-\\uFE4F\\uFF00-\\uFFEF\\u0080-\\u009F\\u2000-\\u201f\r\n]&quot;;</span><br><span class="line">    NSPredicate *pred = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, pattern];</span><br><span class="line">    BOOL isMatch = [pred evaluateWithObject:string];</span><br><span class="line">    return isMatch;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  判断字符串中是否存在emoji</span><br><span class="line"> * @param string 字符串</span><br><span class="line"> * @return YES(含有表情)</span><br><span class="line"> */</span><br><span class="line">+ (BOOL)stringContainsEmoji:(NSString *)string &#123;</span><br><span class="line">    __block BOOL returnValue = NO;</span><br><span class="line">    [string enumerateSubstringsInRange:NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:</span><br><span class="line">     ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) &#123;</span><br><span class="line">         </span><br><span class="line">         const unichar hs = [substring characterAtIndex:0];</span><br><span class="line">         // surrogate pair</span><br><span class="line">         if (0xd800 &lt;= hs &amp;&amp; hs &lt;= 0xdbff) &#123;</span><br><span class="line">             if (substring.length &gt; 1) &#123;</span><br><span class="line">                 const unichar ls = [substring characterAtIndex:1];</span><br><span class="line">                 const int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;</span><br><span class="line">                 if (0x1d000 &lt;= uc &amp;&amp; uc &lt;= 0x1f77f) &#123;</span><br><span class="line">                     returnValue = YES;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; else if (substring.length &gt; 1) &#123;</span><br><span class="line">             const unichar ls = [substring characterAtIndex:1];</span><br><span class="line">             if (ls == 0x20e3) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125;</span><br><span class="line">             </span><br><span class="line">         &#125; else &#123;</span><br><span class="line">             // non surrogate</span><br><span class="line">             if (0x2100 &lt;= hs &amp;&amp; hs &lt;= 0x27ff) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (0x2B05 &lt;= hs &amp;&amp; hs &lt;= 0x2b07) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (0x2934 &lt;= hs &amp;&amp; hs &lt;= 0x2935) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (0x3297 &lt;= hs &amp;&amp; hs &lt;= 0x3299) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125; else if (hs == 0xa9 || hs == 0xae || hs == 0x303d || hs == 0x3030 || hs == 0x2b55 || hs == 0x2b1c || hs == 0x2b1b || hs == 0x2b50) &#123;</span><br><span class="line">                 returnValue = YES;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;];</span><br><span class="line">    </span><br><span class="line">    return returnValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)showAlertVCWithTitle:(NSString *)title message:(NSString *)message &#123;</span><br><span class="line">    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">    UIAlertAction *OKAction = [UIAlertAction actionWithTitle:NSLocalizedString(@&quot;OK&quot;, nil) style:UIAlertActionStyleDefault handler:nil];</span><br><span class="line">    [alertVC addAction:OKAction];</span><br><span class="line">    UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;</span><br><span class="line">    [rootVC presentViewController:alertVC animated:YES completion:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/UI/" rel="tag"># UI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/20/20190320_iOS_MakeFFmepgDynamicLib/" rel="next" title="制作FFmpeg动态库(make ffmpeg dynamic lib)">
+                <i class="fa fa-chevron-left"></i> 制作FFmpeg动态库(make ffmpeg dynamic lib)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：在文本框中限制输入表情，长度限制"><span class="nav-number">1.</span> <span class="nav-text">需求：在文本框中限制输入表情，长度限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理-通过这两个控件的代理与通知实现"><span class="nav-number">2.</span> <span class="nav-text">实现原理: 通过这两个控件的代理与通知实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS-TextFiled-TextView-长度限制，表情限制"><span class="nav-number">3.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS TextFiled,TextView 长度限制，表情限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS-TextFiled-TextView-长度限制，表情限制"><span class="nav-number">3.2.</span> <span class="nav-text">简书地址     : iOS TextFiled,TextView 长度限制，表情限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS-TextFiled-TextView-长度限制，表情限制"><span class="nav-number">3.3.</span> <span class="nav-text">博客地址     : iOS TextFiled,TextView 长度限制，表情限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS-TextFiled-TextView-长度限制，表情限制"><span class="nav-number">3.4.</span> <span class="nav-text">掘金地址     : iOS TextFiled,TextView 长度限制，表情限制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">4.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方法"><span class="nav-number">5.</span> <span class="nav-text">使用方法:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-导入头文件"><span class="nav-number">5.1.</span> <span class="nav-text">1. 导入头文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-直接在对应的代理或通知中对用头文件即可"><span class="nav-number">5.2.</span> <span class="nav-text">2. 直接在对应的代理或通知中对用头文件即可</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">6.</span> <span class="nav-text">具体实现:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
