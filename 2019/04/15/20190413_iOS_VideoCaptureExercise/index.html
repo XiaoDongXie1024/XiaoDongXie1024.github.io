@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度...">
+<meta name="keywords" content="iOS,Video,capture">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS视频采集实战(AVCaptureSession)">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/04/15/20190413_iOS_VideoCaptureExercise/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度...">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-15T01:35:45.829Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS视频采集实战(AVCaptureSession)">
+<meta name="twitter:description" content="使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度...">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/04/15/20190413_iOS_VideoCaptureExercise/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS视频采集实战(AVCaptureSession) | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/04/15/20190413_iOS_VideoCaptureExercise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS视频采集实战(AVCaptureSession)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-15 09:35:45" itemprop="dateCreated datePublished" datetime="2019-04-15T09:35:45+08:00">2019-04-15</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/视频-Video/" itemprop="url" rel="index"><span itemprop="name">视频(Video)</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/15/20190413_iOS_VideoCaptureExercise/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/04/15/20190413_iOS_VideoCaptureExercise/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/04/15/20190413_iOS_VideoCaptureExercise/" class="leancloud_visitors" data-flag-title="iOS视频采集实战(AVCaptureSession)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度...</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求：使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率-包括高帧率-切换前后置摄像头，对焦，屏幕旋转，调节曝光度…"><a href="#需求：使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率-包括高帧率-切换前后置摄像头，对焦，屏幕旋转，调节曝光度…" class="headerlink" title="需求：使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度…"></a>需求：使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度…</h3><hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>原理请参考另一篇文章:<a href="https://github.com/XiaoDongXie1024/XDXVideoCapture_AVCaptureSession" target="_blank" rel="noopener">iOS视频流采集概述(AVCaptureSession)</a></li>
+<li>基于AVFoundation框架</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-iOS视频采集实战-AVCaptureSession"><a href="#GitHub地址-附代码-iOS视频采集实战-AVCaptureSession" class="headerlink" title="GitHub地址(附代码) : iOS视频采集实战(AVCaptureSession)"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXVideoCapture_AVCaptureSession" target="_blank" rel="noopener">iOS视频采集实战(AVCaptureSession)</a></h4><h4 id="简书地址-iOS视频采集实战-AVCaptureSession"><a href="#简书地址-iOS视频采集实战-AVCaptureSession" class="headerlink" title="简书地址     : iOS视频采集实战(AVCaptureSession)"></a>简书地址     : <a href="https://www.jianshu.com/p/6975f706e2e5" target="_blank" rel="noopener">iOS视频采集实战(AVCaptureSession)</a></h4><h4 id="博客地址-iOS视频采集实战-AVCaptureSession"><a href="#博客地址-iOS视频采集实战-AVCaptureSession" class="headerlink" title="博客地址     : iOS视频采集实战(AVCaptureSession)"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/04/13/20190413_iOS_VideoCaptureExercise">iOS视频采集实战(AVCaptureSession)</a></h4><h4 id="掘金地址-iOS视频采集实战-AVCaptureSession"><a href="#掘金地址-iOS视频采集实战-AVCaptureSession" class="headerlink" title="掘金地址     : iOS视频采集实战(AVCaptureSession)"></a>掘金地址     : <a href="https://juejin.im/post/5cb1fd9af265da03bb6fa489" target="_blank" rel="noopener">iOS视频采集实战(AVCaptureSession)</a></h4><hr>
+<h4 id="1-设置分辨率与帧率"><a href="#1-设置分辨率与帧率" class="headerlink" title="1. 设置分辨率与帧率"></a>1. 设置分辨率与帧率</h4><h5 id="1-1-低帧率模式-fps-lt-30"><a href="#1-1-低帧率模式-fps-lt-30" class="headerlink" title="1.1. 低帧率模式(fps &lt;= 30)"></a>1.1. 低帧率模式(fps &lt;= 30)</h5><p>在要求帧率小于等于30帧的情况下,相机设置分辨率与帧率的方法是单独的,即设置帧率是帧率的方法,设置分辨率是分辨率的方法,两者没有绑定.</p>
+<ul>
+<li><p>设置分辨率</p>
+<p>  使用此方法可以设置相机分辨率,可以设置的类型可以直接跳转进API文档处自行选择,目前支持最大的是3840*2160,如果不要求相机帧率大于30帧,此方法可以适用于你.</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (void)setCameraResolutionByPresetWithHeight:(int)height session:(AVCaptureSession *)session &#123;</span><br><span class="line">    /*</span><br><span class="line">     Note: the method only support your frame rate &lt;= 30 because we must use `activeFormat` when frame rate &gt; 30, the `activeFormat` and `sessionPreset` are exclusive</span><br><span class="line">     */</span><br><span class="line">    AVCaptureSessionPreset preset = [self getSessionPresetByResolutionHeight:height];</span><br><span class="line">    if ([session.sessionPreset isEqualToString:preset]) &#123;</span><br><span class="line">        NSLog(@&quot;Needn&apos;t to set camera resolution repeatly !&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (![session canSetSessionPreset:preset]) &#123;</span><br><span class="line">        NSLog(@&quot;Can&apos;t set the sessionPreset !&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    [session beginConfiguration];</span><br><span class="line">    session.sessionPreset = preset;</span><br><span class="line">    [session commitConfiguration];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>设置帧率</p>
+<p>  使用此方法可以设置相机帧率,仅支持帧率小于等于30帧.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)setCameraForLFRWithFrameRate:(int)frameRate &#123;</span><br><span class="line">    // Only for frame rate &lt;= 30</span><br><span class="line">    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];</span><br><span class="line">    [captureDevice lockForConfiguration:NULL];</span><br><span class="line">    [captureDevice setActiveVideoMinFrameDuration:CMTimeMake(1, frameRate)];</span><br><span class="line">    [captureDevice setActiveVideoMaxFrameDuration:CMTimeMake(1, frameRate)];</span><br><span class="line">    [captureDevice unlockForConfiguration];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="1-2-高帧率模式-fps-gt-30"><a href="#1-2-高帧率模式-fps-gt-30" class="headerlink" title="1.2. 高帧率模式(fps &gt;  30)"></a>1.2. 高帧率模式(fps &gt;  30)</h5><p>如果需要对某一分辨率支持高帧率的设置,如50帧,60帧,120帧…,原先<code>setActiveVideoMinFrameDuration</code>与<code>setActiveVideoMaxFrameDuration</code>是无法做到的,Apple规定我们需要使用新的方法设置帧率<code>setActiveVideoMinFrameDuration</code>与<code>setActiveVideoMaxFrameDuration</code>,并且该方法必须配合新的设置分辨率<code>activeFormat</code>的方法一起使用.</p>
+<p>新的设置分辨率的方法<code>activeFormat</code>与<code>sessionPreset</code>是互斥的，如果使用了一个, 另一个会失效,建议直接使用高帧率的设置方法，废弃低帧率下设置方法，避免产生兼容问题。</p>
+<p>Apple在更新方法后将原先分离的分辨率与帧率的设置方法合二为一,原先是单独设置相机分辨率与帧率,而现在则需要一起设置,即每个分辨率有其对应支持的帧率范围,每个帧率也有其支持的分辨率,需要我们遍历来查询,所以原先统一的单独的设置分辨率与帧率的方法在高帧率模式下相当于弃用,可以根据项目需求选择,如果确定项目不会支持高帧率(fps&gt;30),可以使用以前的方法,简单且有效.</p>
+<blockquote>
+<p>注意: 使用<code>activeFormat</code>方法后,之前使用<code>sessionPreset</code>方法设置的分辨率将自动变为<code>AVCaptureSessionPresetInputPriority</code>,所以如果项目之前有用<code>canSetSessionPreset</code>比较的if语句也都将失效,建议如果项目必须支持高帧率则彻底启用<code>sessionPreset</code>方法.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)setCameraFrameRateAndResolutionWithFrameRate:(int)frameRate andResolutionHeight:(CGFloat)resolutionHeight bySession:(AVCaptureSession *)session position:(AVCaptureDevicePosition)position videoFormat:(OSType)videoFormat &#123;</span><br><span class="line">    AVCaptureDevice *captureDevice = [self getCaptureDevicePosition:position];</span><br><span class="line">    </span><br><span class="line">    BOOL isSuccess = NO;</span><br><span class="line">    for(AVCaptureDeviceFormat *vFormat in [captureDevice formats]) &#123;</span><br><span class="line">        CMFormatDescriptionRef description = vFormat.formatDescription;</span><br><span class="line">        float maxRate = ((AVFrameRateRange*) [vFormat.videoSupportedFrameRateRanges objectAtIndex:0]).maxFrameRate;</span><br><span class="line">        if (maxRate &gt;= frameRate &amp;&amp; CMFormatDescriptionGetMediaSubType(description) == videoFormat) &#123;</span><br><span class="line">            if ([captureDevice lockForConfiguration:NULL] == YES) &#123;</span><br><span class="line">                // 对比镜头支持的分辨率和当前设置的分辨率</span><br><span class="line">                CMVideoDimensions dims = CMVideoFormatDescriptionGetDimensions(description);</span><br><span class="line">                if (dims.height == resolutionHeight &amp;&amp; dims.width == [self getResolutionWidthByHeight:resolutionHeight]) &#123;</span><br><span class="line">                    [session beginConfiguration];</span><br><span class="line">                    if ([captureDevice lockForConfiguration:NULL])&#123;</span><br><span class="line">                        captureDevice.activeFormat = vFormat;</span><br><span class="line">                        [captureDevice setActiveVideoMinFrameDuration:CMTimeMake(1, frameRate)];</span><br><span class="line">                        [captureDevice setActiveVideoMaxFrameDuration:CMTimeMake(1, frameRate)];</span><br><span class="line">                        [captureDevice unlockForConfiguration];</span><br><span class="line">                    &#125;</span><br><span class="line">                    [session commitConfiguration];</span><br><span class="line">                    </span><br><span class="line">                    return YES;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                NSLog(@&quot;%s: lock failed!&quot;,__func__);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;Set camera frame is success : %d, frame rate is %lu, resolution height = %f&quot;,isSuccess,(unsigned long)frameRate,resolutionHeight);</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (AVCaptureDevice *)getCaptureDevicePosition:(AVCaptureDevicePosition)position &#123;</span><br><span class="line">    NSArray *devices = nil;</span><br><span class="line">    </span><br><span class="line">    if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">        AVCaptureDeviceDiscoverySession *deviceDiscoverySession =  [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera] mediaType:AVMediaTypeVideo position:position];</span><br><span class="line">        devices = deviceDiscoverySession.devices;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">#pragma clang diagnostic push</span><br><span class="line">#pragma clang diagnostic ignored &quot;-Wdeprecated-declarations&quot;</span><br><span class="line">        devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];</span><br><span class="line">#pragma clang diagnostic pop</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    for (AVCaptureDevice *device in devices) &#123;</span><br><span class="line">        if (position == device.position) &#123;</span><br><span class="line">            return device;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-前后置摄像头切换"><a href="#2-前后置摄像头切换" class="headerlink" title="2. 前后置摄像头切换"></a>2. 前后置摄像头切换</h4><p>切换前后置摄像头，看似简单，实际应用中会产生很多问题，因为同一部设备前后置摄像头支持的分辨率帧率的值是不同的，所以如果从支持切向不支持就会产生问题,具体案例如下</p>
+<p>比如iPhoneX, 后置摄像头最大支持(4K,60fps),前置摄像头最大支持(2K,30fps),当使用(4K,60fps)后置摄像头切到前置摄像头如果不做处理则无法切换,程序错乱.</p>
+<blockquote>
+<p>注意</p>
+</blockquote>
+<p>下面代码中我们这行代码<code>session.sessionPreset = AVCaptureSessionPresetLow;</code>,因为从后置切到前置我们需要重新计算当前输入设备支持最大的分辨率与帧率,而输入设备如果不先添加上去我们无法计算,所以在这里先随便设置一个可接受的分辨率以使我们可以把输入设备添加,之后在求出当前设备最大支持的分辨率与帧率后再重新设置分辨率与帧率.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">- (void)setCameraPosition:(AVCaptureDevicePosition)position session:(AVCaptureSession *)session input:(AVCaptureDeviceInput *)input videoFormat:(OSType)videoFormat resolutionHeight:(CGFloat)resolutionHeight frameRate:(int)frameRate &#123;</span><br><span class="line">    if (input) &#123;</span><br><span class="line">        [session beginConfiguration];</span><br><span class="line">        [session removeInput:input];</span><br><span class="line">        </span><br><span class="line">        AVCaptureDevice *device = [self.class getCaptureDevicePosition:position];</span><br><span class="line">        </span><br><span class="line">        NSError *error = nil;</span><br><span class="line">        AVCaptureDeviceInput *newInput = [AVCaptureDeviceInput deviceInputWithDevice:device</span><br><span class="line">                                                                               error:&amp;error];</span><br><span class="line">        </span><br><span class="line">        if (error != noErr) &#123;</span><br><span class="line">            NSLog(@&quot;%s: error:%@&quot;,__func__, error.localizedDescription);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 比如: 后置是4K, 前置最多支持2K,此时切换需要降级, 而如果不先把Input添加到session中,我们无法计算当前摄像头支持的最大分辨率</span><br><span class="line">        session.sessionPreset = AVCaptureSessionPresetLow;</span><br><span class="line">        if ([session canAddInput:newInput])  &#123;</span><br><span class="line">            self.input = newInput;</span><br><span class="line">            [session addInput:newInput];</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;%s: add input failed.&quot;,__func__);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        int maxResolutionHeight = [self getMaxSupportResolutionByPreset];</span><br><span class="line">        if (resolutionHeight &gt; maxResolutionHeight) &#123;</span><br><span class="line">            resolutionHeight = maxResolutionHeight;</span><br><span class="line">            self.cameraModel.resolutionHeight = resolutionHeight;</span><br><span class="line">            NSLog(@&quot;%s: Current support max resolution height = %d&quot;, __func__, maxResolutionHeight);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        int maxFrameRate = [self getMaxFrameRateByCurrentResolution];</span><br><span class="line">        if (frameRate &gt; maxFrameRate) &#123;</span><br><span class="line">            frameRate = maxFrameRate;</span><br><span class="line">            self.cameraModel.frameRate = frameRate;</span><br><span class="line">            NSLog(@&quot;%s: Current support max frame rate = %d&quot;,__func__, maxFrameRate);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        BOOL isSuccess = [self.class setCameraFrameRateAndResolutionWithFrameRate:frameRate</span><br><span class="line">                                                              andResolutionHeight:resolutionHeight</span><br><span class="line">                                                                        bySession:session</span><br><span class="line">                                                                         position:position</span><br><span class="line">                                                                      videoFormat:videoFormat];</span><br><span class="line">        </span><br><span class="line">        if (!isSuccess) &#123;</span><br><span class="line">            NSLog(@&quot;%s: Set resolution and frame rate failed.&quot;,__func__);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [session commitConfiguration];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-屏幕视频方向切换"><a href="#3-屏幕视频方向切换" class="headerlink" title="3.屏幕视频方向切换"></a>3.屏幕视频方向切换</h4><p>我们在这里首先要区分下屏幕方向与视频方向的概念,一个是用来表示设备方向(UIDeviceOrientation),一个是用来表示视频方向(AVCaptureVideoOrientation). 我们使用的AVCaptureSession,如果要支持屏幕旋转,需要在屏幕旋转的同时将我们的视频画面也进行旋转.</p>
+<p>屏幕方向的旋转可以通过通知<code>UIDeviceOrientationDidChangeNotification</code>接收,这里不做过多说明.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustVideoOrientationByScreenOrientation:(UIDeviceOrientation)orientation previewFrame:(CGRect)previewFrame previewLayer:(AVCaptureVideoPreviewLayer *)previewLayer videoOutput:(AVCaptureVideoDataOutput *)videoOutput &#123;</span><br><span class="line">    [previewLayer setFrame:previewFrame];</span><br><span class="line">    </span><br><span class="line">    switch (orientation) &#123;</span><br><span class="line">        case UIInterfaceOrientationPortrait:</span><br><span class="line">            [self adjustAVOutputDataOrientation:AVCaptureVideoOrientationPortrait</span><br><span class="line">                                    videoOutput:videoOutput];</span><br><span class="line">            break;</span><br><span class="line">        case UIInterfaceOrientationPortraitUpsideDown:</span><br><span class="line">            [self adjustAVOutputDataOrientation:AVCaptureVideoOrientationPortraitUpsideDown</span><br><span class="line">                                    videoOutput:videoOutput];</span><br><span class="line">            break;</span><br><span class="line">        case UIInterfaceOrientationLandscapeLeft:</span><br><span class="line">            [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];</span><br><span class="line">            [self adjustAVOutputDataOrientation:AVCaptureVideoOrientationLandscapeLeft</span><br><span class="line">                                    videoOutput:videoOutput];</span><br><span class="line">            break;</span><br><span class="line">        case UIInterfaceOrientationLandscapeRight:</span><br><span class="line">            [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];</span><br><span class="line">            [self adjustAVOutputDataOrientation:AVCaptureVideoOrientationLandscapeRight</span><br><span class="line">                                    videoOutput:videoOutput];</span><br><span class="line">            break;</span><br><span class="line">            </span><br><span class="line">        default:</span><br><span class="line">            break;</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)adjustAVOutputDataOrientation:(AVCaptureVideoOrientation)orientation videoOutput:(AVCaptureVideoDataOutput *)videoOutput &#123;</span><br><span class="line">    for(AVCaptureConnection *connection in videoOutput.connections) &#123;</span><br><span class="line">        for(AVCaptureInputPort *port in [connection inputPorts]) &#123;</span><br><span class="line">            if([[port mediaType] isEqual:AVMediaTypeVideo]) &#123;</span><br><span class="line">                if([connection isVideoOrientationSupported]) &#123;</span><br><span class="line">                    [connection setVideoOrientation:orientation];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-对焦调节"><a href="#4-对焦调节" class="headerlink" title="4.对焦调节"></a>4.对焦调节</h4><p>关于对焦,我们需要特别说明手动设置对焦点进行对焦,因为对焦方法仅接受以左上角为(0,0),右下角为(1,1)的坐标系,所以我们需要对UIView的坐标系进行转换,但是转换需要分为多种情况,如下</p>
+<ul>
+<li>视频是否以镜像模式输出: 如前置摄像头可能会开启镜像模式(x,y坐标是反的)</li>
+<li>屏幕方向是以Home在右还是在左: 在右的话是以左上角为原点,在左的话则是以右下角为原点.</li>
+<li>视频渲染方式: 是保持分辨率比例,还是填充模式,因为手机型号不同,所以可能是填充黑边,可能超出屏幕,需要重新计算对焦点.</li>
+</ul>
+<p>如果我们是直接使用AVCaptureSession的AVCaptureVideoPreviewLayer做渲染,我们可以使用<code>captureDevicePointOfInterestForPoint</code>方法自动计算,此结果会考虑上面所有情况.但如果我们是自己对屏幕做渲染,则需要自己计算对焦点,上面的情况都需要考虑. 下面提供自动与手动计算两种方法.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)autoFocusAtPoint:(CGPoint)point &#123;</span><br><span class="line">    AVCaptureDevice *device = self.input.device;</span><br><span class="line">    if ([device isFocusPointOfInterestSupported] &amp;&amp; [device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) &#123;</span><br><span class="line">        NSError *error;</span><br><span class="line">        if ([device lockForConfiguration:&amp;error]) &#123;</span><br><span class="line">            [device setExposurePointOfInterest:point];</span><br><span class="line">            [device setExposureMode:AVCaptureExposureModeContinuousAutoExposure];</span><br><span class="line">            [device setFocusPointOfInterest:point];</span><br><span class="line">            [device setFocusMode:AVCaptureFocusModeAutoFocus];</span><br><span class="line">            [device unlockForConfiguration];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-1-自动计算对焦点"><a href="#4-1-自动计算对焦点" class="headerlink" title="4.1. 自动计算对焦点"></a>4.1. 自动计算对焦点</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (CGPoint)convertToPointOfInterestFromViewCoordinates:(CGPoint)viewCoordinates captureVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)captureVideoPreviewLayer &#123;</span><br><span class="line">    CGPoint pointOfInterest = CGPointMake(.5f, .5f);</span><br><span class="line">    CGSize frameSize = [captureVideoPreviewLayer frame].size;</span><br><span class="line">    </span><br><span class="line">    if ([captureVideoPreviewLayer.connection isVideoMirrored]) &#123;</span><br><span class="line">        viewCoordinates.x = frameSize.width - viewCoordinates.x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Convert UIKit coordinate to Focus Point(0.0~1.1)</span><br><span class="line">    pointOfInterest = [captureVideoPreviewLayer captureDevicePointOfInterestForPoint:viewCoordinates];</span><br><span class="line">    </span><br><span class="line">    // NSLog(@&quot;Focus - Auto test: %@&quot;,NSStringFromCGPoint(pointOfInterest));</span><br><span class="line">    </span><br><span class="line">    return pointOfInterest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-2-手动计算对焦点"><a href="#4-2-手动计算对焦点" class="headerlink" title="4.2. 手动计算对焦点"></a>4.2. 手动计算对焦点</h5><ul>
+<li>如果手机屏幕尺寸与分辨率比例完全吻合,则直接将坐标系转为(0,0)到(1,1)即可</li>
+<li>如果屏幕尺寸比例与分辨率比例不同,需要进一步分析视频渲染方式来计算,如果是保持分辨率,则肯定会留下黑边,我们在计算对焦点时需要减去黑边长度,如果是以分辨率比例填充屏幕则会牺牲一部分像素,我们在计算对焦点时同样需要加上牺牲的像素.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">- (CGPoint)manualConvertFocusPoint:(CGPoint)point frameSize:(CGSize)frameSize captureVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)captureVideoPreviewLayer position:(AVCaptureDevicePosition)position videoDataOutput:(AVCaptureVideoDataOutput *)videoDataOutput input:(AVCaptureDeviceInput *)input &#123;</span><br><span class="line">    CGPoint pointOfInterest = CGPointMake(.5f, .5f);</span><br><span class="line">    </span><br><span class="line">    if ([[videoDataOutput connectionWithMediaType:AVMediaTypeVideo] isVideoMirrored]) &#123;</span><br><span class="line">        point.x = frameSize.width - point.x;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    for (AVCaptureInputPort *port in [input ports]) &#123;</span><br><span class="line">        if ([port mediaType] == AVMediaTypeVideo) &#123;</span><br><span class="line">            CGRect cleanAperture = CMVideoFormatDescriptionGetCleanAperture([port formatDescription], YES);</span><br><span class="line">            CGSize resolutionSize = cleanAperture.size;</span><br><span class="line">            </span><br><span class="line">            CGFloat resolutionRatio = resolutionSize.width / resolutionSize.height;</span><br><span class="line">            CGFloat screenSizeRatio = frameSize.width / frameSize.height;</span><br><span class="line">            CGFloat xc = .5f;</span><br><span class="line">            CGFloat yc = .5f;</span><br><span class="line">        </span><br><span class="line">            if (resolutionRatio == screenSizeRatio) &#123;</span><br><span class="line">                xc = point.x / frameSize.width;</span><br><span class="line">                yc = point.y / frameSize.height;</span><br><span class="line">            &#125;else if (resolutionRatio &gt; screenSizeRatio) &#123;</span><br><span class="line">                if ([[captureVideoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResizeAspectFill]) &#123;</span><br><span class="line">                    CGFloat needScreenWidth = resolutionRatio * frameSize.height;</span><br><span class="line">                    CGFloat cropWidth = (needScreenWidth - frameSize.width) / 2;</span><br><span class="line">                    xc = (cropWidth + point.x) / needScreenWidth;</span><br><span class="line">                    yc = point.y / frameSize.height;</span><br><span class="line">                &#125;else if ([[captureVideoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResizeAspect])&#123;</span><br><span class="line">                    CGFloat needScreenHeight = frameSize.width * (1/resolutionRatio);</span><br><span class="line">                    CGFloat blackBarLength   = (frameSize.height - needScreenHeight) / 2;</span><br><span class="line">                    xc = point.x / frameSize.width;</span><br><span class="line">                    yc = (point.y - blackBarLength) / needScreenHeight;</span><br><span class="line">                &#125;else if ([[captureVideoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResize]) &#123;</span><br><span class="line">                    xc = point.x / frameSize.width;</span><br><span class="line">                    yc = point.y / frameSize.height;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                if ([[captureVideoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResizeAspectFill]) &#123;</span><br><span class="line">                    CGFloat needScreenHeight = (1/resolutionRatio) * frameSize.width;</span><br><span class="line">                    CGFloat cropHeight = (needScreenHeight - frameSize.height) / 2;</span><br><span class="line">                    xc = point.x / frameSize.width;</span><br><span class="line">                    yc = (cropHeight + point.y) / needScreenHeight;</span><br><span class="line">                &#125;else if ([[captureVideoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResizeAspect])&#123;</span><br><span class="line">                    CGFloat needScreenWidth = frameSize.height * resolutionRatio;</span><br><span class="line">                    CGFloat blackBarLength   = (frameSize.width - needScreenWidth) / 2;</span><br><span class="line">                    xc = (point.x - blackBarLength) / needScreenWidth;</span><br><span class="line">                    yc = point.y / frameSize.height;</span><br><span class="line">                &#125;else if ([[captureVideoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResize]) &#123;</span><br><span class="line">                    xc = point.x / frameSize.width;</span><br><span class="line">                    yc = point.y / frameSize.height;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            pointOfInterest = CGPointMake(xc, yc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (position == AVCaptureDevicePositionBack) &#123;</span><br><span class="line">        if (captureVideoPreviewLayer.connection.videoOrientation == AVCaptureVideoOrientationLandscapeLeft) &#123;</span><br><span class="line">            pointOfInterest = CGPointMake(1-pointOfInterest.x, 1-pointOfInterest.y);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        pointOfInterest = CGPointMake(pointOfInterest.x, 1-pointOfInterest.y);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //NSLog(@&quot;Focus - manu test: %@&quot;,NSStringFromCGPoint(pointOfInterest));</span><br><span class="line">    return pointOfInterest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="5-曝光调节"><a href="#5-曝光调节" class="headerlink" title="5.曝光调节"></a>5.曝光调节</h4><p>如果我们是以UISlider作为调节控件,最简单的做法可以将其范围设置的与曝光度值的范围相同,即(-8~8),这样无需转换值,直接传入即可,如果是手势或是其他控件可根据需求自行调整.较为简单,不再叙述.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (void)setExposureWithNewValue:(CGFloat)newExposureValue device:(AVCaptureDevice *)device &#123;</span><br><span class="line">    NSError *error;</span><br><span class="line">    if ([device lockForConfiguration:&amp;error]) &#123;</span><br><span class="line">        [device setExposureTargetBias:newExposureValue completionHandler:nil];</span><br><span class="line">        [device unlockForConfiguration];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="6-手电筒模式"><a href="#6-手电筒模式" class="headerlink" title="6.手电筒模式"></a>6.手电筒模式</h4><ul>
+<li>AVCaptureTorchModeAuto: 自动</li>
+<li>AVCaptureTorchModeOn: 打开</li>
+<li>AVCaptureTorchModeOff: 关闭</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (void)setTorchState:(BOOL)isOpen device:(AVCaptureDevice *)device &#123;</span><br><span class="line">    if ([device hasTorch]) &#123;</span><br><span class="line">        NSError *error;</span><br><span class="line">        [device lockForConfiguration:&amp;error];</span><br><span class="line">        device.torchMode = isOpen ? AVCaptureTorchModeOn : AVCaptureTorchModeOff;</span><br><span class="line">        [device unlockForConfiguration];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        NSLog(@&quot;The device not support torch!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="7-视频稳定性调节"><a href="#7-视频稳定性调节" class="headerlink" title="7.视频稳定性调节"></a>7.视频稳定性调节</h4><blockquote>
+<p>注意: 部分机型,部分分辨率使用此属性渲染可能会出现问题 (iphone xs, 自己渲染)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">-(void)adjustVideoStabilizationWithOutput:(AVCaptureVideoDataOutput *)output &#123;</span><br><span class="line">    NSArray *devices = nil;</span><br><span class="line">    </span><br><span class="line">    if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">        AVCaptureDeviceDiscoverySession *deviceDiscoverySession =  [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera] mediaType:AVMediaTypeVideo position:self.cameraModel.position];</span><br><span class="line">        devices = deviceDiscoverySession.devices;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">#pragma clang diagnostic push</span><br><span class="line">#pragma clang diagnostic ignored &quot;-Wdeprecated-declarations&quot;</span><br><span class="line">        devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];</span><br><span class="line">#pragma clang diagnostic pop</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    for(AVCaptureDevice *device in devices)&#123;</span><br><span class="line">        if([device hasMediaType:AVMediaTypeVideo])&#123;</span><br><span class="line">            if([device.activeFormat isVideoStabilizationModeSupported:AVCaptureVideoStabilizationModeAuto]) &#123;</span><br><span class="line">                for(AVCaptureConnection *connection in output.connections) &#123;</span><br><span class="line">                    for(AVCaptureInputPort *port in [connection inputPorts]) &#123;</span><br><span class="line">                        if([[port mediaType] isEqual:AVMediaTypeVideo]) &#123;</span><br><span class="line">                            if(connection.supportsVideoStabilization) &#123;</span><br><span class="line">                                connection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeStandard;</span><br><span class="line">                                NSLog(@&quot;activeVideoStabilizationMode = %ld&quot;,(long)connection.activeVideoStabilizationMode);</span><br><span class="line">                            &#125;else &#123;</span><br><span class="line">                                NSLog(@&quot;connection don&apos;t support video stabilization&quot;);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                NSLog(@&quot;device don&apos;t support video stablization&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="8-白平衡调节"><a href="#8-白平衡调节" class="headerlink" title="8.白平衡调节"></a>8.白平衡调节</h4><ul>
+<li>temperature: 通过华氏温度调节 (-150-~250)</li>
+<li>tint: 通过色调调节 (-150-~150)</li>
+</ul>
+<p>注意在使用<code>setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains</code>方法时必须比较当前的<code>AVCaptureWhiteBalanceGains</code>值是否在有效范围.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">-(AVCaptureWhiteBalanceGains)clampGains:(AVCaptureWhiteBalanceGains)gains toMinVal:(CGFloat)minVal andMaxVal:(CGFloat)maxVal &#123;</span><br><span class="line">    AVCaptureWhiteBalanceGains tmpGains = gains;</span><br><span class="line">    tmpGains.blueGain   = MAX(MIN(tmpGains.blueGain , maxVal), minVal);</span><br><span class="line">    tmpGains.redGain    = MAX(MIN(tmpGains.redGain  , maxVal), minVal);</span><br><span class="line">    tmpGains.greenGain  = MAX(MIN(tmpGains.greenGain, maxVal), minVal);</span><br><span class="line">    </span><br><span class="line">    return tmpGains;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)setWhiteBlanceValueByTemperature:(CGFloat)temperature device:(AVCaptureDevice *)device &#123;</span><br><span class="line">    if ([device isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeLocked]) &#123;</span><br><span class="line">        [device lockForConfiguration:nil];</span><br><span class="line">        AVCaptureWhiteBalanceGains currentGains = device.deviceWhiteBalanceGains;</span><br><span class="line">        CGFloat currentTint = [device temperatureAndTintValuesForDeviceWhiteBalanceGains:currentGains].tint;</span><br><span class="line">        AVCaptureWhiteBalanceTemperatureAndTintValues tempAndTintValues = &#123;</span><br><span class="line">            .temperature = temperature,</span><br><span class="line">            .tint        = currentTint,</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        AVCaptureWhiteBalanceGains deviceGains = [device deviceWhiteBalanceGainsForTemperatureAndTintValues:tempAndTintValues];</span><br><span class="line">        CGFloat maxWhiteBalanceGain = device.maxWhiteBalanceGain;</span><br><span class="line">        deviceGains = [self clampGains:deviceGains toMinVal:1 andMaxVal:maxWhiteBalanceGain];</span><br><span class="line">        </span><br><span class="line">        [device setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains:deviceGains completionHandler:nil];</span><br><span class="line">        [device unlockForConfiguration];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)setWhiteBlanceValueByTint:(CGFloat)tint device:(AVCaptureDevice *)device &#123;</span><br><span class="line">    if ([device isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeLocked]) &#123;</span><br><span class="line">        [device lockForConfiguration:nil];</span><br><span class="line">        CGFloat maxWhiteBalaceGain = device.maxWhiteBalanceGain;</span><br><span class="line">        AVCaptureWhiteBalanceGains currentGains = device.deviceWhiteBalanceGains;</span><br><span class="line">        currentGains = [self clampGains:currentGains toMinVal:1 andMaxVal:maxWhiteBalaceGain];</span><br><span class="line">        CGFloat currentTemperature = [device temperatureAndTintValuesForDeviceWhiteBalanceGains:currentGains].temperature;</span><br><span class="line">        AVCaptureWhiteBalanceTemperatureAndTintValues tempAndTintValues = &#123;</span><br><span class="line">            .temperature = currentTemperature,</span><br><span class="line">            .tint        = tint,</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        AVCaptureWhiteBalanceGains deviceGains = [device deviceWhiteBalanceGainsForTemperatureAndTintValues:tempAndTintValues];</span><br><span class="line">        deviceGains = [self clampGains:deviceGains toMinVal:1 andMaxVal:maxWhiteBalaceGain];</span><br><span class="line">        </span><br><span class="line">        [device setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains:deviceGains completionHandler:nil];</span><br><span class="line">        [device unlockForConfiguration];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="9-屏幕填充方式"><a href="#9-屏幕填充方式" class="headerlink" title="9.屏幕填充方式"></a>9.屏幕填充方式</h4><ul>
+<li>AVLayerVideoGravityResizeAspect: 保持分辨率比例,如果屏幕分辨率与视频分辨率不一致会留下黑边.</li>
+<li>AVLayerVideoGravityResizeAspectFill: 保持分辨率比例去填充屏幕,即以较小的边来准填充屏幕,会牺牲掉一些像素,因为超出屏幕.</li>
+<li>AVLayerVideoGravityResize:以拉伸的方式来填充屏幕,不会牺牲像素,但是画面会被拉伸.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)setVideoGravity:(AVLayerVideoGravity)videoGravity previewLayer:(AVCaptureVideoPreviewLayer *)previewLayer session:(AVCaptureSession *)session &#123;</span><br><span class="line">    [session beginConfiguration];</span><br><span class="line">    [previewLayer setVideoGravity:videoGravity];</span><br><span class="line">    [session commitConfiguration];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/视频-Video/" rel="tag"># 视频(Video)</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/22/20190321_iOS_textContentFilter/" rel="next" title="iOSTextFiled,TextView过滤表情,限制长度">
+                <i class="fa fa-chevron-left"></i> iOSTextFiled,TextView过滤表情,限制长度
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/15/20190415_iOS_AVAssetExplain/" rel="prev" title="iOS AVAsset讲解">
+                iOS AVAsset讲解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率-包括高帧率-切换前后置摄像头，对焦，屏幕旋转，调节曝光度…"><span class="nav-number">1.</span> <span class="nav-text">需求：使用AVFoundation中的AVCaptureSession实现设置相机的分辨率，帧率(包括高帧率), 切换前后置摄像头，对焦，屏幕旋转，调节曝光度…</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS视频采集实战-AVCaptureSession"><span class="nav-number">2.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS视频采集实战(AVCaptureSession)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS视频采集实战-AVCaptureSession"><span class="nav-number">2.2.</span> <span class="nav-text">简书地址     : iOS视频采集实战(AVCaptureSession)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS视频采集实战-AVCaptureSession"><span class="nav-number">2.3.</span> <span class="nav-text">博客地址     : iOS视频采集实战(AVCaptureSession)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS视频采集实战-AVCaptureSession"><span class="nav-number">2.4.</span> <span class="nav-text">掘金地址     : iOS视频采集实战(AVCaptureSession)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-设置分辨率与帧率"><span class="nav-number">2.5.</span> <span class="nav-text">1. 设置分辨率与帧率</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-低帧率模式-fps-lt-30"><span class="nav-number">2.5.1.</span> <span class="nav-text">1.1. 低帧率模式(fps &lt;= 30)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-高帧率模式-fps-gt-30"><span class="nav-number">2.5.2.</span> <span class="nav-text">1.2. 高帧率模式(fps &gt;  30)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-前后置摄像头切换"><span class="nav-number">2.6.</span> <span class="nav-text">2. 前后置摄像头切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-屏幕视频方向切换"><span class="nav-number">2.7.</span> <span class="nav-text">3.屏幕视频方向切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-对焦调节"><span class="nav-number">2.8.</span> <span class="nav-text">4.对焦调节</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-自动计算对焦点"><span class="nav-number">2.8.1.</span> <span class="nav-text">4.1. 自动计算对焦点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-手动计算对焦点"><span class="nav-number">2.8.2.</span> <span class="nav-text">4.2. 手动计算对焦点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-曝光调节"><span class="nav-number">2.9.</span> <span class="nav-text">5.曝光调节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-手电筒模式"><span class="nav-number">2.10.</span> <span class="nav-text">6.手电筒模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-视频稳定性调节"><span class="nav-number">2.11.</span> <span class="nav-text">7.视频稳定性调节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-白平衡调节"><span class="nav-number">2.12.</span> <span class="nav-text">8.白平衡调节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-屏幕填充方式"><span class="nav-number">2.13.</span> <span class="nav-text">9.屏幕填充方式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

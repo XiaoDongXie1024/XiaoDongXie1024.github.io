@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="需要采集到视频帧数据从而可以进行一系列处理(裁剪，旋转，美颜，特效)所以,必须采集到视频帧数据">
+<meta name="keywords" content="iOS,Video,Capture">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS视频流采集概述(AVCaptureSession)">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/04/15/20190413_iOS_VideoCaptureExplain/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="需要采集到视频帧数据从而可以进行一系列处理(裁剪，旋转，美颜，特效)所以,必须采集到视频帧数据">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/A.MvvNfc4h*YxW8lhOWq*bOG5owrxasaGcD8NTeYLdk!/r/dFIBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/3OFXQcx5s4Ugc8JVpdxRWVQPAiKKOVS7c7lQ2em2yx8!/r/dMEAAAAAAAAA">
+<meta property="og:updated_time" content="2019-04-15T02:20:43.384Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS视频流采集概述(AVCaptureSession)">
+<meta name="twitter:description" content="需要采集到视频帧数据从而可以进行一系列处理(裁剪，旋转，美颜，特效)所以,必须采集到视频帧数据">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/A.MvvNfc4h*YxW8lhOWq*bOG5owrxasaGcD8NTeYLdk!/r/dFIBAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/04/15/20190413_iOS_VideoCaptureExplain/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS视频流采集概述(AVCaptureSession) | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/04/15/20190413_iOS_VideoCaptureExplain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS视频流采集概述(AVCaptureSession)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-15 10:20:43" itemprop="dateCreated datePublished" datetime="2019-04-15T10:20:43+08:00">2019-04-15</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/视频-Video/" itemprop="url" rel="index"><span itemprop="name">视频(Video)</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/15/20190413_iOS_VideoCaptureExplain/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/04/15/20190413_iOS_VideoCaptureExplain/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/04/15/20190413_iOS_VideoCaptureExplain/" class="leancloud_visitors" data-flag-title="iOS视频流采集概述(AVCaptureSession)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">需要采集到视频帧数据从而可以进行一系列处理(裁剪，旋转，美颜，特效)所以,必须采集到视频帧数据</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求：需要采集到视频帧数据从而可以进行一系列处理-如-裁剪，旋转，美颜，特效…-所以-必须采集到视频帧数据"><a href="#需求：需要采集到视频帧数据从而可以进行一系列处理-如-裁剪，旋转，美颜，特效…-所以-必须采集到视频帧数据" class="headerlink" title="需求：需要采集到视频帧数据从而可以进行一系列处理(如: 裁剪，旋转，美颜，特效….). 所以,必须采集到视频帧数据."></a>需求：需要采集到视频帧数据从而可以进行一系列处理(如: 裁剪，旋转，美颜，特效….). 所以,必须采集到视频帧数据.</h3><hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>使用AVFoundation框架</li>
+<li>采集音视频帧数据</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-iOS视频流采集概述"><a href="#GitHub地址-附代码-iOS视频流采集概述" class="headerlink" title="GitHub地址(附代码) : iOS视频流采集概述"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXVideoCapture_AVCaptureSession" target="_blank" rel="noopener">iOS视频流采集概述</a></h4><h4 id="简书地址-iOS视频流采集概述"><a href="#简书地址-iOS视频流采集概述" class="headerlink" title="简书地址     : iOS视频流采集概述"></a>简书地址     : <a href="https://www.jianshu.com/p/5885fee3c8b8" target="_blank" rel="noopener">iOS视频流采集概述</a></h4><h4 id="博客地址-iOS视频流采集概述"><a href="#博客地址-iOS视频流采集概述" class="headerlink" title="博客地址     : iOS视频流采集概述"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/04/13/20190413_iOS_VideoCaptureExplain/">iOS视频流采集概述</a></h4><h4 id="掘金地址-iOS视频流采集概述"><a href="#掘金地址-iOS视频流采集概述" class="headerlink" title="掘金地址     : iOS视频流采集概述"></a>掘金地址     : <a href="https://juejin.im/post/5cb1f987f265da039d3274c3" target="_blank" rel="noopener">iOS视频流采集概述</a></h4><hr>
+<h3 id="注意：本文仅仅是原理性讲解，而实际相机的设置也是比较复杂，具体相机参数的设置请参考另一篇-iOS相机设置实战"><a href="#注意：本文仅仅是原理性讲解，而实际相机的设置也是比较复杂，具体相机参数的设置请参考另一篇-iOS相机设置实战" class="headerlink" title="注意：本文仅仅是原理性讲解，而实际相机的设置也是比较复杂，具体相机参数的设置请参考另一篇 - iOS相机设置实战"></a>注意：本文仅仅是原理性讲解，而实际相机的设置也是比较复杂，具体相机参数的设置请参考另一篇 - <a href="https://www.jianshu.com/p/6975f706e2e5" target="_blank" rel="noopener">iOS相机设置实战</a></h3><hr>
+<h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><p>AVCaptureSession:使用相机或麦克风实时采集音视频数据流.</p>
+<ul>
+<li>AVCaptureSession   : 管理输入输出音视频流</li>
+<li>AVCaptureDevice    : 相机硬件的接口,用于控制硬件特性，诸如镜头的位置(前后摄像头)、曝光、闪光灯等。</li>
+<li>AVCaptureInput     : 配置输入设备,提供来自设备的数据</li>
+<li>AVCaptureOutput    : 管理输出的结果(音视频数据流)</li>
+<li><p>AVCaptureConnection: 表示输入与输出的连接</p>
+</li>
+<li><p>AVCaptureVideoPreviewLayer: 显示当前相机正在采集的状况</p>
+</li>
+</ul>
+<p>一个session可以配置多个输入输出</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/A.MvvNfc4h*YxW8lhOWq*bOG5owrxasaGcD8NTeYLdk!/r/dFIBAAAAAAAA" alt="1.AVCaptureSession"></p>
+<p>下图展示了向session中添加输入输出后的连接情况</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/3OFXQcx5s4Ugc8JVpdxRWVQPAiKKOVS7c7lQ2em2yx8!/r/dMEAAAAAAAAA" alt="2.AVCaptureConnection"></p>
+<h3 id="授权"><a href="#授权" class="headerlink" title="授权"></a>授权</h3><p>首先需要在Info.plist文件中添加键<code>Privacy - Camera Usage Description</code>以请求相机权限.</p>
+<blockquote>
+<p>注意: 如果不添加,程序crash,如果用户不给权限,则会显示全黑的相机画面.</p>
+</blockquote>
+<h3 id="1-使用Capture-Session管理数据流"><a href="#1-使用Capture-Session管理数据流" class="headerlink" title="1. 使用Capture Session管理数据流"></a>1. 使用Capture Session管理数据流</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureSession *session = [[AVCaptureSession alloc] init];</span><br><span class="line">// Add inputs and outputs.</span><br><span class="line">[session startRunning];</span><br></pre></td></tr></table></figure>
+<h4 id="1-1-使用preset配置分辨率-帧率"><a href="#1-1-使用preset配置分辨率-帧率" class="headerlink" title="1.1. 使用preset配置分辨率,帧率"></a>1.1. 使用preset配置分辨率,帧率</h4><ul>
+<li>canSetSessionPreset:检查是否支持指定分辨率</li>
+<li>setActiveVideoMinFrameDuration: 设置帧率最小值</li>
+<li>setActiveVideoMaxFrameDuration: 设置帧率最大值</li>
+</ul>
+<blockquote>
+<p>CMTimeMake: 分子为1,即每秒钟来多少帧.</p>
+</blockquote>
+<ul>
+<li><p>在低帧率下(帧率&lt;=30)可以用如下方式设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)setCameraResolutionByPresetWithHeight:(int)height session:(AVCaptureSession *)session &#123;</span><br><span class="line">    [session beginConfiguration];</span><br><span class="line">    session.sessionPreset = preset;</span><br><span class="line">    [session commitConfiguration];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setCameraForLFRWithFrameRate:(int)frameRate &#123;</span><br><span class="line">    // Only for frame rate &lt;= 30</span><br><span class="line">    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];</span><br><span class="line">    [captureDevice lockForConfiguration:NULL];</span><br><span class="line">    [captureDevice setActiveVideoMinFrameDuration:CMTimeMake(1, frameRate)];</span><br><span class="line">    [captureDevice setActiveVideoMaxFrameDuration:CMTimeMake(1, frameRate)];</span><br><span class="line">    [captureDevice unlockForConfiguration];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>高帧率下设置分辨率(帧率&gt;30)</p>
+</li>
+</ul>
+<p>如果需要对某一分辨率支持高帧率的设置,如50帧,60帧,120帧…,原先<code>setActiveVideoMinFrameDuration</code>与<code>setActiveVideoMaxFrameDuration</code>是无法做到的,Apple规定我们需要使用新的方法设置帧率<code>setActiveVideoMinFrameDuration</code>与<code>setActiveVideoMaxFrameDuration</code>,并且该方法必须配合新的设置分辨率<code>activeFormat</code>的方法一起使用.</p>
+<p>新的设置分辨率的方法<code>activeFormat</code>与<code>sessionPreset</code>是互斥的，如果使用了一个, 另一个会失效,建议直接使用高帧率的设置方法，废弃低帧率下设置方法，避免产生兼容问题。</p>
+<p>Apple在更新方法后将原先分离的分辨率与帧率的设置方法合二为一,原先是单独设置相机分辨率与帧率,而现在则需要一起设置,即每个分辨率有其对应支持的帧率范围,每个帧率也有其支持的分辨率,需要我们遍历来查询,所以原先统一的单独的设置分辨率与帧率的方法在高帧率模式下相当于弃用,可以根据项目需求选择,如果确定项目不会支持高帧率(fps&gt;30),可以使用以前的方法,简单且有效.</p>
+<blockquote>
+<p>注意: 使用<code>activeFormat</code>方法后,之前使用<code>sessionPreset</code>方法设置的分辨率将自动变为<code>AVCaptureSessionPresetInputPriority</code>,所以如果项目之前有用<code>canSetSessionPreset</code>比较的if语句也都将失效,建议如果项目必须支持高帧率则彻底启用<code>sessionPreset</code>方法.</p>
+</blockquote>
+<p>具体设置方法参考另一篇文章:<a href="https://www.jianshu.com/p/6975f706e2e5" target="_blank" rel="noopener">iOS相机设置实战</a></p>
+<blockquote>
+<p>注意: 在将session配置为使用用于高分辨率静态拍摄的活动格式并将以下一个或多个操作应用于AVCaptureVideoDataOutput时，系统可能无法满足目标帧速率：缩放，方向更改，格式转换。</p>
+</blockquote>
+<h4 id="1-2-更改相机设置"><a href="#1-2-更改相机设置" class="headerlink" title="1.2. 更改相机设置"></a>1.2. 更改相机设置</h4><p>如果你需要在开启相机后进一步调节相机参数,在<code>beginConfiguration</code>和<code>commitConfiguration</code>中写入更改的代码.调用<code>beginConfiguration</code>后可以添加移除输入输出,更改分辨率,配置个别的输入输出属性,直到调用<code>commitConfiguration</code>所有的更改才会生效.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[session beginConfiguration];</span><br><span class="line">// Remove an existing capture device.</span><br><span class="line">// Add a new capture device.</span><br><span class="line">// Reset the preset.</span><br><span class="line">[session commitConfiguration];</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-监听Session状态"><a href="#1-3-监听Session状态" class="headerlink" title="1.3. 监听Session状态"></a>1.3. 监听Session状态</h4><p>可以使用通知监听相机当前状态,如开始,停止,意外中断等等… </p>
+<ul>
+<li><p>监听掉帧</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)captureOutput:(AVCaptureOutput *)output didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>处理相机运行中突然出错</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[kTVUNotification addObserver:self selector:@selector(handleCameraRuntimeError)</span><br><span class="line">                         name:AVCaptureSessionRuntimeErrorNotification</span><br><span class="line">                       object:nil];</span><br><span class="line">[kTVUNotification addObserver:self selector:@selector(handleCameraInterruptionEndedError)</span><br><span class="line">                         name:AVCaptureSessionInterruptionEndedNotification</span><br><span class="line">                       object:nil];</span><br><span class="line">[kTVUNotification addObserver:self selector:@selector(handleCameraWasInterruptedError)</span><br><span class="line">                         name:AVCaptureSessionWasInterruptedNotification</span><br><span class="line">                       object:nil];</span><br></pre></td></tr></table></figure>
+<h3 id="2-AVCaptureDevice表示输入设备"><a href="#2-AVCaptureDevice表示输入设备" class="headerlink" title="2. AVCaptureDevice表示输入设备"></a>2. AVCaptureDevice表示输入设备</h3><h4 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1. 定义"></a>2.1. 定义</h4><p>AVCaptureDevice对象是关于相机硬件的接口,用于控制硬件特性，诸如镜头的位置、曝光、闪光灯等。</p>
+<h4 id="2-2-获取设备"><a href="#2-2-获取设备" class="headerlink" title="2.2. 获取设备"></a>2.2. 获取设备</h4><p>使用AVCaptureDevice的<code>devices</code> 和 <code>devicesWithMediaType:</code>方法可以找到我们需要的设备, 可用设备列表可能会发生变化, 如它们被别的应用使用,或一个新的输入设备接入(如耳机),通过注册AVCaptureDeviceWasConnectedNotification,AVCaptureDeviceWasDisconnectedNotification可以在设备变化时得到通知.</p>
+<h4 id="2-3-设备特性"><a href="#2-3-设备特性" class="headerlink" title="2.3. 设备特性"></a>2.3. 设备特性</h4><p>可以通过代码获取当前输入设备的位置(前后置摄像头)以及其他硬件相关信息.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">NSArray *devices = [AVCaptureDevice devices];</span><br><span class="line"> </span><br><span class="line">for (AVCaptureDevice *device in devices) &#123;</span><br><span class="line"> </span><br><span class="line">    NSLog(@&quot;Device name: %@&quot;, [device localizedName]);</span><br><span class="line"> </span><br><span class="line">    if ([device hasMediaType:AVMediaTypeVideo]) &#123;</span><br><span class="line"> </span><br><span class="line">        if ([device position] == AVCaptureDevicePositionBack) &#123;</span><br><span class="line">            NSLog(@&quot;Device position : back&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            NSLog(@&quot;Device position : front&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-4-相机功能设置"><a href="#2-4-相机功能设置" class="headerlink" title="2.4. 相机功能设置"></a>2.4. 相机功能设置</h4><p>不同设备具有不同的功能,如果需要可以开启对应的功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];</span><br><span class="line">NSMutableArray *torchDevices = [[NSMutableArray alloc] init];</span><br><span class="line"> </span><br><span class="line">for (AVCaptureDevice *device in devices) &#123;</span><br><span class="line">    [if ([device hasTorch] &amp;&amp;</span><br><span class="line">         [device supportsAVCaptureSessionPreset:AVCaptureSessionPreset640x480]) &#123;</span><br><span class="line">        [torchDevices addObject:device];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：在设置相机属性前,总是先通过API查询当前设备是否支持该功能,再进行相应处理</p>
+</blockquote>
+<ul>
+<li>聚焦模式-Focus Modes<ul>
+<li>AVCaptureFocusModeLocked: 设置一个固定的聚焦点</li>
+<li>AVCaptureFocusModeAutoFocus: 首次自动对焦然后锁定一个聚焦点</li>
+<li>AVCaptureFocusModeContinuousAutoFocus: 指当场景改变，相机会自动重新对焦到画面的中心点</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">isFocusModeSupported: 查询设备是否支持.</span><br><span class="line">adjustingFocus: 判断一个设备是否正在改变对焦点</span><br></pre></td></tr></table></figure>
+<p>使用<code>focusPointOfInterestSupported</code>测试设备是否支持设置对焦点,如果支持,使用<code>focusPointOfInterest</code>设置聚焦点,{0,0}代表画面左上角坐标,{1,1}代表右下角坐标.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ([currentDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) &#123;</span><br><span class="line">    CGPoint autofocusPoint = CGPointMake(0.5f, 0.5f);</span><br><span class="line">    [currentDevice setFocusPointOfInterest:autofocusPoint];</span><br><span class="line">    [currentDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>曝光模式-Exposure Modes<ul>
+<li>AVCaptureExposureModeContinuousAutoExposure: 自动调节曝光模式</li>
+<li>AVCaptureExposureModeLocked: 固定的曝光模式</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">isExposureModeSupported:是否支持某个曝光模式</span><br><span class="line">adjustingExposure:判断一个设备是否正在改变曝光值</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ([currentDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) &#123;</span><br><span class="line">    CGPoint exposurePoint = CGPointMake(0.5f, 0.5f);</span><br><span class="line">    [currentDevice setExposurePointOfInterest:exposurePoint];</span><br><span class="line">    [currentDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>闪光灯模式-Flash Modes<ul>
+<li>AVCaptureFlashModeOff: 永不开启</li>
+<li>AVCaptureFlashModeOn: 总是开启</li>
+<li>AVCaptureFlashModeAuto: 自动开启,根据光线判断</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hasFlash:是否有闪光灯</span><br><span class="line">isFlashModeSupported:是否支持闪光灯模式</span><br></pre></td></tr></table></figure>
+<ul>
+<li>手电筒模式-Torch Mode<ul>
+<li>AVCaptureTorchModeOff </li>
+<li>AVCaptureTorchModeOn</li>
+<li>AVCaptureTorchModeAuto</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hasTorch: 是否有手电筒</span><br><span class="line">isTorchModeSupported: 是否支持手电筒模式</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>手电筒只有在相机开启时才能打开</p>
+</blockquote>
+<ul>
+<li>视频稳定性-Video Stabilization<ul>
+<li>videoStabilizationEnabled</li>
+<li>enablesVideoStabilizationWhenAvailable</li>
+</ul>
+</li>
+</ul>
+<p>该功能默认是关闭的,画面稳定功能依赖于设备特定的硬件,并且不是所有格式的元数据与分辨率都支持此功能.</p>
+<blockquote>
+<p>开启该功能可能造成画面延迟</p>
+</blockquote>
+<ul>
+<li>白平衡-White Balance<ul>
+<li>AVCaptureWhiteBalanceModeLocked</li>
+<li>AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">isWhiteBalanceModeSupported: 是否支持白平衡模式</span><br><span class="line">adjustingWhiteBalance: 是否正在调整白平衡</span><br></pre></td></tr></table></figure>
+<p>相机为了适应不同类型的光照条件需要补偿。这意味着在冷光线的条件下，传感器应该增强红色部分，而在暖光线下增强蓝色部分。在 iPhone 相机中，设备会自动决定合适的补光，但有时也会被场景的颜色所混淆失效。幸运地是，iOS 8 可以里手动控制白平衡。</p>
+<p>自动模式工作方式和对焦、曝光的方式一样，但是没有“感兴趣的点”，整张图像都会被纳入考虑范围。在手动模式，我们可以通过开尔文所表示的温度来调节色温和色彩。典型的色温值在 2000-3000K (类似蜡烛或灯泡的暖光源) 到 8000K (纯净的蓝色天空) 之间。色彩范围从最小的 -150 (偏绿) 到 150 (偏品红)。</p>
+<ul>
+<li>设置设备方向<ul>
+<li>AVCaptureConnectionsupportsVideoOrientation:</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureConnection *captureConnection = &lt;#A capture connection#&gt;;</span><br><span class="line">if ([captureConnection isVideoOrientationSupported])</span><br><span class="line">&#123;</span><br><span class="line">    AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeLeft;</span><br><span class="line">    [captureConnection setVideoOrientation:orientation];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置设备</li>
+</ul>
+<p>使用锁配置相机属性,<code>lockForConfiguration:</code>,为了避免在你修改它时其他应用程序可能对它做更改.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if ([device isFocusModeSupported:AVCaptureFocusModeLocked]) &#123;</span><br><span class="line">    NSError *error = nil;</span><br><span class="line">    if ([device lockForConfiguration:&amp;error]) &#123;</span><br><span class="line">        device.focusMode = AVCaptureFocusModeLocked;</span><br><span class="line">        [device unlockForConfiguration];</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        // Respond to the failure as appropriate.</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>切换设备<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureSession *session = &lt;#A capture session#&gt;;</span><br><span class="line">[session beginConfiguration];</span><br><span class="line"> </span><br><span class="line">[session removeInput:frontFacingCameraDeviceInput];</span><br><span class="line">[session addInput:backFacingCameraDeviceInput];</span><br><span class="line"> </span><br><span class="line">[session commitConfiguration];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="3-配置Capture-Inputs添加到Session中"><a href="#3-配置Capture-Inputs添加到Session中" class="headerlink" title="3. 配置Capture Inputs添加到Session中"></a>3. 配置Capture Inputs添加到Session中</h3><p>一个AVCaptureInput代表一种或多种媒体数据,比如,输入设备可以同时提供视频和音频数据.每种媒体流代表一个AVCaptureInputPort对象.使用AVCaptureConnection可以将AVCaptureInputPort与AVCaptureOutput连接起来.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">NSError *error;</span><br><span class="line">AVCaptureDeviceInput *input =</span><br><span class="line">        [AVCaptureDeviceInput deviceInputWithDevice:device error:&amp;error];</span><br><span class="line">if (!input) &#123;</span><br><span class="line">    // Handle the error appropriately.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">AVCaptureSession *captureSession = &lt;#Get a capture session#&gt;;</span><br><span class="line">AVCaptureDeviceInput *captureDeviceInput = &lt;#Get a capture device input#&gt;;</span><br><span class="line">if ([captureSession canAddInput:captureDeviceInput]) &#123;</span><br><span class="line">    [captureSession addInput:captureDeviceInput];</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">    // Handle the failure.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-使用Capture-Outputs从Session中获取输出流"><a href="#4-使用Capture-Outputs从Session中获取输出流" class="headerlink" title="4. 使用Capture Outputs从Session中获取输出流"></a>4. 使用Capture Outputs从Session中获取输出流</h3><p>AVCaptureOutput: 从session中获取输出流.</p>
+<ul>
+<li>AVCaptureMovieFileOutput: 将数据写入文件</li>
+<li>AVCaptureVideoDataOutput: 将视频数据以回调形式输出视频帧</li>
+<li>AVCaptureAudioDataOutput: 将音频数据以回调形式输出音频帧</li>
+<li>AVCaptureStillImageOutput: 捕捉静态图片</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">addOutput: 添加输出</span><br><span class="line">canAddOutput: 是否能添加</span><br><span class="line"></span><br><span class="line">AVCaptureSession *captureSession = &lt;#Get a capture session#&gt;;</span><br><span class="line">AVCaptureMovieFileOutput *movieOutput = &lt;#Create and configure a movie output#&gt;;</span><br><span class="line">if ([captureSession canAddOutput:movieOutput]) &#123;</span><br><span class="line">    [captureSession addOutput:movieOutput];</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">    // Handle the failure.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-1-AVCaptureMovieFileOutput"><a href="#4-1-AVCaptureMovieFileOutput" class="headerlink" title="4.1. AVCaptureMovieFileOutput"></a>4.1. AVCaptureMovieFileOutput</h4><h5 id="4-1-1-写入文件"><a href="#4-1-1-写入文件" class="headerlink" title="4.1.1. 写入文件"></a>4.1.1. 写入文件</h5><p>AVCaptureMovieFileOutput: 使用此类作为输出.可以配置录制最长时间,文件大小以及禁止在磁盘空间不足时继续录制等等.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureMovieFileOutput *aMovieFileOutput = [[AVCaptureMovieFileOutput alloc] init];</span><br><span class="line">CMTime maxDuration = &lt;#Create a CMTime to represent the maximum duration#&gt;;</span><br><span class="line">aMovieFileOutput.maxRecordedDuration = maxDuration;</span><br><span class="line">aMovieFileOutput.minFreeDiskSpaceLimit = &lt;#An appropriate minimum given the quality of the movie format and the duration#&gt;;</span><br></pre></td></tr></table></figure>
+<h5 id="4-1-2-开始录制"><a href="#4-1-2-开始录制" class="headerlink" title="4.1.2. 开始录制"></a>4.1.2. 开始录制</h5><p>你需要提供一个文件保存地址的URL以及代理去监听状态,这个代理是AVCaptureFileOutputRecordingDelegate, 必须实现<code>captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:</code>代理方法</p>
+<blockquote>
+<p>URL不能是已经存在的文件,因为无法重写.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureMovieFileOutput *aMovieFileOutput = &lt;#Get a movie file output#&gt;;</span><br><span class="line">NSURL *fileURL = &lt;#A file URL that identifies the output location#&gt;;</span><br><span class="line">[aMovieFileOutput startRecordingToOutputFileURL:fileURL recordingDelegate:&lt;#The delegate#&gt;];</span><br></pre></td></tr></table></figure>
+<h5 id="4-1-3-确保文件写入成功"><a href="#4-1-3-确保文件写入成功" class="headerlink" title="4.1.3. 确保文件写入成功"></a>4.1.3. 确保文件写入成功</h5><p>通过代理方法可以检查是否写入成功</p>
+<blockquote>
+<p>需要检查<code>AVErrorRecordingSuccessfullyFinishedKey</code>的值,因为可能写入没有错误,但由于磁盘内存不足导致最终写入失败.</p>
+</blockquote>
+<p>写入失败的原因</p>
+<ul>
+<li>磁盘内存不足(AVErrorDiskFull)</li>
+<li>录制设备失去连接(AVErrorDeviceWasDisconnected)</li>
+<li>session意外中断(AVErrorSessionWasInterrupted)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)captureOutput:(AVCaptureFileOutput *)captureOutput</span><br><span class="line">        didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL</span><br><span class="line">        fromConnections:(NSArray *)connections</span><br><span class="line">        error:(NSError *)error &#123;</span><br><span class="line"> </span><br><span class="line">    BOOL recordedSuccessfully = YES;</span><br><span class="line">    if ([error code] != noErr) &#123;</span><br><span class="line">        // A problem occurred: Find out if the recording was successful.</span><br><span class="line">        id value = [[error userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey];</span><br><span class="line">        if (value) &#123;</span><br><span class="line">            recordedSuccessfully = [value boolValue];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // Continue as appropriate...</span><br></pre></td></tr></table></figure>
+<h5 id="4-1-4-添加Metadata到文件"><a href="#4-1-4-添加Metadata到文件" class="headerlink" title="4.1.4. 添加Metadata到文件"></a>4.1.4. 添加Metadata到文件</h5><p>可以在任意时间设置输出文件的metadata信息,即使正在录制.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureMovieFileOutput *aMovieFileOutput = &lt;#Get a movie file output#&gt;;</span><br><span class="line">NSArray *existingMetadataArray = aMovieFileOutput.metadata;</span><br><span class="line">NSMutableArray *newMetadataArray = nil;</span><br><span class="line">if (existingMetadataArray) &#123;</span><br><span class="line">    newMetadataArray = [existingMetadataArray mutableCopy];</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">    newMetadataArray = [[NSMutableArray alloc] init];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">AVMutableMetadataItem *item = [[AVMutableMetadataItem alloc] init];</span><br><span class="line">item.keySpace = AVMetadataKeySpaceCommon;</span><br><span class="line">item.key = AVMetadataCommonKeyLocation;</span><br><span class="line"> </span><br><span class="line">CLLocation *location - &lt;#The location to set#&gt;;</span><br><span class="line">item.value = [NSString stringWithFormat:@&quot;%+08.4lf%+09.4lf/&quot;</span><br><span class="line">    location.coordinate.latitude, location.coordinate.longitude];</span><br><span class="line"> </span><br><span class="line">[newMetadataArray addObject:item];</span><br><span class="line"> </span><br><span class="line">aMovieFileOutput.metadata = newMetadataArray;</span><br></pre></td></tr></table></figure></p>
+<h4 id="4-2-AVCaptureVideoDataOutput"><a href="#4-2-AVCaptureVideoDataOutput" class="headerlink" title="4.2 AVCaptureVideoDataOutput"></a>4.2 AVCaptureVideoDataOutput</h4><h5 id="4-2-1-获取视频帧数据"><a href="#4-2-1-获取视频帧数据" class="headerlink" title="4.2.1. 获取视频帧数据"></a>4.2.1. 获取视频帧数据</h5><p>AVCaptureVideoDataOutput对象可以通过代理(<code>setSampleBufferDelegate:queue:</code>)获取实时的视频帧数据.同时需要指定一个接受视频帧的串行队列.</p>
+<blockquote>
+<p>必须使用串行队列,因为要保证视频帧是按顺序传输给代理方法</p>
+</blockquote>
+<p>在<code>captureOutput:didOutputSampleBuffer:fromConnection:</code>代理方法中接受视频帧,每个视频帧被存放在CMSampleBufferRef引用对象中, 默认这些buffers以相机最有效的格式发出,我们也可以通过<code>videoSettings</code>指定输出相机的格式.需要将要指定的格式设置为<code>kCVPixelBufferPixelFormatTypeKey</code>的value,使用<code>availableVideoCodecTypes</code>可以查询当前支持的相机格式.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureVideoDataOutput *videoDataOutput = [AVCaptureVideoDataOutput new];</span><br><span class="line">NSDictionary *newSettings =</span><br><span class="line">                @&#123; (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) &#125;;</span><br><span class="line">videoDataOutput.videoSettings = newSettings;</span><br><span class="line"> </span><br><span class="line"> // discard if the data output queue is blocked (as we process the still image</span><br><span class="line">[videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];)</span><br><span class="line"> </span><br><span class="line">// create a serial dispatch queue used for the sample buffer delegate as well as when a still image is captured</span><br><span class="line">// a serial dispatch queue must be used to guarantee that video frames will be delivered in order</span><br><span class="line">// see the header doc for setSampleBufferDelegate:queue: for more information</span><br><span class="line">videoDataOutputQueue = dispatch_queue_create(&quot;VideoDataOutputQueue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">[videoDataOutput setSampleBufferDelegate:self queue:videoDataOutputQueue];</span><br><span class="line"> </span><br><span class="line">AVCaptureSession *captureSession = &lt;#The Capture Session#&gt;;</span><br><span class="line"> </span><br><span class="line">if ( [captureSession canAddOutput:videoDataOutput] )</span><br><span class="line">     [captureSession addOutput:videoDataOutput];</span><br></pre></td></tr></table></figure>
+<h5 id="4-3-AVCaptureStillImageOutput"><a href="#4-3-AVCaptureStillImageOutput" class="headerlink" title="4.3. AVCaptureStillImageOutput"></a>4.3. AVCaptureStillImageOutput</h5><p>如果要使用附带metadata元数据的静止图像,需要使用<code>AVCaptureStillImageOutput</code>.</p>
+<ul>
+<li>像素与编码格式</li>
+</ul>
+<p>使用<code>availableImageDataCVPixelFormatTypes, availableImageDataCodecTypes</code>获取当前支持的格式,以便于查询是否支持你想要设置的格式.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];</span><br><span class="line">NSDictionary *outputSettings = @&#123; AVVideoCodecKey : AVVideoCodecJPEG&#125;;</span><br><span class="line">[stillImageOutput setOutputSettings:outputSettings];</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>采集图像</li>
+</ul>
+<p>向output发送一条<code>captureStillImageAsynchronouslyFromConnection:completionHandler:</code>消息以采集一张图像.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureConnection *videoConnection = nil;</span><br><span class="line">for (AVCaptureConnection *connection in stillImageOutput.connections) &#123;</span><br><span class="line">    for (AVCaptureInputPort *port in [connection inputPorts]) &#123;</span><br><span class="line">        if ([[port mediaType] isEqual:AVMediaTypeVideo] ) &#123;</span><br><span class="line">            videoConnection = connection;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (videoConnection) &#123; break; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:</span><br><span class="line">    ^(CMSampleBufferRef imageSampleBuffer, NSError *error) &#123;</span><br><span class="line">        CFDictionaryRef exifAttachments =</span><br><span class="line">            CMGetAttachment(imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);</span><br><span class="line">        if (exifAttachments) &#123;</span><br><span class="line">            // Do something with the attachments.</span><br><span class="line">        &#125;</span><br><span class="line">        // Continue as appropriate.</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-展示预览图"><a href="#5-展示预览图" class="headerlink" title="5. 展示预览图"></a>5. 展示预览图</h3><p>如果相机的session已经开始工作,我们可以为用户创建一个预览图展示当前相机采集的状况(即就像系统相机拍摄视频时的预览界面)</p>
+<h4 id="5-1-Video-Preview"><a href="#5-1-Video-Preview" class="headerlink" title="5.1. Video Preview"></a>5.1. Video Preview</h4><ul>
+<li>AVCaptureVideoPreviewLayer: 展示相机预览情况,CALayer的子类.</li>
+<li>使用<code>AVCaptureVideoDataOutput</code>可以将像素层呈现给用户</li>
+</ul>
+<blockquote>
+<p> a video preview layer保持对它关联session的强引用,为了确保在图层尝试显示视频时不会被释放</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureSession *captureSession = &lt;#Get a capture session#&gt;;</span><br><span class="line">CALayer *viewLayer = &lt;#Get a layer from the view in which you want to present the preview#&gt;;</span><br><span class="line"> </span><br><span class="line">AVCaptureVideoPreviewLayer *captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];</span><br><span class="line">[viewLayer addSublayer:captureVideoPreviewLayer];</span><br></pre></td></tr></table></figure>
+<p>preview layer是CALayer的子类,因此它具有CALayer的行为,你可以对这一图层执行转换,旋转等操作.</p>
+<h5 id="5-1-1-视频重力感应模式"><a href="#5-1-1-视频重力感应模式" class="headerlink" title="5.1.1. 视频重力感应模式"></a>5.1.1. 视频重力感应模式</h5><ul>
+<li>AVLayerVideoGravityResizeAspect: 保持分辨率的原始尺寸,即横纵比,未填充的屏幕区域会有黑条</li>
+<li>AVLayerVideoGravityResizeAspectFill: 保持横纵比,铺满屏幕时可以牺牲部分像素</li>
+<li>AVLayerVideoGravityResize: 拉伸视频以充满屏幕,图像会失真</li>
+</ul>
+<h5 id="5-1-2-点击聚焦"><a href="#5-1-2-点击聚焦" class="headerlink" title="5.1.2. 点击聚焦"></a>5.1.2. 点击聚焦</h5><p>实现带有预览层的对焦时,必须考虑预览层的预览方向和重力以及镜像预览的可能性.</p>
+<h4 id="5-2-显示Audio-Levels"><a href="#5-2-显示Audio-Levels" class="headerlink" title="5.2. 显示Audio Levels"></a>5.2. 显示Audio Levels</h4><blockquote>
+<p>注意：一般采集音频不使用AVCaptureSession, 而是用更底层的AudioQueue, AudioUnit, 如需帮助请参考另一篇文章: <a href="https://www.jianshu.com/p/e2d072b9e4d8" target="_blank" rel="noopener">音频采集</a></p>
+</blockquote>
+<p>使用AVCaptureAudioChannel对象监视捕获连接中音频通道的平均功率和峰值功率级别.音频级不支持KVO，因此必须经常轮询更新级别，以便更新用户界面（例如，每秒10次）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureAudioDataOutput *audioDataOutput = &lt;#Get the audio data output#&gt;;</span><br><span class="line">NSArray *connections = audioDataOutput.connections;</span><br><span class="line">if ([connections count] &gt; 0) &#123;</span><br><span class="line">    // There should be only one connection to an AVCaptureAudioDataOutput.</span><br><span class="line">    AVCaptureConnection *connection = [connections objectAtIndex:0];</span><br><span class="line"> </span><br><span class="line">    NSArray *audioChannels = connection.audioChannels;</span><br><span class="line"> </span><br><span class="line">    for (AVCaptureAudioChannel *channel in audioChannels) &#123;</span><br><span class="line">        float avg = channel.averagePowerLevel;</span><br><span class="line">        float peak = channel.peakHoldLevel;</span><br><span class="line">        // Update the level meter user interface.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h3><p>下面将介绍如何采集视频帧并将其转换为UIImage对象.</p>
+<h4 id="6-1-流程"><a href="#6-1-流程" class="headerlink" title="6.1. 流程"></a>6.1. 流程</h4><ul>
+<li>创建AVCaptureSession对象管理输入输出流</li>
+<li>创建AVCaptureDevice对象管理当前硬件支持的所有设备，可以遍历找到我们需要的设备</li>
+<li>创建AVCaptureDeviceInput对象表示具体的的输入端的硬件设备</li>
+<li>创建AVCaptureVideoDataOutput对象管理输出视频帧</li>
+<li>实现AVCaptureVideoDataOutput代理方法以产生视频帧</li>
+<li>将视频帧从CMSampleBuffer格式转为UIImage格式</li>
+</ul>
+<p>下面是简单流程实现</p>
+<ul>
+<li><p>创建并配置session对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureSession *session = [[AVCaptureSession alloc] init];</span><br><span class="line">session.sessionPreset = AVCaptureSessionPresetMedium;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建并配置设备的输入端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureDevice *device =</span><br><span class="line">        [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];</span><br><span class="line"> </span><br><span class="line">NSError *error = nil;</span><br><span class="line">AVCaptureDeviceInput *input =</span><br><span class="line">        [AVCaptureDeviceInput deviceInputWithDevice:device error:&amp;error];</span><br><span class="line">if (!input) &#123;</span><br><span class="line">    // Handle the error appropriately.</span><br><span class="line">&#125;</span><br><span class="line">[session addInput:input];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建并配置输出端</p>
+</li>
+</ul>
+<p>通过配置AVCaptureVideoDataOutput对象(如视频帧的格式, 帧率),以产生未压缩的原始数据.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AVCaptureVideoDataOutput *output = [[AVCaptureVideoDataOutput alloc] init];</span><br><span class="line">[session addOutput:output];</span><br><span class="line">output.videoSettings =</span><br><span class="line">                @&#123; (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) &#125;;</span><br><span class="line">output.minFrameDuration = CMTimeMake(1, 15);</span><br><span class="line"></span><br><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;MyQueue&quot;, NULL);</span><br><span class="line">[output setSampleBufferDelegate:self queue:queue];</span><br><span class="line">dispatch_release(queue);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>实现代理方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (void)captureOutput:(AVCaptureOutput *)captureOutput</span><br><span class="line">         didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer</span><br><span class="line">         fromConnection:(AVCaptureConnection *)connection &#123;</span><br><span class="line"> </span><br><span class="line">    UIImage *image = imageFromSampleBuffer(sampleBuffer);</span><br><span class="line">    // Add your code here that uses the image.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>开始/停止录制</li>
+</ul>
+<p>配置完capture session之后,确保应用程序拥有权限.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">NSString *mediaType = AVMediaTypeVideo;</span><br><span class="line"> </span><br><span class="line">[AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) &#123;</span><br><span class="line">    if (granted)</span><br><span class="line">    &#123;</span><br><span class="line">        //Granted access to mediaType</span><br><span class="line">        [self setDeviceAuthorized:YES];</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        //Not granted access to mediaType</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [[[UIAlertView alloc] initWithTitle:@&quot;AVCam!&quot;</span><br><span class="line">                                    message:@&quot;AVCam doesn&apos;t have permission to use Camera, please change privacy settings&quot;</span><br><span class="line">                                   delegate:self</span><br><span class="line">                          cancelButtonTitle:@&quot;OK&quot;</span><br><span class="line">                          otherButtonTitles:nil] show];</span><br><span class="line">                [self setDeviceAuthorized:NO];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">[session startRunning];</span><br><span class="line">[session stopRunning];</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: startRunning是一个同步的方法,它可能会花一些时间,因此可能阻塞线程(可以在同步队列中执行避免主线程阻塞).</p>
+</blockquote>
+<h3 id="7-补充"><a href="#7-补充" class="headerlink" title="7. 补充"></a>7. 补充</h3><p>iOS7.0 介绍了高帧率视频采集,我们需要使用AVCaptureDeviceFormat类,该类具有返回支持的图像类型,帧率,缩放比例,是否支持稳定性等等.</p>
+<ul>
+<li>支持720p, 60帧,同时保证视频稳定性</li>
+<li>兼容音频的倍速播放</li>
+<li>编辑支持可变组合中的缩放编辑 (Editing has full support for scaled edits in mutable compositions.)</li>
+<li>导出可以支持可变帧率的60fps或者将其转为较低帧率如30fps</li>
+</ul>
+<h4 id="7-1-播放"><a href="#7-1-播放" class="headerlink" title="7.1. 播放"></a>7.1. 播放</h4><p>AVPlayer的一个实例通过设置setRate：方法值自动管理大部分播放速度。该值用作播放速度的乘数。值为1.0会导致正常播放，0.5以半速播放，5.0播放比正常播放快5倍，依此类推。</p>
+<p>AVPlayerItem对象支持audioTimePitchAlgorithm属性。此属性允许您指定在使用“时间间距算法设置”常量以各种帧速率播放影片时播放音频的方式。</p>
+<h4 id="7-2-编辑"><a href="#7-2-编辑" class="headerlink" title="7.2. 编辑"></a>7.2. 编辑</h4><p>使用AVMutableComposition对象完成编辑操作</p>
+<h4 id="7-3-导出"><a href="#7-3-导出" class="headerlink" title="7.3. 导出"></a>7.3. 导出</h4><p>使用<code>AVAssetExportSession</code>导出60fps的视频文件</p>
+<ul>
+<li>AVAssetExportPresetPassthrough: 避免重新编码视频。它将媒体的部分标记为部分60 fps，部分减速或部分加速.</li>
+<li>frameDuration: 使用恒定帧速率导出以获得最大的播放兼容性,可以使用audioTimePitchAlgorithm指定时间.</li>
+</ul>
+<h4 id="7-4-录制"><a href="#7-4-录制" class="headerlink" title="7.4. 录制"></a>7.4. 录制</h4><p>使用AVCaptureMovieFileOutput自动支持高帧率的录制,它将自动选择正确的H264的音高与比特率.如果需要对录制做一些额外操作,需要用到AVAssetWriter.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assetWriterInput.expectsMediaDataInRealTime=YES;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/视频-Video/" rel="tag"># 视频(Video)</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/15/20190415_iOS_AVAssetExplain/" rel="next" title="iOS AVAsset讲解">
+                <i class="fa fa-chevron-left"></i> iOS AVAsset讲解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：需要采集到视频帧数据从而可以进行一系列处理-如-裁剪，旋转，美颜，特效…-所以-必须采集到视频帧数据"><span class="nav-number">1.</span> <span class="nav-text">需求：需要采集到视频帧数据从而可以进行一系列处理(如: 裁剪，旋转，美颜，特效….). 所以,必须采集到视频帧数据.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS视频流采集概述"><span class="nav-number">2.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS视频流采集概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS视频流采集概述"><span class="nav-number">2.2.</span> <span class="nav-text">简书地址     : iOS视频流采集概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS视频流采集概述"><span class="nav-number">2.3.</span> <span class="nav-text">博客地址     : iOS视频流采集概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS视频流采集概述"><span class="nav-number">2.4.</span> <span class="nav-text">掘金地址     : iOS视频流采集概述</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意：本文仅仅是原理性讲解，而实际相机的设置也是比较复杂，具体相机参数的设置请参考另一篇-iOS相机设置实战"><span class="nav-number">3.</span> <span class="nav-text">注意：本文仅仅是原理性讲解，而实际相机的设置也是比较复杂，具体相机参数的设置请参考另一篇 - iOS相机设置实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview"><span class="nav-number">4.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#授权"><span class="nav-number">5.</span> <span class="nav-text">授权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用Capture-Session管理数据流"><span class="nav-number">6.</span> <span class="nav-text">1. 使用Capture Session管理数据流</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-使用preset配置分辨率-帧率"><span class="nav-number">6.1.</span> <span class="nav-text">1.1. 使用preset配置分辨率,帧率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-更改相机设置"><span class="nav-number">6.2.</span> <span class="nav-text">1.2. 更改相机设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-监听Session状态"><span class="nav-number">6.3.</span> <span class="nav-text">1.3. 监听Session状态</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-AVCaptureDevice表示输入设备"><span class="nav-number">7.</span> <span class="nav-text">2. AVCaptureDevice表示输入设备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-定义"><span class="nav-number">7.1.</span> <span class="nav-text">2.1. 定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-获取设备"><span class="nav-number">7.2.</span> <span class="nav-text">2.2. 获取设备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-设备特性"><span class="nav-number">7.3.</span> <span class="nav-text">2.3. 设备特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-相机功能设置"><span class="nav-number">7.4.</span> <span class="nav-text">2.4. 相机功能设置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-配置Capture-Inputs添加到Session中"><span class="nav-number">8.</span> <span class="nav-text">3. 配置Capture Inputs添加到Session中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-使用Capture-Outputs从Session中获取输出流"><span class="nav-number">9.</span> <span class="nav-text">4. 使用Capture Outputs从Session中获取输出流</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-AVCaptureMovieFileOutput"><span class="nav-number">9.1.</span> <span class="nav-text">4.1. AVCaptureMovieFileOutput</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-1-写入文件"><span class="nav-number">9.1.1.</span> <span class="nav-text">4.1.1. 写入文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-2-开始录制"><span class="nav-number">9.1.2.</span> <span class="nav-text">4.1.2. 开始录制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-3-确保文件写入成功"><span class="nav-number">9.1.3.</span> <span class="nav-text">4.1.3. 确保文件写入成功</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-4-添加Metadata到文件"><span class="nav-number">9.1.4.</span> <span class="nav-text">4.1.4. 添加Metadata到文件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-AVCaptureVideoDataOutput"><span class="nav-number">9.2.</span> <span class="nav-text">4.2 AVCaptureVideoDataOutput</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-1-获取视频帧数据"><span class="nav-number">9.2.1.</span> <span class="nav-text">4.2.1. 获取视频帧数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-AVCaptureStillImageOutput"><span class="nav-number">9.2.2.</span> <span class="nav-text">4.3. AVCaptureStillImageOutput</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-展示预览图"><span class="nav-number">10.</span> <span class="nav-text">5. 展示预览图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-Video-Preview"><span class="nav-number">10.1.</span> <span class="nav-text">5.1. Video Preview</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-1-视频重力感应模式"><span class="nav-number">10.1.1.</span> <span class="nav-text">5.1.1. 视频重力感应模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-2-点击聚焦"><span class="nav-number">10.1.2.</span> <span class="nav-text">5.1.2. 点击聚焦</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-显示Audio-Levels"><span class="nav-number">10.2.</span> <span class="nav-text">5.2. 显示Audio Levels</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-总结"><span class="nav-number">11.</span> <span class="nav-text">6. 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-流程"><span class="nav-number">11.1.</span> <span class="nav-text">6.1. 流程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-补充"><span class="nav-number">12.</span> <span class="nav-text">7. 补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-播放"><span class="nav-number">12.1.</span> <span class="nav-text">7.1. 播放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-编辑"><span class="nav-number">12.2.</span> <span class="nav-text">7.2. 编辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-导出"><span class="nav-number">12.3.</span> <span class="nav-text">7.3. 导出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-录制"><span class="nav-number">12.4.</span> <span class="nav-text">7.4. 录制</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="AVAsset是AVFoundation框架中的核心的类,它提供了基于时间的音视频数据.(如电影文件,视频流),一个asset包含很多轨道的结合,如audio, video, text, closed captions, subtitles">
+<meta name="keywords" content="iOS,xx,xx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS AVAsset讲解">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/04/15/20190415_iOS_AVAssetExplain/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="AVAsset是AVFoundation框架中的核心的类,它提供了基于时间的音视频数据.(如电影文件,视频流),一个asset包含很多轨道的结合,如audio, video, text, closed captions, subtitles">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/d4NPjuOUUrs69A9CggcAMaLGRT00RMoV6cOsgjui2Ow!/r/dD4BAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/K0tyVZuW.OhgL7jA1P28v.*qsWWPfVsr0baVRPQAQuU!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/6OekVRllD879dR1ywtWk27H3eZ0svFZeZd40n6tmBIg!/r/dL4AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qtsjMz2bJ9GAbxtcGu0VyJEdO*vRPRkUmMkf2sR7IlQ!/r/dDcBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/kUWCUlC*pJZGth90iA*p7dUa6J*Qvb55nzJs98wGa7U!/r/dEYBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/1Vhp.iUVnRkGovcB9axankw*pbuZYR00zFPLpCvW14Y!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/G4A6pKbQy.rAFB0xscqRKrC*YpUzJ05sO7y2PkM9B.M!/r/dDUBAAAAAAAA">
+<meta property="og:updated_time" content="2019-04-15T02:19:26.173Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS AVAsset讲解">
+<meta name="twitter:description" content="AVAsset是AVFoundation框架中的核心的类,它提供了基于时间的音视频数据.(如电影文件,视频流),一个asset包含很多轨道的结合,如audio, video, text, closed captions, subtitles">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/d4NPjuOUUrs69A9CggcAMaLGRT00RMoV6cOsgjui2Ow!/r/dD4BAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/04/15/20190415_iOS_AVAssetExplain/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS AVAsset讲解 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/04/15/20190415_iOS_AVAssetExplain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS AVAsset讲解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-15 10:19:26" itemprop="dateCreated datePublished" datetime="2019-04-15T10:19:26+08:00">2019-04-15</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/视频-Video/" itemprop="url" rel="index"><span itemprop="name">视频(Video)</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/15/20190415_iOS_AVAssetExplain/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/04/15/20190415_iOS_AVAssetExplain/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/04/15/20190415_iOS_AVAssetExplain/" class="leancloud_visitors" data-flag-title="iOS AVAsset讲解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">AVAsset是AVFoundation框架中的核心的类,它提供了基于时间的音视频数据.(如电影文件,视频流),一个asset包含很多轨道的结合,如audio, video, text, closed captions, subtitles</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h4 id="GitHub地址-附代码-iOS-AVAsset"><a href="#GitHub地址-附代码-iOS-AVAsset" class="headerlink" title="GitHub地址(附代码) : iOS AVAsset"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXAVAsset" target="_blank" rel="noopener">iOS AVAsset</a></h4><h4 id="简书地址-iOS-AVAsset"><a href="#简书地址-iOS-AVAsset" class="headerlink" title="简书地址     : iOS AVAsset"></a>简书地址     : <a href="https://www.jianshu.com/p/d22d4e0a8593" target="_blank" rel="noopener">iOS AVAsset</a></h4><h4 id="博客地址-iOS-AVAsset"><a href="#博客地址-iOS-AVAsset" class="headerlink" title="博客地址     : iOS AVAsset"></a>博客地址     : <a href="">iOS AVAsset</a></h4><h4 id="掘金地址-iOS-AVAsset"><a href="#掘金地址-iOS-AVAsset" class="headerlink" title="掘金地址     : iOS AVAsset"></a>掘金地址     : <a href="https://juejin.im/post/5cb3323c5188251d28699764" target="_blank" rel="noopener">iOS AVAsset</a></h4><hr>
+<h2 id="知识预备"><a href="#知识预备" class="headerlink" title="知识预备"></a>知识预备</h2><h3 id="AVFoundation概览"><a href="#AVFoundation概览" class="headerlink" title="AVFoundation概览"></a>AVFoundation概览</h3><p>AVFoundation是一个底层可以用来实时捕捉与播放的框架.苹果提供了回调可以获取每帧视频数据.如果你仅仅是想播放一段视频而不对视频做一些特殊处理,则您可以简单的使用上层框架如AVKit framework,</p>
+<ul>
+<li>AVAudioPlayer: 播放音频文件</li>
+<li>AVAudioRecorder: 录制音频文件</li>
+<li>AVAsset: 一个或多个媒体数据(音频轨道,视频轨道)的集合</li>
+<li>Reading, Writing, and Reencoding Assets: 读取,写出,重新编码</li>
+<li>Thumbnails: 使用AVAssetImageGenerator生成缩略图</li>
+<li>Editing: 对获取的视频文件做一些编辑操作:改变背景颜色,透明度,快进等等…</li>
+<li>Still and Video Media Capture: 使用capture session来捕捉此相机的视频数据与麦克风的音频数据.</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/d4NPjuOUUrs69A9CggcAMaLGRT00RMoV6cOsgjui2Ow!/r/dD4BAAAAAAAA" alt="1.AVFoundation"></p>
+<h3 id="Asset的表示"><a href="#Asset的表示" class="headerlink" title="Asset的表示"></a>Asset的表示</h3><ul>
+<li><code>AVAsset</code>是AVFoundation框架中的核心的类,它提供了基于时间的音视频数据.(如电影文件,视频流),一个asset包含很多轨道的结合,如audio, video, text, closed captions, subtitles…</li>
+<li><code>AVMetadataItem</code>:提供了一个asset相关的所有资源信息.</li>
+<li><code>AVAssetTrack</code>: 一个轨道可以代表一个音频轨道或视频轨道</li>
+</ul>
+<p>AVAsset代表了一种基于时间的音视频数据的抽象类型,其结构决定了很多框架的工作原理.AVFoundation中一些用于代表时间与媒体数据的sample buffer来自Core Media框架.</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/K0tyVZuW.OhgL7jA1P28v.*qsWWPfVsr0baVRPQAQuU!/r/dL8AAAAAAAAA" alt="1.AVAsset"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/6OekVRllD879dR1ywtWk27H3eZ0svFZeZd40n6tmBIg!/r/dL4AAAAAAAAA" alt="2.AVAssetTrack"></p>
+<h3 id="Media的表示"><a href="#Media的表示" class="headerlink" title="Media的表示"></a>Media的表示</h3><ul>
+<li>CMSampleBuffer: 表示视频帧数据</li>
+<li>CMSampleBufferGetPresentationTimeStamp,CMSampleBufferGetDecodeTimeStamp: 获取原始时间与解码时间戳</li>
+<li>CMFormatDescriptionRef: 格式信息</li>
+<li>CMGetAttachment: 获取元数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CMSampleBufferRef sampleBuffer = &lt;#Get a sample buffer#&gt;;</span><br><span class="line">CFDictionaryRef metadataDictionary =</span><br><span class="line">    CMGetAttachment(sampleBuffer, CFSTR(&quot;MetadataDictionary&quot;, NULL);</span><br><span class="line">if (metadataDictionary) &#123;</span><br><span class="line">    // Do something with the metadata.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="CMTime"><a href="#CMTime" class="headerlink" title="CMTime"></a>CMTime</h3><p>CMTime是一个C语言结构类型的有理数,它使用分子(int64_t)与分母(int32_t)表示时间. AVFoundation中关于时间的代码均使用此数据结构,所以务必了解其使用规则.</p>
+<ul>
+<li>Using CMTime</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CMTime time1 = CMTimeMake(200, 2); // 200 half-seconds</span><br><span class="line">CMTime time2 = CMTimeMake(400, 4); // 400 quarter-seconds</span><br><span class="line"> </span><br><span class="line">// time1 and time2 both represent 100 seconds, but using different timescales.</span><br><span class="line">if (CMTimeCompare(time1, time2) == 0) &#123;</span><br><span class="line">    NSLog(@&quot;time1 and time2 are the same&quot;);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">Float64 float64Seconds = 200.0 / 3;</span><br><span class="line">CMTime time3 = CMTimeMakeWithSeconds(float64Seconds , 3); // 66.66... third-seconds</span><br><span class="line">time3 = CMTimeMultiply(time3, 3);</span><br><span class="line">// time3 now represents 200 seconds; next subtract time1 (100 seconds).</span><br><span class="line">time3 = CMTimeSubtract(time3, time1);</span><br><span class="line">CMTimeShow(time3);</span><br><span class="line"> </span><br><span class="line">if (CMTIME_COMPARE_INLINE(time2, ==, time3)) &#123;</span><br><span class="line">    NSLog(@&quot;time2 and time3 are the same&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>特定CMTime的值<ul>
+<li>kCMTimeZero</li>
+<li>kCMTimePositiveInfinity</li>
+<li>kCMTimeInvalid</li>
+<li>kCMTimeNegativeInfinity</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CMTime myTime = &lt;#Get a CMTime#&gt;;</span><br><span class="line">if (CMTIME_IS_INVALID(myTime)) &#123;</span><br><span class="line">    // Perhaps treat this as an error; display a suitable alert to the user.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>CMTime作为一个对象</li>
+</ul>
+<p>可以用CMTimeCopyAsDictionary与CMTimeMakeFromDictionary将CMTime转换为CFDictionary.还可以使用CMTimeCopyDescription获取一个代表CMTime的字符串</p>
+<ul>
+<li>CMTimeRange表示一个时间段</li>
+</ul>
+<p>CMTimeRange是一个拥有开始时间与持续时间的C语言数据结构.</p>
+<ul>
+<li><p>比较</p>
+<ul>
+<li>CMTimeRangeContainsTime</li>
+<li>CMTimeRangeEqual</li>
+<li>CMTimeRangeContainsTimeRange</li>
+<li>CMTimeRangeGetUnion<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMTimeRangeContainsTime(range, CMTimeRangeGetEnd(range))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>特定的CMTimeRange</p>
+<ul>
+<li>kCMTimeRangeInvalid</li>
+<li>kCMTimeRangeZero</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CMTimeRange myTimeRange = &lt;#Get a CMTimeRange#&gt;;</span><br><span class="line">if (CMTIMERANGE_IS_EMPTY(myTimeRange)) &#123;</span><br><span class="line">    // The time range is zero.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>转换</li>
+</ul>
+<p>使用CMTimeRangeCopyAsDictionary与CMTimeRangeMakeFromDictionary将CMTimeRange转为CFDictionary.</p>
+<h3 id="1-Assets使用"><a href="#1-Assets使用" class="headerlink" title="1. Assets使用"></a>1. Assets使用</h3><ul>
+<li><p>定义: Assets 可以来自一个文件或用户的相册,可以理解为多媒体资源</p>
+<p>  创建Asset对象时,我们无法立即获取其所有数据, 因为含音视频的资源文件可能很大,系统需要花时间遍历它.一旦获取到asset后,可以从中提取静态图像, 或者将它转码为其他格式, 亦或是做裁剪操作.</p>
+</li>
+</ul>
+<h4 id="1-1-创建Asset对象"><a href="#1-1-创建Asset对象" class="headerlink" title="1.1. 创建Asset对象"></a>1.1. 创建Asset对象</h4><p>通过URL作为一个asset对象的标识. 这个URL可以是本地文件路径或网络流<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSURL *url = &lt;#A URL that identifies an audiovisual asset such as a movie file#&gt;;</span><br><span class="line">AVURLAsset *anAsset = [[AVURLAsset alloc] initWithURL:url options:nil];</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-2-初始化属性"><a href="#1-2-初始化属性" class="headerlink" title="1.2. 初始化属性"></a>1.2. 初始化属性</h4><p>AVURLAsset对象的初始化方式是用url与字典作为参数.</p>
+<ul>
+<li>字典中的key是AVURLAssetPreferPreciseDurationAndTimingKey枚举中的值</li>
+<li>AVURLAssetPreferPreciseDurationAndTimingKey是一个Bool类型的值,他决定了是否应准备好指示精确的持续时间并按时间提供精确的随机访问。</li>
+<li>获取精确的时间需要大量的处理开销. 使用近似时间开销较小且可以满足播放功能.<ul>
+<li>如果仅仅想播放asset,可以设置nil,它将默认为NO</li>
+<li>如果想要用asset做一个合成操作,我们需要一个精确的访问.则需要设置为true.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSURL *url = &lt;#A URL that identifies an audiovisual asset such as a movie file#&gt;;</span><br><span class="line">NSDictionary *options = @&#123; AVURLAssetPreferPreciseDurationAndTimingKey : @YES &#125;;</span><br><span class="line">AVURLAsset *anAssetToUseInAComposition = [[AVURLAsset alloc] initWithURL:url options:options];</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-访问用户相册"><a href="#1-3-访问用户相册" class="headerlink" title="1.3. 访问用户相册"></a>1.3. 访问用户相册</h4><p>我们可以获取用户相册中的视频资源</p>
+<ul>
+<li>iPod: MPMediaQuery</li>
+<li>iPhone: ALAssetsLibrary</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];</span><br><span class="line"> </span><br><span class="line">// Enumerate just the photos and videos group by using ALAssetsGroupSavedPhotos.</span><br><span class="line">[library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos usingBlock:^(ALAssetsGroup *group, BOOL *stop) &#123;</span><br><span class="line"> </span><br><span class="line">// Within the group enumeration block, filter to enumerate just videos.</span><br><span class="line">[group setAssetsFilter:[ALAssetsFilter allVideos]];</span><br><span class="line"> </span><br><span class="line">// For this example, we&apos;re only interested in the first item.</span><br><span class="line">[group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:0]</span><br><span class="line">                        options:0</span><br><span class="line">                     usingBlock:^(ALAsset *alAsset, NSUInteger index, BOOL *innerStop) &#123;</span><br><span class="line"> </span><br><span class="line">                         // The end of the enumeration is signaled by asset == nil.</span><br><span class="line">                         if (alAsset) &#123;</span><br><span class="line">                             ALAssetRepresentation *representation = [alAsset defaultRepresentation];</span><br><span class="line">                             NSURL *url = [representation url];</span><br><span class="line">                             AVAsset *avAsset = [AVURLAsset URLAssetWithURL:url options:nil];</span><br><span class="line">                             // Do something interesting with the AV asset.</span><br><span class="line">                         &#125;</span><br><span class="line">                     &#125;];</span><br><span class="line">                 &#125;</span><br><span class="line">                 failureBlock: ^(NSError *error) &#123;</span><br><span class="line">                     // Typically you should handle an error more gracefully than this.</span><br><span class="line">                     NSLog(@&quot;No groups&quot;);</span><br><span class="line">                 &#125;];</span><br></pre></td></tr></table></figure>
+<h4 id="1-4-使用"><a href="#1-4-使用" class="headerlink" title="1.4. 使用"></a>1.4. 使用</h4><p>初始化asset并意味着你检索的信息可以马上使用. 它可能需要一定时间去计算视频的信息.因此我们需要使用block异步接受处理的结果.<br>使用AVAsynchronousKeyValueLoading协议.</p>
+<ul>
+<li>a property using statusOfValueForKey:error: : 测试一个值是否被加载</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">NSURL *url = &lt;#A URL that identifies an audiovisual asset such as a movie file#&gt;;</span><br><span class="line">AVURLAsset *anAsset = [[AVURLAsset alloc] initWithURL:url options:nil];</span><br><span class="line">NSArray *keys = @[@&quot;duration&quot;];</span><br><span class="line"> </span><br><span class="line">[asset loadValuesAsynchronouslyForKeys:keys completionHandler:^() &#123;</span><br><span class="line"> </span><br><span class="line">    NSError *error = nil;</span><br><span class="line">    AVKeyValueStatus tracksStatus = [asset statusOfValueForKey:@&quot;duration&quot; error:&amp;error];</span><br><span class="line">    switch (tracksStatus) &#123;</span><br><span class="line">        case AVKeyValueStatusLoaded:</span><br><span class="line">            [self updateUserInterfaceForDuration];</span><br><span class="line">            break;</span><br><span class="line">        case AVKeyValueStatusFailed:</span><br><span class="line">            [self reportError:error forAsset:asset];</span><br><span class="line">            break;</span><br><span class="line">        case AVKeyValueStatusCancelled:</span><br><span class="line">            // Do whatever is appropriate for cancelation.</span><br><span class="line">            break;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h4 id="1-5-从Video中获取静止图像"><a href="#1-5-从Video中获取静止图像" class="headerlink" title="1.5.从Video中获取静止图像"></a>1.5.从Video中获取静止图像</h4><p>为了从asset的播放回调中获取像缩略图这样的静态图片,需要使用 AVAssetImageGenerator对象.可以使用<code>tracksWithMediaCharacteristic:.</code>测试asset是否有具有视频信息.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AVAsset anAsset = &lt;#Get an asset#&gt;;</span><br><span class="line">if ([[anAsset tracksWithMediaType:AVMediaTypeVideo] count] &gt; 0) &#123;</span><br><span class="line">    AVAssetImageGenerator *imageGenerator =</span><br><span class="line">        [AVAssetImageGenerator assetImageGeneratorWithAsset:anAsset];</span><br><span class="line">    // Implementation continues...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-6-生成一张图片"><a href="#1-6-生成一张图片" class="headerlink" title="1.6. 生成一张图片"></a>1.6. 生成一张图片</h4><p>可以使用<code>copyCGImageAtTime:actualTime:error:</code>在特定时间生成一张图片. AVFoundation不能在一个精准时间生成一张请求的图片.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">AVAsset *myAsset = &lt;#An asset#&gt;];</span><br><span class="line">AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:myAsset];</span><br><span class="line"> </span><br><span class="line">Float64 durationSeconds = CMTimeGetSeconds([myAsset duration]);</span><br><span class="line">CMTime midpoint = CMTimeMakeWithSeconds(durationSeconds/2.0, 600);</span><br><span class="line">NSError *error;</span><br><span class="line">CMTime actualTime;</span><br><span class="line"> </span><br><span class="line">CGImageRef halfWayImage = [imageGenerator copyCGImageAtTime:midpoint actualTime:&amp;actualTime error:&amp;error];</span><br><span class="line"> </span><br><span class="line">if (halfWayImage != NULL) &#123;</span><br><span class="line"> </span><br><span class="line">    NSString *actualTimeString = (NSString *)CMTimeCopyDescription(NULL, actualTime);</span><br><span class="line">    NSString *requestedTimeString = (NSString *)CMTimeCopyDescription(NULL, midpoint);</span><br><span class="line">    NSLog(@&quot;Got halfWayImage: Asked for %@, got %@&quot;, requestedTimeString, actualTimeString);</span><br><span class="line"> </span><br><span class="line">    // Do something interesting with the image.</span><br><span class="line">    CGImageRelease(halfWayImage);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-7-生成一系列图像"><a href="#1-7-生成一系列图像" class="headerlink" title="1.7.生成一系列图像"></a>1.7.生成一系列图像</h4><p>为了生成一系列图像,可以使用<code>generateCGImagesAsynchronouslyForTimes:completionHandler:</code>方法生成某个时间段内的连续图片.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">AVAsset *myAsset = &lt;#An asset#&gt;];</span><br><span class="line">// Assume: @property (strong) AVAssetImageGenerator *imageGenerator;</span><br><span class="line">self.imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:myAsset];</span><br><span class="line"> </span><br><span class="line">Float64 durationSeconds = CMTimeGetSeconds([myAsset duration]);</span><br><span class="line">CMTime firstThird = CMTimeMakeWithSeconds(durationSeconds/3.0, 600);</span><br><span class="line">CMTime secondThird = CMTimeMakeWithSeconds(durationSeconds*2.0/3.0, 600);</span><br><span class="line">CMTime end = CMTimeMakeWithSeconds(durationSeconds, 600);</span><br><span class="line">NSArray *times = @[NSValue valueWithCMTime:kCMTimeZero],</span><br><span class="line">                  [NSValue valueWithCMTime:firstThird], [NSValue valueWithCMTime:secondThird],</span><br><span class="line">                  [NSValue valueWithCMTime:end]];</span><br><span class="line"> </span><br><span class="line">[imageGenerator generateCGImagesAsynchronouslyForTimes:times</span><br><span class="line">                completionHandler:^(CMTime requestedTime, CGImageRef image, CMTime actualTime,</span><br><span class="line">                                    AVAssetImageGeneratorResult result, NSError *error) &#123;</span><br><span class="line"> </span><br><span class="line">                NSString *requestedTimeString = (NSString *)</span><br><span class="line">                    CFBridgingRelease(CMTimeCopyDescription(NULL, requestedTime));</span><br><span class="line">                NSString *actualTimeString = (NSString *)</span><br><span class="line">                    CFBridgingRelease(CMTimeCopyDescription(NULL, actualTime));</span><br><span class="line">                NSLog(@&quot;Requested: %@; actual %@&quot;, requestedTimeString, actualTimeString);</span><br><span class="line"> </span><br><span class="line">                if (result == AVAssetImageGeneratorSucceeded) &#123;</span><br><span class="line">                    // Do something interesting with the image.</span><br><span class="line">                &#125;</span><br><span class="line"> </span><br><span class="line">                if (result == AVAssetImageGeneratorFailed) &#123;</span><br><span class="line">                    NSLog(@&quot;Failed with error: %@&quot;, [error localizedDescription]);</span><br><span class="line">                &#125;</span><br><span class="line">                if (result == AVAssetImageGeneratorCancelled) &#123;</span><br><span class="line">                    NSLog(@&quot;Canceled&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">  &#125;];</span><br></pre></td></tr></table></figure></p>
+<p>  另外,调用<code>cancelAllCGImageGeneration</code>可以取消上面正在生成的图片.</p>
+<h4 id="1-8-裁剪-转码一个视频文件"><a href="#1-8-裁剪-转码一个视频文件" class="headerlink" title="1.8.裁剪,转码一个视频文件"></a>1.8.裁剪,转码一个视频文件</h4><p>可以使用AVAssetExportSession对象对视频做格式转码,裁剪功能.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">AVAsset *anAsset = &lt;#Get an asset#&gt;;</span><br><span class="line">NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:anAsset];</span><br><span class="line">if ([compatiblePresets containsObject:AVAssetExportPresetLowQuality]) &#123;</span><br><span class="line">    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]</span><br><span class="line">        initWithAsset:anAsset presetName:AVAssetExportPresetLowQuality];</span><br><span class="line">    // Implementation continues.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exportSession.outputURL = &lt;#A file URL#&gt;;</span><br><span class="line">    exportSession.outputFileType = AVFileTypeQuickTimeMovie;</span><br><span class="line"> </span><br><span class="line">    CMTime start = CMTimeMakeWithSeconds(1.0, 600);</span><br><span class="line">    CMTime duration = CMTimeMakeWithSeconds(3.0, 600);</span><br><span class="line">    CMTimeRange range = CMTimeRangeMake(start, duration);</span><br><span class="line">    exportSession.timeRange = range;</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>exportAsynchronouslyWithCompletionHandler:.</code>方法将创建一个新的文件.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[exportSession exportAsynchronouslyWithCompletionHandler:^&#123;</span><br><span class="line"> </span><br><span class="line">        switch ([exportSession status]) &#123;</span><br><span class="line">            case AVAssetExportSessionStatusFailed:</span><br><span class="line">                NSLog(@&quot;Export failed: %@&quot;, [[exportSession error] localizedDescription]);</span><br><span class="line">                break;</span><br><span class="line">            case AVAssetExportSessionStatusCancelled:</span><br><span class="line">                NSLog(@&quot;Export canceled&quot;);</span><br><span class="line">                break;</span><br><span class="line">            default:</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure></p>
+<p>可以使用<code>cancelExport</code>取消导出操作</p>
+<p>导出操作可能因为一下原因失败</p>
+<ul>
+<li>有来电显示</li>
+<li>有别的应用程序开始播放音频当程序进入后台</li>
+</ul>
+<h3 id="2-Playback"><a href="#2-Playback" class="headerlink" title="2. Playback"></a>2. Playback</h3><p>需要使用AVPlayer对象播放asset.</p>
+<h4 id="2-1-播放assets"><a href="#2-1-播放assets" class="headerlink" title="2.1 播放assets"></a>2.1 播放assets</h4><ul>
+<li>使用AVPlayer播放一个asset</li>
+<li>使用AVQueuePlayer播放一定数量的items.</li>
+</ul>
+<h4 id="2-2-处理不同类型asset"><a href="#2-2-处理不同类型asset" class="headerlink" title="2.2 处理不同类型asset"></a>2.2 处理不同类型asset</h4><ul>
+<li>基于文件<ul>
+<li>创建一个AVURLAsset</li>
+<li>使用asset创建一个AVPlayerItem</li>
+<li>使用AVPlayer关联AVPlayerItem</li>
+<li>使用KVO检测item状态变化</li>
+</ul>
+</li>
+<li>基于HTTP流<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSURL *url = [NSURL URLWithString:@&quot;&lt;#Live stream URL#&gt;];</span><br><span class="line">// You may find a test stream at &lt;http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8&gt;.</span><br><span class="line">self.playerItem = [AVPlayerItem playerItemWithURL:url];</span><br><span class="line">[playerItem addObserver:self forKeyPath:@&quot;status&quot; options:0 context:&amp;ItemStatusContext];</span><br><span class="line">self.player = [AVPlayer playerWithPlayerItem:playerItem];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="2-3-播放Item"><a href="#2-3-播放Item" class="headerlink" title="2.3 播放Item"></a>2.3 播放Item</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (IBAction)play:sender &#123;</span><br><span class="line">    [player play];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>改变播放速率</p>
+<ul>
+<li>canPlayReverse : 是否支持倒放</li>
+<li>canPlaySlowReverse:0.0 and -1.0</li>
+<li>canPlayFastReverse : less than -1.0<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">aPlayer.rate = 0.5;</span><br><span class="line">aPlayer.rate = 1; // 正常播放</span><br><span class="line">aPlayer.rate = 0; // 暂停</span><br><span class="line">aPlayer.rate = -0.5; // 倒放</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>重新定位播放头:主要用于调节播放视频的位置,及播放完后重置播放头</p>
+<ul>
+<li>seekToTime:针对性能</li>
+<li>seekToTime:toleranceBefore:toleranceAfter: 针对精确度<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CMTime fiveSecondsIn = CMTimeMake(5, 1);</span><br><span class="line">[player seekToTime:fiveSecondsIn];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CMTime fiveSecondsIn = CMTimeMake(5, 1);</span><br><span class="line">[player seekToTime:fiveSecondsIn toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>播放完后,应该重新将播放头设置为0,以便下次继续播放<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// Register with the notification center after creating the player item.</span><br><span class="line">    [[NSNotificationCenter defaultCenter]</span><br><span class="line">        addObserver:self</span><br><span class="line">        selector:@selector(playerItemDidReachEnd:)</span><br><span class="line">        name:AVPlayerItemDidPlayToEndTimeNotification</span><br><span class="line">        object:&lt;#The player item#&gt;];</span><br><span class="line"> </span><br><span class="line">- (void)playerItemDidReachEnd:(NSNotification *)notification &#123;</span><br><span class="line">    [player seekToTime:kCMTimeZero];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-4-播放多个Items"><a href="#2-4-播放多个Items" class="headerlink" title="2.4. 播放多个Items"></a>2.4. 播放多个Items</h4><p>可以使用play播放多个Items, 它们将按顺序播放.</p>
+<ul>
+<li>advanceToNextItem:跳过下一个</li>
+<li>insertItem:afterItem: 插入一个</li>
+<li>removeItem:删除一个</li>
+<li>removeAllItems: 删除所有<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NSArray *items = &lt;#An array of player items#&gt;;</span><br><span class="line">AVQueuePlayer *queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];</span><br><span class="line"></span><br><span class="line">AVPlayerItem *anItem = &lt;#Get a player item#&gt;;</span><br><span class="line">if ([queuePlayer canInsertItem:anItem afterItem:nil]) &#123;</span><br><span class="line">    [queuePlayer insertItem:anItem afterItem:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="2-5-监听播放"><a href="#2-5-监听播放" class="headerlink" title="2.5. 监听播放"></a>2.5. 监听播放</h4><p>比如</p>
+<ul>
+<li>如果用户切换到别的APP, rate会降到0</li>
+<li>播放远程媒体时,item的loadedTimeRanges and seekableTimeRanges等更多数据的可用性发生变化</li>
+<li>currentItem属性在Item通过HTTP live stream创建</li>
+<li>item的track属性也变化如果当前正在播放HTTP live stream.</li>
+<li>item的stataus属性也会随着播放失败的原因而变化</li>
+</ul>
+<blockquote>
+<p>我们应该在主线程注册和删除通知</p>
+</blockquote>
+<p>响应状态的变化</p>
+<p>当item的状态发生变化时,我们可以通知中得知.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object</span><br><span class="line">                        change:(NSDictionary *)change context:(void *)context &#123;</span><br><span class="line"> </span><br><span class="line">    if (context == &lt;#Player status context#&gt;) &#123;</span><br><span class="line">        AVPlayer *thePlayer = (AVPlayer *)object;</span><br><span class="line">        if ([thePlayer status] == AVPlayerStatusFailed) &#123;</span><br><span class="line">            NSError *error = [&lt;#The AVPlayer object#&gt; error];</span><br><span class="line">            // Respond to error: for example, display an alert sheet.</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        // Deal with other status change if appropriate.</span><br><span class="line">    &#125;</span><br><span class="line">    // Deal with other change notifications if appropriate.</span><br><span class="line">    [super observeValueForKeyPath:keyPath ofObject:object</span><br><span class="line">           change:change context:context];</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>时间追踪<ul>
+<li>addPeriodicTimeObserverForInterval:queue:usingBlock:</li>
+<li>addBoundaryTimeObserverForTimes:queue:usingBlock:</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// Assume a property: @property (strong) id playerObserver;</span><br><span class="line"> </span><br><span class="line">Float64 durationSeconds = CMTimeGetSeconds([&lt;#An asset#&gt; duration]);</span><br><span class="line">CMTime firstThird = CMTimeMakeWithSeconds(durationSeconds/3.0, 1);</span><br><span class="line">CMTime secondThird = CMTimeMakeWithSeconds(durationSeconds*2.0/3.0, 1);</span><br><span class="line">NSArray *times = @[[NSValue valueWithCMTime:firstThird], [NSValue valueWithCMTime:secondThird]];</span><br><span class="line"> </span><br><span class="line">self.playerObserver = [&lt;#A player#&gt; addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^&#123;</span><br><span class="line"> </span><br><span class="line">    NSString *timeDescription = (NSString *)</span><br><span class="line">        CFBridgingRelease(CMTimeCopyDescription(NULL, [self.player currentTime]));</span><br><span class="line">    NSLog(@&quot;Passed a boundary at %@&quot;, timeDescription);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>播放结束<br>注册AVPlayerItemDidPlayToEndTimeNotification当播放结束<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[NSNotificationCenter defaultCenter] addObserver:&lt;#The observer, typically self#&gt;</span><br><span class="line">                                         selector:@selector(&lt;#The selector name#&gt;)</span><br><span class="line">                                             name:AVPlayerItemDidPlayToEndTimeNotification</span><br><span class="line">                                           object:&lt;#A player item#&gt;];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="2-6-使用AVPlayerLayer-播放视频文件"><a href="#2-6-使用AVPlayerLayer-播放视频文件" class="headerlink" title="2.6. 使用AVPlayerLayer 播放视频文件"></a>2.6. 使用AVPlayerLayer 播放视频文件</h4><h5 id="2-6-1-步骤"><a href="#2-6-1-步骤" class="headerlink" title="2.6.1. 步骤"></a>2.6.1. 步骤</h5><ul>
+<li>配置AVPlayerLayer</li>
+<li>创建AVPlayer</li>
+<li>创建一个基于asset的AVPlayerItem对象并使用KVO观察他的状态</li>
+<li>准备播放</li>
+<li>播放完成后恢复播放头</li>
+</ul>
+<h5 id="2-6-2-The-Player-View"><a href="#2-6-2-The-Player-View" class="headerlink" title="2.6.2. The Player View"></a>2.6.2. The Player View</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &lt;AVFoundation/AVFoundation.h&gt;</span><br><span class="line"> </span><br><span class="line">@interface PlayerView : UIView</span><br><span class="line">@property (nonatomic) AVPlayer *player;</span><br><span class="line">@end</span><br><span class="line"> </span><br><span class="line">@implementation PlayerView</span><br><span class="line">+ (Class)layerClass &#123;</span><br><span class="line">    return [AVPlayerLayer class];</span><br><span class="line">&#125;</span><br><span class="line">- (AVPlayer*)player &#123;</span><br><span class="line">    return [(AVPlayerLayer *)[self layer] player];</span><br><span class="line">&#125;</span><br><span class="line">- (void)setPlayer:(AVPlayer *)player &#123;</span><br><span class="line">    [(AVPlayerLayer *)[self layer] setPlayer:player];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h5 id="2-6-3-A-Simple-View-Controller"><a href="#2-6-3-A-Simple-View-Controller" class="headerlink" title="2.6.3. A Simple View Controller"></a>2.6.3. A Simple View Controller</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@class PlayerView;</span><br><span class="line">@interface PlayerViewController : UIViewController</span><br><span class="line"> </span><br><span class="line">@property (nonatomic) AVPlayer *player;</span><br><span class="line">@property (nonatomic) AVPlayerItem *playerItem;</span><br><span class="line">@property (nonatomic, weak) IBOutlet PlayerView *playerView;</span><br><span class="line">@property (nonatomic, weak) IBOutlet UIButton *playButton;</span><br><span class="line">- (IBAction)loadAssetFromFile:sender;</span><br><span class="line">- (IBAction)play:sender;</span><br><span class="line">- (void)syncUI;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">- (void)syncUI &#123;</span><br><span class="line">    if ((self.player.currentItem != nil) &amp;&amp;</span><br><span class="line">        ([self.player.currentItem status] == AVPlayerItemStatusReadyToPlay)) &#123;</span><br><span class="line">        self.playButton.enabled = YES;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        self.playButton.enabled = NO;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    [self syncUI];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-6-4-创建Asset"><a href="#2-6-4-创建Asset" class="headerlink" title="2.6.4. 创建Asset"></a>2.6.4. 创建Asset</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (IBAction)loadAssetFromFile:sender &#123;</span><br><span class="line"> </span><br><span class="line">    NSURL *fileURL = [[NSBundle mainBundle]</span><br><span class="line">        URLForResource:&lt;#@&quot;VideoFileName&quot;#&gt; withExtension:&lt;#@&quot;extension&quot;#&gt;];</span><br><span class="line"> </span><br><span class="line">    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:fileURL options:nil];</span><br><span class="line">    NSString *tracksKey = @&quot;tracks&quot;;</span><br><span class="line"> </span><br><span class="line">    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:</span><br><span class="line">     ^&#123;</span><br><span class="line">         // The completion block goes here.</span><br><span class="line">     &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Define this constant for the key-value observation context.</span><br><span class="line">static const NSString *ItemStatusContext;</span><br><span class="line"> </span><br><span class="line">// Completion handler block.</span><br><span class="line">         dispatch_async(dispatch_get_main_queue(),</span><br><span class="line">            ^&#123;</span><br><span class="line">                NSError *error;</span><br><span class="line">                AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&amp;error];</span><br><span class="line"> </span><br><span class="line">                if (status == AVKeyValueStatusLoaded) &#123;</span><br><span class="line">                    self.playerItem = [AVPlayerItem playerItemWithAsset:asset];</span><br><span class="line">                     // ensure that this is done before the playerItem is associated with the player</span><br><span class="line">                    [self.playerItem addObserver:self forKeyPath:@&quot;status&quot;</span><br><span class="line">                                options:NSKeyValueObservingOptionInitial context:&amp;ItemStatusContext];</span><br><span class="line">                    [[NSNotificationCenter defaultCenter] addObserver:self</span><br><span class="line">                                                              selector:@selector(playerItemDidReachEnd:)</span><br><span class="line">                                                                  name:AVPlayerItemDidPlayToEndTimeNotification</span><br><span class="line">                                                                object:self.playerItem];</span><br><span class="line">                    self.player = [AVPlayer playerWithPlayerItem:self.playerItem];</span><br><span class="line">                    [self.playerView setPlayer:self.player];</span><br><span class="line">                &#125;</span><br><span class="line">                else &#123;</span><br><span class="line">                    // You should deal with the error appropriately.</span><br><span class="line">                    NSLog(@&quot;The asset&apos;s tracks were not loaded:\n%@&quot;, [error localizedDescription]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br></pre></td></tr></table></figure>
+<h5 id="2-6-5-响应状态变化"><a href="#2-6-5-响应状态变化" class="headerlink" title="2.6.5. 响应状态变化"></a>2.6.5. 响应状态变化</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object</span><br><span class="line">                        change:(NSDictionary *)change context:(void *)context &#123;</span><br><span class="line"> </span><br><span class="line">    if (context == &amp;ItemStatusContext) &#123;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(),</span><br><span class="line">                       ^&#123;</span><br><span class="line">                           [self syncUI];</span><br><span class="line">                       &#125;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    [super observeValueForKeyPath:keyPath ofObject:object</span><br><span class="line">           change:change context:context];</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-6-7-播放Item"><a href="#2-6-7-播放Item" class="headerlink" title="2.6.7. 播放Item"></a>2.6.7. 播放Item</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (IBAction)play:sender &#123;</span><br><span class="line">    [player play];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Register with the notification center after creating the player item.</span><br><span class="line">    [[NSNotificationCenter defaultCenter]</span><br><span class="line">        addObserver:self</span><br><span class="line">        selector:@selector(playerItemDidReachEnd:)</span><br><span class="line">        name:AVPlayerItemDidPlayToEndTimeNotification</span><br><span class="line">        object:[self.player currentItem]];</span><br><span class="line"> </span><br><span class="line">- (void)playerItemDidReachEnd:(NSNotification *)notification &#123;</span><br><span class="line">    [self.player seekToTime:kCMTimeZero];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-Editing"><a href="#3-Editing" class="headerlink" title="3.Editing"></a>3.Editing</h3><p>AVFoundation 提供了一组丰富功能的类去编辑asset, 编辑的核心是组合. 组合是来自一个或多个asset的集合.</p>
+<p>AVMutableComposition类提供了插入,删除,管理tracks顺序的界面,下图展示了两个asset结合成一个新的asset.<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qtsjMz2bJ9GAbxtcGu0VyJEdO*vRPRkUmMkf2sR7IlQ!/r/dDcBAAAAAAAA" alt="1.AVMutableComposition"></p>
+<p>使用AVMutableAudioMix类,可以执行自定义的音频处理.<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/kUWCUlC*pJZGth90iA*p7dUa6J*Qvb55nzJs98wGa7U!/r/dEYBAAAAAAAA" alt="2.AVMutableAudioMix"></p>
+<p>AVMutableVideoComposition: 使用合成的track进行编辑<br>AVMutableVideoCompositionLayerInstruction: 变换,渐变变换,不透明度,渐变不透明<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/1Vhp.iUVnRkGovcB9axankw*pbuZYR00zFPLpCvW14Y!/r/dL8AAAAAAAAA" alt="3.AVMutableVideoComposition"></p>
+<p>AVAssetExportSession: 将音视频合成<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/G4A6pKbQy.rAFB0xscqRKrC*YpUzJ05sO7y2PkM9B.M!/r/dDUBAAAAAAAA" alt="4.AVAssetExportSession"></p>
+<h4 id="3-1-新建Composition"><a href="#3-1-新建Composition" class="headerlink" title="3.1 新建Composition"></a>3.1 新建Composition</h4><p>使用AVMutableComposition创建对象,然后添加音视频数据,通过AVMutableCompositionTrack添加.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AVMutableComposition *mutableComposition = [AVMutableComposition composition];</span><br><span class="line">// Create the video composition track.</span><br><span class="line">AVMutableCompositionTrack *mutableCompositionVideoTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];</span><br><span class="line">// Create the audio composition track.</span><br><span class="line">AVMutableCompositionTrack *mutableCompositionAudioTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>kCMPersistentTrackID_Invalid: 将自动为您生成唯一标识符并与轨道关联。</p>
+</blockquote>
+<p>类型</p>
+<ul>
+<li>AVMediaTypeVideo</li>
+<li>AVMediaTypeAudio</li>
+<li>AVMediaTypeSubtitle</li>
+<li>AVMediaTypeText.</li>
+</ul>
+<h4 id="3-2-添加音视频数据"><a href="#3-2-添加音视频数据" class="headerlink" title="3.2. 添加音视频数据"></a>3.2. 添加音视频数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// You can retrieve AVAssets from a number of places, like the camera roll for example.</span><br><span class="line">AVAsset *videoAsset = &lt;#AVAsset with at least one video track#&gt;;</span><br><span class="line">AVAsset *anotherVideoAsset = &lt;#another AVAsset with at least one video track#&gt;;</span><br><span class="line">// Get the first video track from each asset.</span><br><span class="line">AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];</span><br><span class="line">AVAssetTrack *anotherVideoAssetTrack = [[anotherVideoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];</span><br><span class="line">// Add them both to the composition.</span><br><span class="line">[mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAssetTrack.timeRange.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];</span><br><span class="line">[mutableCompositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,anotherVideoAssetTrack.timeRange.duration) ofTrack:anotherVideoAssetTrack atTime:videoAssetTrack.timeRange.duration error:nil];</span><br><span class="line"></span><br><span class="line">AVMutableCompositionTrack *compatibleCompositionTrack = [mutableComposition mutableTrackCompatibleWithTrack:&lt;#the AVAssetTrack you want to insert#&gt;];</span><br><span class="line">if (compatibleCompositionTrack) &#123;</span><br><span class="line">    // Implementation continues.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-生成一个音量坡度"><a href="#3-3-生成一个音量坡度" class="headerlink" title="3.3. 生成一个音量坡度"></a>3.3. 生成一个音量坡度</h4><p>AVMutableAudioMix对象可以单独地对你的合成的全部音频执行自定义处理,<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AVMutableAudioMix *mutableAudioMix = [AVMutableAudioMix audioMix];</span><br><span class="line">// Create the audio mix input parameters object.</span><br><span class="line">AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mutableCompositionAudioTrack];</span><br><span class="line">// Set the volume ramp to slowly fade the audio out over the duration of the composition.</span><br><span class="line">[mixParameters setVolumeRampFromStartVolume:1.f toEndVolume:0.f timeRange:CMTimeRangeMake(kCMTimeZero, mutableComposition.duration)];</span><br><span class="line">// Attach the input parameters to the audio mix.</span><br><span class="line">mutableAudioMix.inputParameters = @[mixParameters];</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-4-自定义视频处理"><a href="#3-4-自定义视频处理" class="headerlink" title="3.4 自定义视频处理"></a>3.4 自定义视频处理</h4><p>AVMutableVideoComposition对象在你的视频合成轨道中执行所有自定义的处理.你可以直接设置渲染尺寸,scal, 帧率在你合成的视频轨道上.</p>
+<ul>
+<li><p>改变背影颜色</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AVMutableVideoCompositionInstruction *mutableVideoCompositionInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];</span><br><span class="line">mutableVideoCompositionInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, mutableComposition.duration);</span><br><span class="line">mutableVideoCompositionInstruction.backgroundColor = [[UIColor redColor] CGColor];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>应用不透明坡度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">AVAsset *firstVideoAssetTrack = &lt;#AVAssetTrack representing the first video segment played in the composition#&gt;;</span><br><span class="line">AVAsset *secondVideoAssetTrack = &lt;#AVAssetTrack representing the second video segment played in the composition#&gt;;</span><br><span class="line">// Create the first video composition instruction.</span><br><span class="line">AVMutableVideoCompositionInstruction *firstVideoCompositionInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];</span><br><span class="line">// Set its time range to span the duration of the first video track.</span><br><span class="line">firstVideoCompositionInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, firstVideoAssetTrack.timeRange.duration);</span><br><span class="line">// Create the layer instruction and associate it with the composition video track.</span><br><span class="line">AVMutableVideoCompositionLayerInstruction *firstVideoLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:mutableCompositionVideoTrack];</span><br><span class="line">// Create the opacity ramp to fade out the first video track over its entire duration.</span><br><span class="line">[firstVideoLayerInstruction setOpacityRampFromStartOpacity:1.f toEndOpacity:0.f timeRange:CMTimeRangeMake(kCMTimeZero, firstVideoAssetTrack.timeRange.duration)];</span><br><span class="line">// Create the second video composition instruction so that the second video track isn&apos;t transparent.</span><br><span class="line">AVMutableVideoCompositionInstruction *secondVideoCompositionInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];</span><br><span class="line">// Set its time range to span the duration of the second video track.</span><br><span class="line">secondVideoCompositionInstruction.timeRange = CMTimeRangeMake(firstVideoAssetTrack.timeRange.duration, CMTimeAdd(firstVideoAssetTrack.timeRange.duration, secondVideoAssetTrack.timeRange.duration));</span><br><span class="line">// Create the second layer instruction and associate it with the composition video track.</span><br><span class="line">AVMutableVideoCompositionLayerInstruction *secondVideoLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:mutableCompositionVideoTrack];</span><br><span class="line">// Attach the first layer instruction to the first video composition instruction.</span><br><span class="line">firstVideoCompositionInstruction.layerInstructions = @[firstVideoLayerInstruction];</span><br><span class="line">// Attach the second layer instruction to the second video composition instruction.</span><br><span class="line">secondVideoCompositionInstruction.layerInstructions = @[secondVideoLayerInstruction];</span><br><span class="line">// Attach both of the video composition instructions to the video composition.</span><br><span class="line">AVMutableVideoComposition *mutableVideoComposition = [AVMutableVideoComposition videoComposition];</span><br><span class="line">mutableVideoComposition.instructions = @[firstVideoCompositionInstruction, secondVideoCompositionInstruction];</span><br><span class="line">Incorporating Core Animation Effects</span><br><span class="line">A video composition can add the power of Core Animation to your composition through the animationTool property. Through this animation tool, you can accomplish tasks such as watermarking video and adding titles or animating overlays. Core Animation can be used in two different ways with video compositions: You can add a Core Animation layer as its own individual composition track, or you can render Core Animation effects (using a Core Animation layer) into the video frames in your composition directly. The following code displays the latter option by adding a watermark to the center of the video:</span><br><span class="line"></span><br><span class="line">CALayer *watermarkLayer = &lt;#CALayer representing your desired watermark image#&gt;;</span><br><span class="line">CALayer *parentLayer = [CALayer layer];</span><br><span class="line">CALayer *videoLayer = [CALayer layer];</span><br><span class="line">parentLayer.frame = CGRectMake(0, 0, mutableVideoComposition.renderSize.width, mutableVideoComposition.renderSize.height);</span><br><span class="line">videoLayer.frame = CGRectMake(0, 0, mutableVideoComposition.renderSize.width, mutableVideoComposition.renderSize.height);</span><br><span class="line">[parentLayer addSublayer:videoLayer];</span><br><span class="line">watermarkLayer.position = CGPointMake(mutableVideoComposition.renderSize.width/2, mutableVideoComposition.renderSize.height/4);</span><br><span class="line">[parentLayer addSublayer:watermarkLayer];</span><br><span class="line">mutableVideoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>结合Core Animation动画效果<br>video composition通过animationTool属性添加Core Animation中的动画到合成轨道中.你可以利用它去做视频水印,添加标题,动画叠加等操作.</p>
+</li>
+</ul>
+<p>Core Animation主要用于以下两方面</p>
+<pre><code>- 你可以把Core Animation图层添加到自己的合成轨道
+- 直接将 Core Animation 效果渲染到你合成轨道的视频帧中.
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CALayer *watermarkLayer = &lt;#CALayer representing your desired watermark image#&gt;;</span><br><span class="line">CALayer *parentLayer = [CALayer layer];</span><br><span class="line">CALayer *videoLayer = [CALayer layer];</span><br><span class="line">parentLayer.frame = CGRectMake(0, 0, mutableVideoComposition.renderSize.width, mutableVideoComposition.renderSize.height);</span><br><span class="line">videoLayer.frame = CGRectMake(0, 0, mutableVideoComposition.renderSize.width, mutableVideoComposition.renderSize.height);</span><br><span class="line">[parentLayer addSublayer:videoLayer];</span><br><span class="line">watermarkLayer.position = CGPointMake(mutableVideoComposition.renderSize.width/2, mutableVideoComposition.renderSize.height/4);</span><br><span class="line">[parentLayer addSublayer:watermarkLayer];</span><br><span class="line">mutableVideoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];</span><br></pre></td></tr></table></figure>
+<h4 id="3-5-组合多个asset-保存到相册"><a href="#3-5-组合多个asset-保存到相册" class="headerlink" title="3.5 组合多个asset, 保存到相册"></a>3.5 组合多个asset, 保存到相册</h4><h5 id="3-5-1-创建Composition"><a href="#3-5-1-创建Composition" class="headerlink" title="3.5.1. 创建Composition"></a>3.5.1. 创建Composition</h5><p>使用AVMutableComposition将多个asset组合在一起<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AVMutableComposition *mutableComposition = [AVMutableComposition composition];</span><br><span class="line">AVMutableCompositionTrack *videoCompositionTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];</span><br><span class="line">AVMutableCompositionTrack *audioCompositionTrack = [mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-5-2-添加assets"><a href="#3-5-2-添加assets" class="headerlink" title="3.5.2. 添加assets"></a>3.5.2. 添加assets</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AVAssetTrack *firstVideoAssetTrack = [[firstVideoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];</span><br><span class="line">AVAssetTrack *secondVideoAssetTrack = [[secondVideoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];</span><br><span class="line">[videoCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstVideoAssetTrack.timeRange.duration) ofTrack:firstVideoAssetTrack atTime:kCMTimeZero error:nil];</span><br><span class="line">[videoCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, secondVideoAssetTrack.timeRange.duration) ofTrack:secondVideoAssetTrack atTime:firstVideoAssetTrack.timeRange.duration error:nil];</span><br><span class="line">[audioCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, CMTimeAdd(firstVideoAssetTrack.timeRange.duration, secondVideoAssetTrack.timeRange.duration)) ofTrack:[[audioAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0] atTime:kCMTimeZero error:nil];</span><br></pre></td></tr></table></figure>
+<h5 id="3-5-3-检查视频方向"><a href="#3-5-3-检查视频方向" class="headerlink" title="3.5.3. 检查视频方向"></a>3.5.3. 检查视频方向</h5><p>一旦添加了音频和视频轨道到composition,请确保视频轨道的方向是正确的.默认,所有视频被指定为横屏方向.如果你的视频是纵向拍摄的,则导出视频无法正确定位.同样地,如果将横向视频与纵向视频结合也将出错.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">BOOL isFirstVideoPortrait = NO;</span><br><span class="line">CGAffineTransform firstTransform = firstVideoAssetTrack.preferredTransform;</span><br><span class="line">// Check the first video track&apos;s preferred transform to determine if it was recorded in portrait mode.</span><br><span class="line">if (firstTransform.a == 0 &amp;&amp; firstTransform.d == 0 &amp;&amp; (firstTransform.b == 1.0 || firstTransform.b == -1.0) &amp;&amp; (firstTransform.c == 1.0 || firstTransform.c == -1.0)) &#123;</span><br><span class="line">    isFirstVideoPortrait = YES;</span><br><span class="line">&#125;</span><br><span class="line">BOOL isSecondVideoPortrait = NO;</span><br><span class="line">CGAffineTransform secondTransform = secondVideoAssetTrack.preferredTransform;</span><br><span class="line">// Check the second video track&apos;s preferred transform to determine if it was recorded in portrait mode.</span><br><span class="line">if (secondTransform.a == 0 &amp;&amp; secondTransform.d == 0 &amp;&amp; (secondTransform.b == 1.0 || secondTransform.b == -1.0) &amp;&amp; (secondTransform.c == 1.0 || secondTransform.c == -1.0)) &#123;</span><br><span class="line">    isSecondVideoPortrait = YES;</span><br><span class="line">&#125;</span><br><span class="line">if ((isFirstVideoAssetPortrait &amp;&amp; !isSecondVideoAssetPortrait) || (!isFirstVideoAssetPortrait &amp;&amp; isSecondVideoAssetPortrait)) &#123;</span><br><span class="line">    UIAlertView *incompatibleVideoOrientationAlert = [[UIAlertView alloc] initWithTitle:@&quot;Error!&quot; message:@&quot;Cannot combine a video shot in portrait mode with a video shot in landscape mode.&quot; delegate:self cancelButtonTitle:@&quot;Dismiss&quot; otherButtonTitles:nil];</span><br><span class="line">    [incompatibleVideoOrientationAlert show];</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="3-5-4-视频合成指令"><a href="#3-5-4-视频合成指令" class="headerlink" title="3.5.4. 视频合成指令"></a>3.5.4. 视频合成指令</h5><p>一旦知道视频的兼容方向,可以对视频片段加以说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">AVMutableVideoCompositionInstruction *firstVideoCompositionInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];</span><br><span class="line">// Set the time range of the first instruction to span the duration of the first video track.</span><br><span class="line">firstVideoCompositionInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, firstVideoAssetTrack.timeRange.duration);</span><br><span class="line">AVMutableVideoCompositionInstruction * secondVideoCompositionInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];</span><br><span class="line">// Set the time range of the second instruction to span the duration of the second video track.</span><br><span class="line">secondVideoCompositionInstruction.timeRange = CMTimeRangeMake(firstVideoAssetTrack.timeRange.duration, CMTimeAdd(firstVideoAssetTrack.timeRange.duration, secondVideoAssetTrack.timeRange.duration));</span><br><span class="line">AVMutableVideoCompositionLayerInstruction *firstVideoLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack];</span><br><span class="line">// Set the transform of the first layer instruction to the preferred transform of the first video track.</span><br><span class="line">[firstVideoLayerInstruction setTransform:firstTransform atTime:kCMTimeZero];</span><br><span class="line">AVMutableVideoCompositionLayerInstruction *secondVideoLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack];</span><br><span class="line">// Set the transform of the second layer instruction to the preferred transform of the second video track.</span><br><span class="line">[secondVideoLayerInstruction setTransform:secondTransform atTime:firstVideoAssetTrack.timeRange.duration];</span><br><span class="line">firstVideoCompositionInstruction.layerInstructions = @[firstVideoLayerInstruction];</span><br><span class="line">secondVideoCompositionInstruction.layerInstructions = @[secondVideoLayerInstruction];</span><br><span class="line">AVMutableVideoComposition *mutableVideoComposition = [AVMutableVideoComposition videoComposition];</span><br><span class="line">mutableVideoComposition.instructions = @[firstVideoCompositionInstruction, secondVideoCompositionInstruction];</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-5-5-设置渲染尺寸和帧率"><a href="#3-5-5-设置渲染尺寸和帧率" class="headerlink" title="3.5.5. 设置渲染尺寸和帧率"></a>3.5.5. 设置渲染尺寸和帧率</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">CGSize naturalSizeFirst, naturalSizeSecond;</span><br><span class="line">// If the first video asset was shot in portrait mode, then so was the second one if we made it here.</span><br><span class="line">if (isFirstVideoAssetPortrait) &#123;</span><br><span class="line">// Invert the width and height for the video tracks to ensure that they display properly.</span><br><span class="line">    naturalSizeFirst = CGSizeMake(firstVideoAssetTrack.naturalSize.height, firstVideoAssetTrack.naturalSize.width);</span><br><span class="line">    naturalSizeSecond = CGSizeMake(secondVideoAssetTrack.naturalSize.height, secondVideoAssetTrack.naturalSize.width);</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">// If the videos weren&apos;t shot in portrait mode, we can just use their natural sizes.</span><br><span class="line">    naturalSizeFirst = firstVideoAssetTrack.naturalSize;</span><br><span class="line">    naturalSizeSecond = secondVideoAssetTrack.naturalSize;</span><br><span class="line">&#125;</span><br><span class="line">float renderWidth, renderHeight;</span><br><span class="line">// Set the renderWidth and renderHeight to the max of the two videos widths and heights.</span><br><span class="line">if (naturalSizeFirst.width &gt; naturalSizeSecond.width) &#123;</span><br><span class="line">    renderWidth = naturalSizeFirst.width;</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">    renderWidth = naturalSizeSecond.width;</span><br><span class="line">&#125;</span><br><span class="line">if (naturalSizeFirst.height &gt; naturalSizeSecond.height) &#123;</span><br><span class="line">    renderHeight = naturalSizeFirst.height;</span><br><span class="line">&#125;</span><br><span class="line">else &#123;</span><br><span class="line">    renderHeight = naturalSizeSecond.height;</span><br><span class="line">&#125;</span><br><span class="line">mutableVideoComposition.renderSize = CGSizeMake(renderWidth, renderHeight);</span><br><span class="line">// Set the frame duration to an appropriate value (i.e. 30 frames per second for video).</span><br><span class="line">mutableVideoComposition.frameDuration = CMTimeMake(1,30);</span><br></pre></td></tr></table></figure>
+<h5 id="3-5-6-导出合成的视频"><a href="#3-5-6-导出合成的视频" class="headerlink" title="3.5.6. 导出合成的视频"></a>3.5.6. 导出合成的视频</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// Create a static date formatter so we only have to initialize it once.</span><br><span class="line">static NSDateFormatter *kDateFormatter;</span><br><span class="line">if (!kDateFormatter) &#123;</span><br><span class="line">    kDateFormatter = [[NSDateFormatter alloc] init];</span><br><span class="line">    kDateFormatter.dateStyle = NSDateFormatterMediumStyle;</span><br><span class="line">    kDateFormatter.timeStyle = NSDateFormatterShortStyle;</span><br><span class="line">&#125;</span><br><span class="line">// Create the export session with the composition and set the preset to the highest quality.</span><br><span class="line">AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mutableComposition presetName:AVAssetExportPresetHighestQuality];</span><br><span class="line">// Set the desired output URL for the file created by the export process.</span><br><span class="line">exporter.outputURL = [[[[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:@YES error:nil] URLByAppendingPathComponent:[kDateFormatter stringFromDate:[NSDate date]]] URLByAppendingPathExtension:CFBridgingRelease(UTTypeCopyPreferredTagWithClass((CFStringRef)AVFileTypeQuickTimeMovie, kUTTagClassFilenameExtension))];</span><br><span class="line">// Set the output file type to be a QuickTime movie.</span><br><span class="line">exporter.outputFileType = AVFileTypeQuickTimeMovie;</span><br><span class="line">exporter.shouldOptimizeForNetworkUse = YES;</span><br><span class="line">exporter.videoComposition = mutableVideoComposition;</span><br><span class="line">// Asynchronously export the composition to a video file and save this file to the camera roll once export completes.</span><br><span class="line">[exporter exportAsynchronouslyWithCompletionHandler:^&#123;</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        if (exporter.status == AVAssetExportSessionStatusCompleted) &#123;</span><br><span class="line">            ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];</span><br><span class="line">            if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:exporter.outputURL]) &#123;</span><br><span class="line">                [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:exporter.outputURL completionBlock:NULL];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h3 id="4-导出AVAsset"><a href="#4-导出AVAsset" class="headerlink" title="4. 导出AVAsset"></a>4. 导出AVAsset</h3><h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><p>为了读写asset,必须使用由AVFoundation提供的导出API. AVAssetExportSession类提供了一些导出的方法,如改变文件格式,裁剪asset长度等等.</p>
+<ul>
+<li>AVAssetReader: 当你相对asset内容进行操作时,比如读取音轨以生成波形图</li>
+<li>AVAssetWriter: 从媒体(sample buffers或still images)中生成asset.</li>
+</ul>
+<blockquote>
+<p>asset reader and writer 不适用于实时处理. asset reader不能读取HTTP直播流. 然而,如果你使用asset writer做实时流操作,设置expectsMediaDataInRealTime为YES.对于非实时流的数据如果设置该属性则会报错.</p>
+</blockquote>
+<h4 id="4-1-Reading-an-Asset"><a href="#4-1-Reading-an-Asset" class="headerlink" title="4.1. Reading an Asset"></a>4.1. Reading an Asset</h4><p>每个AVAssetReader对象仅仅能和一个asset关联,但是这个asset可以包含多个tracks.</p>
+<ul>
+<li><p>创建Asset Reader</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSError *outError;</span><br><span class="line">AVAsset *someAsset = &lt;#AVAsset that you want to read#&gt;;</span><br><span class="line">AVAssetReader *assetReader = [AVAssetReader assetReaderWithAsset:someAsset error:&amp;outError];</span><br><span class="line">BOOL success = (assetReader != nil);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立Asset Reader输出</p>
+</li>
+</ul>
+<p>创建好asset reader后,至少设置一个输出对象以接收当前正在去读的媒体数据.设置好输出后,请确保<code>alwaysCopiesSampleData</code>为NO以便得到性能的提升.</p>
+<p>如果仅仅想要从一个或多个轨道中读取媒体数据并且将其转为不同的格式,可以使用AVAssetReaderTrackOutput类. 通过使用一个单独的轨道输出对象对每个AVAssetTrack对象你想要从asset中读取的.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AVAsset *localAsset = assetReader.asset;</span><br><span class="line">// Get the audio track to read.</span><br><span class="line">AVAssetTrack *audioTrack = [[localAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];</span><br><span class="line">// Decompression settings for Linear PCM</span><br><span class="line">NSDictionary *decompressionAudioSettings = @&#123; AVFormatIDKey : [NSNumber numberWithUnsignedInt:kAudioFormatLinearPCM] &#125;;</span><br><span class="line">// Create the output with the audio track and decompression settings.</span><br><span class="line">AVAssetReaderOutput *trackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:audioTrack outputSettings:decompressionAudioSettings];</span><br><span class="line">// Add the output to the reader if possible.</span><br><span class="line">if ([assetReader canAddOutput:trackOutput])</span><br><span class="line">    [assetReader addOutput:trackOutput];</span><br></pre></td></tr></table></figure>
+<p>使用AVAssetReaderAudioMixOutput与AVAssetReaderVideoCompositionOutput类分别读取由AVAudioMix与AVVideoComposition对象合成的媒体数据.通常被用在从AVComposition中读取数据.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">AVAudioMix *audioMix = &lt;#An AVAudioMix that specifies how the audio tracks from the AVAsset are mixed#&gt;;</span><br><span class="line">// Assumes that assetReader was initialized with an AVComposition object.</span><br><span class="line">AVComposition *composition = (AVComposition *)assetReader.asset;</span><br><span class="line">// Get the audio tracks to read.</span><br><span class="line">NSArray *audioTracks = [composition tracksWithMediaType:AVMediaTypeAudio];</span><br><span class="line">// Get the decompression settings for Linear PCM.</span><br><span class="line">NSDictionary *decompressionAudioSettings = @&#123; AVFormatIDKey : [NSNumber numberWithUnsignedInt:kAudioFormatLinearPCM] &#125;;</span><br><span class="line">// Create the audio mix output with the audio tracks and decompression setttings.</span><br><span class="line">AVAssetReaderOutput *audioMixOutput = [AVAssetReaderAudioMixOutput assetReaderAudioMixOutputWithAudioTracks:audioTracks audioSettings:decompressionAudioSettings];</span><br><span class="line">// Associate the audio mix used to mix the audio tracks being read with the output.</span><br><span class="line">audioMixOutput.audioMix = audioMix;</span><br><span class="line">// Add the output to the reader if possible.</span><br><span class="line">if ([assetReader canAddOutput:audioMixOutput])</span><br><span class="line">    [assetReader addOutput:audioMixOutput];</span><br></pre></td></tr></table></figure>
+<p>video也同理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">AVVideoComposition *videoComposition = &lt;#An AVVideoComposition that specifies how the video tracks from the AVAsset are composited#&gt;;</span><br><span class="line">// Assumes assetReader was initialized with an AVComposition.</span><br><span class="line">AVComposition *composition = (AVComposition *)assetReader.asset;</span><br><span class="line">// Get the video tracks to read.</span><br><span class="line">NSArray *videoTracks = [composition tracksWithMediaType:AVMediaTypeVideo];</span><br><span class="line">// Decompression settings for ARGB.</span><br><span class="line">NSDictionary *decompressionVideoSettings = @&#123; (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32ARGB], (id)kCVPixelBufferIOSurfacePropertiesKey : [NSDictionary dictionary] &#125;;</span><br><span class="line">// Create the video composition output with the video tracks and decompression setttings.</span><br><span class="line">AVAssetReaderOutput *videoCompositionOutput = [AVAssetReaderVideoCompositionOutput assetReaderVideoCompositionOutputWithVideoTracks:videoTracks videoSettings:decompressionVideoSettings];</span><br><span class="line">// Associate the video composition used to composite the video tracks being read with the output.</span><br><span class="line">videoCompositionOutput.videoComposition = videoComposition;</span><br><span class="line">// Add the output to the reader if possible.</span><br><span class="line">if ([assetReader canAddOutput:videoCompositionOutput])</span><br><span class="line">    [assetReader addOutput:videoCompositionOutput];</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Reading the Asset’s Media Data<br>设置好输出后,可以调用<code>startReading</code>开始读取.接下来,使用<code>copyNextSampleBuffer</code>方法从每个输出中单独检索数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// Start the asset reader up.</span><br><span class="line">[self.assetReader startReading];</span><br><span class="line">BOOL done = NO;</span><br><span class="line">while (!done)</span><br><span class="line">&#123;</span><br><span class="line">  // Copy the next sample buffer from the reader output.</span><br><span class="line">  CMSampleBufferRef sampleBuffer = [self.assetReaderOutput copyNextSampleBuffer];</span><br><span class="line">  if (sampleBuffer)</span><br><span class="line">  &#123;</span><br><span class="line">    // Do something with sampleBuffer here.</span><br><span class="line">    CFRelease(sampleBuffer);</span><br><span class="line">    sampleBuffer = NULL;</span><br><span class="line">  &#125;</span><br><span class="line">  else</span><br><span class="line">  &#123;</span><br><span class="line">    // Find out why the asset reader output couldn&apos;t copy another sample buffer.</span><br><span class="line">    if (self.assetReader.status == AVAssetReaderStatusFailed)</span><br><span class="line">    &#123;</span><br><span class="line">      NSError *failureError = self.assetReader.error;</span><br><span class="line">      // Handle the error here.</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">      // The asset reader output has read all of its samples.</span><br><span class="line">      done = YES;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-Writing-an-Asset"><a href="#4-2-Writing-an-Asset" class="headerlink" title="4.2.Writing an Asset"></a>4.2.Writing an Asset</h4><p>AVAssetWriter: 用于将多个源的媒体数据写入指定格式的单个文件中.你不必去关联你的asset writer对象与一个特定的asset, 但必须使用一个单独的asset为你创建的每个输出文件.</p>
+<ul>
+<li>创建Asset Writer</li>
+</ul>
+<p>指定输出文件的URL与类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NSError *outError;</span><br><span class="line">NSURL *outputURL = &lt;#NSURL object representing the URL where you want to save the video#&gt;;</span><br><span class="line">AVAssetWriter *assetWriter = [AVAssetWriter assetWriterWithURL:outputURL</span><br><span class="line">                                                      fileType:AVFileTypeQuickTimeMovie</span><br><span class="line">                                                         error:&amp;outError];</span><br><span class="line">BOOL success = (assetWriter != nil);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>建立 Asset Writer输入</li>
+</ul>
+<p>为了让asset writer能够写入数据,必须键值至少一个asset writer输入源.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// Configure the channel layout as stereo.</span><br><span class="line">AudioChannelLayout stereoChannelLayout = &#123;</span><br><span class="line">    .mChannelLayoutTag = kAudioChannelLayoutTag_Stereo,</span><br><span class="line">    .mChannelBitmap = 0,</span><br><span class="line">    .mNumberChannelDescriptions = 0</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">// Convert the channel layout object to an NSData object.</span><br><span class="line">NSData *channelLayoutAsData = [NSData dataWithBytes:&amp;stereoChannelLayout length:offsetof(AudioChannelLayout, mChannelDescriptions)];</span><br><span class="line"> </span><br><span class="line">// Get the compression settings for 128 kbps AAC.</span><br><span class="line">NSDictionary *compressionAudioSettings = @&#123;</span><br><span class="line">    AVFormatIDKey         : [NSNumber numberWithUnsignedInt:kAudioFormatMPEG4AAC],</span><br><span class="line">    AVEncoderBitRateKey   : [NSNumber numberWithInteger:128000],</span><br><span class="line">    AVSampleRateKey       : [NSNumber numberWithInteger:44100],</span><br><span class="line">    AVChannelLayoutKey    : channelLayoutAsData,</span><br><span class="line">    AVNumberOfChannelsKey : [NSNumber numberWithUnsignedInteger:2]</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">// Create the asset writer input with the compression settings and specify the media type as audio.</span><br><span class="line">AVAssetWriterInput *assetWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:compressionAudioSettings];</span><br><span class="line">// Add the input to the writer if possible.</span><br><span class="line">if ([assetWriter canAddInput:assetWriterInput])</span><br><span class="line">    [assetWriter addInput:assetWriterInput];</span><br><span class="line">    </span><br><span class="line">    AVAsset *videoAsset = &lt;#AVAsset with at least one video track#&gt;;</span><br><span class="line">AVAssetTrack *videoAssetTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];</span><br><span class="line">assetWriterInput.transform = videoAssetTrack.preferredTransform;</span><br><span class="line"></span><br><span class="line">NSDictionary *pixelBufferAttributes = @&#123;</span><br><span class="line">     kCVPixelBufferCGImageCompatibilityKey : [NSNumber numberWithBool:YES],</span><br><span class="line">     kCVPixelBufferCGBitmapContextCompatibilityKey : [NSNumber numberWithBool:YES],</span><br><span class="line">     kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_32ARGB]</span><br><span class="line">&#125;;</span><br><span class="line">AVAssetWriterInputPixelBufferAdaptor *inputPixelBufferAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:self.assetWriterInput sourcePixelBufferAttributes:pixelBufferAttributes];</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Writing Media Data<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CMTime halfAssetDuration = CMTimeMultiplyByFloat64(self.asset.duration, 0.5);</span><br><span class="line">[self.assetWriter startSessionAtSourceTime:halfAssetDuration];</span><br><span class="line">//Implementation continues.</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以使用endSessionAtSourceTime:结束当前正在写的session, 然而,如果你的session将执行到文件末尾, 可以调用finishWriting.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// Prepare the asset writer for writing.</span><br><span class="line">[self.assetWriter startWriting];</span><br><span class="line">// Start a sample-writing session.</span><br><span class="line">[self.assetWriter startSessionAtSourceTime:kCMTimeZero];</span><br><span class="line">// Specify the block to execute when the asset writer is ready for media data and the queue to call it on.</span><br><span class="line">[self.assetWriterInput requestMediaDataWhenReadyOnQueue:myInputSerialQueue usingBlock:^&#123;</span><br><span class="line">     while ([self.assetWriterInput isReadyForMoreMediaData])</span><br><span class="line">     &#123;</span><br><span class="line">          // Get the next sample buffer.</span><br><span class="line">          CMSampleBufferRef nextSampleBuffer = [self copyNextSampleBufferToWrite];</span><br><span class="line">          if (nextSampleBuffer)</span><br><span class="line">          &#123;</span><br><span class="line">               // If it exists, append the next sample buffer to the output file.</span><br><span class="line">               [self.assetWriterInput appendSampleBuffer:nextSampleBuffer];</span><br><span class="line">               CFRelease(nextSampleBuffer);</span><br><span class="line">               nextSampleBuffer = nil;</span><br><span class="line">          &#125;</span><br><span class="line">          else</span><br><span class="line">          &#123;</span><br><span class="line">               // Assume that lack of a next sample buffer means the sample buffer source is out of samples and mark the input as finished.</span><br><span class="line">               [self.assetWriterInput markAsFinished];</span><br><span class="line">               break;</span><br><span class="line">          &#125;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-重新编码Assets"><a href="#4-3-重新编码Assets" class="headerlink" title="4.3. 重新编码Assets"></a>4.3. 重新编码Assets</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">NSString *serializationQueueDescription = [NSString stringWithFormat:@&quot;%@ serialization queue&quot;, self];</span><br><span class="line"> </span><br><span class="line">// Create a serialization queue for reading and writing.</span><br><span class="line">dispatch_queue_t serializationQueue = dispatch_queue_create([serializationQueueDescription UTF8String], NULL);</span><br><span class="line"> </span><br><span class="line">// Specify the block to execute when the asset writer is ready for media data and the queue to call it on.</span><br><span class="line">[self.assetWriterInput requestMediaDataWhenReadyOnQueue:serializationQueue usingBlock:^&#123;</span><br><span class="line">     while ([self.assetWriterInput isReadyForMoreMediaData])</span><br><span class="line">     &#123;</span><br><span class="line">          // Get the asset reader output&apos;s next sample buffer.</span><br><span class="line">          CMSampleBufferRef sampleBuffer = [self.assetReaderOutput copyNextSampleBuffer];</span><br><span class="line">          if (sampleBuffer != NULL)</span><br><span class="line">          &#123;</span><br><span class="line">               // If it exists, append this sample buffer to the output file.</span><br><span class="line">               BOOL success = [self.assetWriterInput appendSampleBuffer:sampleBuffer];</span><br><span class="line">               CFRelease(sampleBuffer);</span><br><span class="line">               sampleBuffer = NULL;</span><br><span class="line">               // Check for errors that may have occurred when appending the new sample buffer.</span><br><span class="line">               if (!success &amp;&amp; self.assetWriter.status == AVAssetWriterStatusFailed)</span><br><span class="line">               &#123;</span><br><span class="line">                    NSError *failureError = self.assetWriter.error;</span><br><span class="line">                    //Handle the error.</span><br><span class="line">               &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          else</span><br><span class="line">          &#123;</span><br><span class="line">               // If the next sample buffer doesn&apos;t exist, find out why the asset reader output couldn&apos;t vend another one.</span><br><span class="line">               if (self.assetReader.status == AVAssetReaderStatusFailed)</span><br><span class="line">               &#123;</span><br><span class="line">                    NSError *failureError = self.assetReader.error;</span><br><span class="line">                    //Handle the error here.</span><br><span class="line">               &#125;</span><br><span class="line">               else</span><br><span class="line">               &#123;</span><br><span class="line">                    // The asset reader output must have vended all of its samples. Mark the input as finished.</span><br><span class="line">                    [self.assetWriterInput markAsFinished];</span><br><span class="line">                    break;</span><br><span class="line">               &#125;</span><br><span class="line">          &#125;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h4 id="4-4-总结-使用Asset-Reader-and-Writer串联去重新编码Asset"><a href="#4-4-总结-使用Asset-Reader-and-Writer串联去重新编码Asset" class="headerlink" title="4.4 总结: 使用Asset Reader and Writer串联去重新编码Asset"></a>4.4 总结: 使用Asset Reader and Writer串联去重新编码Asset</h4><h5 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h5><ul>
+<li>使用串行队列处理异步读取与写入的数据.</li>
+<li>初始化asset reader并且配置两个asset reader的输出(一个video,一个audio)</li>
+<li>初始化asset writer并且配置两个asset writer的输入出(一个video,一个audio)</li>
+<li>使用一个asset reader通过两种不同的输入输出结合将数据传给asset writer</li>
+<li>使用dispatch group通知重新编码的过程完成</li>
+<li>允许用户取消开始后的重新编码的过程</li>
+</ul>
+<h5 id="4-4-1-Handling-the-Initial-Setup"><a href="#4-4-1-Handling-the-Initial-Setup" class="headerlink" title="4.4.1. Handling the Initial Setup"></a>4.4.1. Handling the Initial Setup</h5><p>创建三个单独的同步队列去管理读写进程,主队列用于管理asset reader, writer的启动与停止,其他两个队列用于通过输入,输出读取组合串行化读取与写入.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSString *serializationQueueDescription = [NSString stringWithFormat:@&quot;%@ serialization queue&quot;, self];</span><br><span class="line"> </span><br><span class="line">// Create the main serialization queue.</span><br><span class="line">self.mainSerializationQueue = dispatch_queue_create([serializationQueueDescription UTF8String], NULL);</span><br><span class="line">NSString *rwAudioSerializationQueueDescription = [NSString stringWithFormat:@&quot;%@ rw audio serialization queue&quot;, self];</span><br><span class="line"> </span><br><span class="line">// Create the serialization queue to use for reading and writing the audio data.</span><br><span class="line">self.rwAudioSerializationQueue = dispatch_queue_create([rwAudioSerializationQueueDescription UTF8String], NULL);</span><br><span class="line">NSString *rwVideoSerializationQueueDescription = [NSString stringWithFormat:@&quot;%@ rw video serialization queue&quot;, self];</span><br><span class="line"> </span><br><span class="line">// Create the serialization queue to use for reading and writing the video data.</span><br><span class="line">self.rwVideoSerializationQueue = dispatch_queue_create([rwVideoSerializationQueueDescription UTF8String], NULL);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">self.asset = &lt;#AVAsset that you want to reencode#&gt;;</span><br><span class="line">self.cancelled = NO;</span><br><span class="line">self.outputURL = &lt;#NSURL representing desired output URL for file generated by asset writer#&gt;;</span><br><span class="line">// Asynchronously load the tracks of the asset you want to read.</span><br><span class="line">[self.asset loadValuesAsynchronouslyForKeys:@[@&quot;tracks&quot;] completionHandler:^&#123;</span><br><span class="line">     // Once the tracks have finished loading, dispatch the work to the main serialization queue.</span><br><span class="line">     dispatch_async(self.mainSerializationQueue, ^&#123;</span><br><span class="line">          // Due to asynchronous nature, check to see if user has already cancelled.</span><br><span class="line">          if (self.cancelled)</span><br><span class="line">               return;</span><br><span class="line">          BOOL success = YES;</span><br><span class="line">          NSError *localError = nil;</span><br><span class="line">          // Check for success of loading the assets tracks.</span><br><span class="line">          success = ([self.asset statusOfValueForKey:@&quot;tracks&quot; error:&amp;localError] == AVKeyValueStatusLoaded);</span><br><span class="line">          if (success)</span><br><span class="line">          &#123;</span><br><span class="line">               // If the tracks loaded successfully, make sure that no file exists at the output path for the asset writer.</span><br><span class="line">               NSFileManager *fm = [NSFileManager defaultManager];</span><br><span class="line">               NSString *localOutputPath = [self.outputURL path];</span><br><span class="line">               if ([fm fileExistsAtPath:localOutputPath])</span><br><span class="line">                    success = [fm removeItemAtPath:localOutputPath error:&amp;localError];</span><br><span class="line">          &#125;</span><br><span class="line">          if (success)</span><br><span class="line">               success = [self setupAssetReaderAndAssetWriter:&amp;localError];</span><br><span class="line">          if (success)</span><br><span class="line">               success = [self startAssetReaderAndWriter:&amp;localError];</span><br><span class="line">          if (!success)</span><br><span class="line">               [self readingAndWritingDidFinishSuccessfully:success withError:localError];</span><br><span class="line">     &#125;);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h5 id="4-4-2-初始化Asset-Reader-and-Writer"><a href="#4-4-2-初始化Asset-Reader-and-Writer" class="headerlink" title="4.4.2 初始化Asset Reader and Writer"></a>4.4.2 初始化Asset Reader and Writer</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)setupAssetReaderAndAssetWriter:(NSError **)outError</span><br><span class="line">&#123;</span><br><span class="line">     // Create and initialize the asset reader.</span><br><span class="line">     self.assetReader = [[AVAssetReader alloc] initWithAsset:self.asset error:outError];</span><br><span class="line">     BOOL success = (self.assetReader != nil);</span><br><span class="line">     if (success)</span><br><span class="line">     &#123;</span><br><span class="line">          // If the asset reader was successfully initialized, do the same for the asset writer.</span><br><span class="line">          self.assetWriter = [[AVAssetWriter alloc] initWithURL:self.outputURL fileType:AVFileTypeQuickTimeMovie error:outError];</span><br><span class="line">          success = (self.assetWriter != nil);</span><br><span class="line">     &#125;</span><br><span class="line"> </span><br><span class="line">     if (success)</span><br><span class="line">     &#123;</span><br><span class="line">          // If the reader and writer were successfully initialized, grab the audio and video asset tracks that will be used.</span><br><span class="line">          AVAssetTrack *assetAudioTrack = nil, *assetVideoTrack = nil;</span><br><span class="line">          NSArray *audioTracks = [self.asset tracksWithMediaType:AVMediaTypeAudio];</span><br><span class="line">          if ([audioTracks count] &gt; 0)</span><br><span class="line">               assetAudioTrack = [audioTracks objectAtIndex:0];</span><br><span class="line">          NSArray *videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];</span><br><span class="line">          if ([videoTracks count] &gt; 0)</span><br><span class="line">               assetVideoTrack = [videoTracks objectAtIndex:0];</span><br><span class="line"> </span><br><span class="line">          if (assetAudioTrack)</span><br><span class="line">          &#123;</span><br><span class="line">               // If there is an audio track to read, set the decompression settings to Linear PCM and create the asset reader output.</span><br><span class="line">               NSDictionary *decompressionAudioSettings = @&#123; AVFormatIDKey : [NSNumber numberWithUnsignedInt:kAudioFormatLinearPCM] &#125;;</span><br><span class="line">               self.assetReaderAudioOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetAudioTrack outputSettings:decompressionAudioSettings];</span><br><span class="line">               [self.assetReader addOutput:self.assetReaderAudioOutput];</span><br><span class="line">               // Then, set the compression settings to 128kbps AAC and create the asset writer input.</span><br><span class="line">               AudioChannelLayout stereoChannelLayout = &#123;</span><br><span class="line">                    .mChannelLayoutTag = kAudioChannelLayoutTag_Stereo,</span><br><span class="line">                    .mChannelBitmap = 0,</span><br><span class="line">                    .mNumberChannelDescriptions = 0</span><br><span class="line">               &#125;;</span><br><span class="line">               NSData *channelLayoutAsData = [NSData dataWithBytes:&amp;stereoChannelLayout length:offsetof(AudioChannelLayout, mChannelDescriptions)];</span><br><span class="line">               NSDictionary *compressionAudioSettings = @&#123;</span><br><span class="line">                    AVFormatIDKey         : [NSNumber numberWithUnsignedInt:kAudioFormatMPEG4AAC],</span><br><span class="line">                    AVEncoderBitRateKey   : [NSNumber numberWithInteger:128000],</span><br><span class="line">                    AVSampleRateKey       : [NSNumber numberWithInteger:44100],</span><br><span class="line">                    AVChannelLayoutKey    : channelLayoutAsData,</span><br><span class="line">                    AVNumberOfChannelsKey : [NSNumber numberWithUnsignedInteger:2]</span><br><span class="line">               &#125;;</span><br><span class="line">               self.assetWriterAudioInput = [AVAssetWriterInput assetWriterInputWithMediaType:[assetAudioTrack mediaType] outputSettings:compressionAudioSettings];</span><br><span class="line">               [self.assetWriter addInput:self.assetWriterAudioInput];</span><br><span class="line">          &#125;</span><br><span class="line"> </span><br><span class="line">          if (assetVideoTrack)</span><br><span class="line">          &#123;</span><br><span class="line">               // If there is a video track to read, set the decompression settings for YUV and create the asset reader output.</span><br><span class="line">               NSDictionary *decompressionVideoSettings = @&#123;</span><br><span class="line">                    (id)kCVPixelBufferPixelFormatTypeKey     : [NSNumber numberWithUnsignedInt:kCVPixelFormatType_422YpCbCr8],</span><br><span class="line">                    (id)kCVPixelBufferIOSurfacePropertiesKey : [NSDictionary dictionary]</span><br><span class="line">               &#125;;</span><br><span class="line">               self.assetReaderVideoOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:assetVideoTrack outputSettings:decompressionVideoSettings];</span><br><span class="line">               [self.assetReader addOutput:self.assetReaderVideoOutput];</span><br><span class="line">               CMFormatDescriptionRef formatDescription = NULL;</span><br><span class="line">               // Grab the video format descriptions from the video track and grab the first one if it exists.</span><br><span class="line">               NSArray *videoFormatDescriptions = [assetVideoTrack formatDescriptions];</span><br><span class="line">               if ([videoFormatDescriptions count] &gt; 0)</span><br><span class="line">                    formatDescription = (__bridge CMFormatDescriptionRef)[formatDescriptions objectAtIndex:0];</span><br><span class="line">               CGSize trackDimensions = &#123;</span><br><span class="line">                    .width = 0.0,</span><br><span class="line">                    .height = 0.0,</span><br><span class="line">               &#125;;</span><br><span class="line">               // If the video track had a format description, grab the track dimensions from there. Otherwise, grab them direcly from the track itself.</span><br><span class="line">               if (formatDescription)</span><br><span class="line">                    trackDimensions = CMVideoFormatDescriptionGetPresentationDimensions(formatDescription, false, false);</span><br><span class="line">               else</span><br><span class="line">                    trackDimensions = [assetVideoTrack naturalSize];</span><br><span class="line">               NSDictionary *compressionSettings = nil;</span><br><span class="line">               // If the video track had a format description, attempt to grab the clean aperture settings and pixel aspect ratio used by the video.</span><br><span class="line">               if (formatDescription)</span><br><span class="line">               &#123;</span><br><span class="line">                    NSDictionary *cleanAperture = nil;</span><br><span class="line">                    NSDictionary *pixelAspectRatio = nil;</span><br><span class="line">                    CFDictionaryRef cleanApertureFromCMFormatDescription = CMFormatDescriptionGetExtension(formatDescription, kCMFormatDescriptionExtension_CleanAperture);</span><br><span class="line">                    if (cleanApertureFromCMFormatDescription)</span><br><span class="line">                    &#123;</span><br><span class="line">                         cleanAperture = @&#123;</span><br><span class="line">                              AVVideoCleanApertureWidthKey            : (id)CFDictionaryGetValue(cleanApertureFromCMFormatDescription, kCMFormatDescriptionKey_CleanApertureWidth),</span><br><span class="line">                              AVVideoCleanApertureHeightKey           : (id)CFDictionaryGetValue(cleanApertureFromCMFormatDescription, kCMFormatDescriptionKey_CleanApertureHeight),</span><br><span class="line">                              AVVideoCleanApertureHorizontalOffsetKey : (id)CFDictionaryGetValue(cleanApertureFromCMFormatDescription, kCMFormatDescriptionKey_CleanApertureHorizontalOffset),</span><br><span class="line">                              AVVideoCleanApertureVerticalOffsetKey   : (id)CFDictionaryGetValue(cleanApertureFromCMFormatDescription, kCMFormatDescriptionKey_CleanApertureVerticalOffset)</span><br><span class="line">                         &#125;;</span><br><span class="line">                    &#125;</span><br><span class="line">                    CFDictionaryRef pixelAspectRatioFromCMFormatDescription = CMFormatDescriptionGetExtension(formatDescription, kCMFormatDescriptionExtension_PixelAspectRatio);</span><br><span class="line">                    if (pixelAspectRatioFromCMFormatDescription)</span><br><span class="line">                    &#123;</span><br><span class="line">                         pixelAspectRatio = @&#123;</span><br><span class="line">                              AVVideoPixelAspectRatioHorizontalSpacingKey : (id)CFDictionaryGetValue(pixelAspectRatioFromCMFormatDescription, kCMFormatDescriptionKey_PixelAspectRatioHorizontalSpacing),</span><br><span class="line">                              AVVideoPixelAspectRatioVerticalSpacingKey   : (id)CFDictionaryGetValue(pixelAspectRatioFromCMFormatDescription, kCMFormatDescriptionKey_PixelAspectRatioVerticalSpacing)</span><br><span class="line">                         &#125;;</span><br><span class="line">                    &#125;</span><br><span class="line">                    // Add whichever settings we could grab from the format description to the compression settings dictionary.</span><br><span class="line">                    if (cleanAperture || pixelAspectRatio)</span><br><span class="line">                    &#123;</span><br><span class="line">                         NSMutableDictionary *mutableCompressionSettings = [NSMutableDictionary dictionary];</span><br><span class="line">                         if (cleanAperture)</span><br><span class="line">                              [mutableCompressionSettings setObject:cleanAperture forKey:AVVideoCleanApertureKey];</span><br><span class="line">                         if (pixelAspectRatio)</span><br><span class="line">                              [mutableCompressionSettings setObject:pixelAspectRatio forKey:AVVideoPixelAspectRatioKey];</span><br><span class="line">                         compressionSettings = mutableCompressionSettings;</span><br><span class="line">                    &#125;</span><br><span class="line">               &#125;</span><br><span class="line">               // Create the video settings dictionary for H.264.</span><br><span class="line">               NSMutableDictionary *videoSettings = (NSMutableDictionary *) @&#123;</span><br><span class="line">                    AVVideoCodecKey  : AVVideoCodecH264,</span><br><span class="line">                    AVVideoWidthKey  : [NSNumber numberWithDouble:trackDimensions.width],</span><br><span class="line">                    AVVideoHeightKey : [NSNumber numberWithDouble:trackDimensions.height]</span><br><span class="line">               &#125;;</span><br><span class="line">               // Put the compression settings into the video settings dictionary if we were able to grab them.</span><br><span class="line">               if (compressionSettings)</span><br><span class="line">                    [videoSettings setObject:compressionSettings forKey:AVVideoCompressionPropertiesKey];</span><br><span class="line">               // Create the asset writer input and add it to the asset writer.</span><br><span class="line">               self.assetWriterVideoInput = [AVAssetWriterInput assetWriterInputWithMediaType:[videoTrack mediaType] outputSettings:videoSettings];</span><br><span class="line">               [self.assetWriter addInput:self.assetWriterVideoInput];</span><br><span class="line">          &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     return success;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-4-3-重编码asset"><a href="#4-4-3-重编码asset" class="headerlink" title="4.4.3. 重编码asset"></a>4.4.3. 重编码asset</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)startAssetReaderAndWriter:(NSError **)outError</span><br><span class="line">&#123;</span><br><span class="line">     BOOL success = YES;</span><br><span class="line">     // Attempt to start the asset reader.</span><br><span class="line">     success = [self.assetReader startReading];</span><br><span class="line">     if (!success)</span><br><span class="line">          *outError = [self.assetReader error];</span><br><span class="line">     if (success)</span><br><span class="line">     &#123;</span><br><span class="line">          // If the reader started successfully, attempt to start the asset writer.</span><br><span class="line">          success = [self.assetWriter startWriting];</span><br><span class="line">          if (!success)</span><br><span class="line">               *outError = [self.assetWriter error];</span><br><span class="line">     &#125;</span><br><span class="line"> </span><br><span class="line">     if (success)</span><br><span class="line">     &#123;</span><br><span class="line">          // If the asset reader and writer both started successfully, create the dispatch group where the reencoding will take place and start a sample-writing session.</span><br><span class="line">          self.dispatchGroup = dispatch_group_create();</span><br><span class="line">          [self.assetWriter startSessionAtSourceTime:kCMTimeZero];</span><br><span class="line">          self.audioFinished = NO;</span><br><span class="line">          self.videoFinished = NO;</span><br><span class="line"> </span><br><span class="line">          if (self.assetWriterAudioInput)</span><br><span class="line">          &#123;</span><br><span class="line">               // If there is audio to reencode, enter the dispatch group before beginning the work.</span><br><span class="line">               dispatch_group_enter(self.dispatchGroup);</span><br><span class="line">               // Specify the block to execute when the asset writer is ready for audio media data, and specify the queue to call it on.</span><br><span class="line">               [self.assetWriterAudioInput requestMediaDataWhenReadyOnQueue:self.rwAudioSerializationQueue usingBlock:^&#123;</span><br><span class="line">                    // Because the block is called asynchronously, check to see whether its task is complete.</span><br><span class="line">                    if (self.audioFinished)</span><br><span class="line">                         return;</span><br><span class="line">                    BOOL completedOrFailed = NO;</span><br><span class="line">                    // If the task isn&apos;t complete yet, make sure that the input is actually ready for more media data.</span><br><span class="line">                    while ([self.assetWriterAudioInput isReadyForMoreMediaData] &amp;&amp; !completedOrFailed)</span><br><span class="line">                    &#123;</span><br><span class="line">                         // Get the next audio sample buffer, and append it to the output file.</span><br><span class="line">                         CMSampleBufferRef sampleBuffer = [self.assetReaderAudioOutput copyNextSampleBuffer];</span><br><span class="line">                         if (sampleBuffer != NULL)</span><br><span class="line">                         &#123;</span><br><span class="line">                              BOOL success = [self.assetWriterAudioInput appendSampleBuffer:sampleBuffer];</span><br><span class="line">                              CFRelease(sampleBuffer);</span><br><span class="line">                              sampleBuffer = NULL;</span><br><span class="line">                              completedOrFailed = !success;</span><br><span class="line">                         &#125;</span><br><span class="line">                         else</span><br><span class="line">                         &#123;</span><br><span class="line">                              completedOrFailed = YES;</span><br><span class="line">                         &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (completedOrFailed)</span><br><span class="line">                    &#123;</span><br><span class="line">                         // Mark the input as finished, but only if we haven&apos;t already done so, and then leave the dispatch group (since the audio work has finished).</span><br><span class="line">                         BOOL oldFinished = self.audioFinished;</span><br><span class="line">                         self.audioFinished = YES;</span><br><span class="line">                         if (oldFinished == NO)</span><br><span class="line">                         &#123;</span><br><span class="line">                              [self.assetWriterAudioInput markAsFinished];</span><br><span class="line">                         &#125;</span><br><span class="line">                         dispatch_group_leave(self.dispatchGroup);</span><br><span class="line">                    &#125;</span><br><span class="line">               &#125;];</span><br><span class="line">          &#125;</span><br><span class="line"> </span><br><span class="line">          if (self.assetWriterVideoInput)</span><br><span class="line">          &#123;</span><br><span class="line">               // If we had video to reencode, enter the dispatch group before beginning the work.</span><br><span class="line">               dispatch_group_enter(self.dispatchGroup);</span><br><span class="line">               // Specify the block to execute when the asset writer is ready for video media data, and specify the queue to call it on.</span><br><span class="line">               [self.assetWriterVideoInput requestMediaDataWhenReadyOnQueue:self.rwVideoSerializationQueue usingBlock:^&#123;</span><br><span class="line">                    // Because the block is called asynchronously, check to see whether its task is complete.</span><br><span class="line">                    if (self.videoFinished)</span><br><span class="line">                         return;</span><br><span class="line">                    BOOL completedOrFailed = NO;</span><br><span class="line">                    // If the task isn&apos;t complete yet, make sure that the input is actually ready for more media data.</span><br><span class="line">                    while ([self.assetWriterVideoInput isReadyForMoreMediaData] &amp;&amp; !completedOrFailed)</span><br><span class="line">                    &#123;</span><br><span class="line">                         // Get the next video sample buffer, and append it to the output file.</span><br><span class="line">                         CMSampleBufferRef sampleBuffer = [self.assetReaderVideoOutput copyNextSampleBuffer];</span><br><span class="line">                         if (sampleBuffer != NULL)</span><br><span class="line">                         &#123;</span><br><span class="line">                              BOOL success = [self.assetWriterVideoInput appendSampleBuffer:sampleBuffer];</span><br><span class="line">                              CFRelease(sampleBuffer);</span><br><span class="line">                              sampleBuffer = NULL;</span><br><span class="line">                              completedOrFailed = !success;</span><br><span class="line">                         &#125;</span><br><span class="line">                         else</span><br><span class="line">                         &#123;</span><br><span class="line">                              completedOrFailed = YES;</span><br><span class="line">                         &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (completedOrFailed)</span><br><span class="line">                    &#123;</span><br><span class="line">                         // Mark the input as finished, but only if we haven&apos;t already done so, and then leave the dispatch group (since the video work has finished).</span><br><span class="line">                         BOOL oldFinished = self.videoFinished;</span><br><span class="line">                         self.videoFinished = YES;</span><br><span class="line">                         if (oldFinished == NO)</span><br><span class="line">                         &#123;</span><br><span class="line">                              [self.assetWriterVideoInput markAsFinished];</span><br><span class="line">                         &#125;</span><br><span class="line">                         dispatch_group_leave(self.dispatchGroup);</span><br><span class="line">                    &#125;</span><br><span class="line">               &#125;];</span><br><span class="line">          &#125;</span><br><span class="line">          // Set up the notification that the dispatch group will send when the audio and video work have both finished.</span><br><span class="line">          dispatch_group_notify(self.dispatchGroup, self.mainSerializationQueue, ^&#123;</span><br><span class="line">               BOOL finalSuccess = YES;</span><br><span class="line">               NSError *finalError = nil;</span><br><span class="line">               // Check to see if the work has finished due to cancellation.</span><br><span class="line">               if (self.cancelled)</span><br><span class="line">               &#123;</span><br><span class="line">                    // If so, cancel the reader and writer.</span><br><span class="line">                    [self.assetReader cancelReading];</span><br><span class="line">                    [self.assetWriter cancelWriting];</span><br><span class="line">               &#125;</span><br><span class="line">               else</span><br><span class="line">               &#123;</span><br><span class="line">                    // If cancellation didn&apos;t occur, first make sure that the asset reader didn&apos;t fail.</span><br><span class="line">                    if ([self.assetReader status] == AVAssetReaderStatusFailed)</span><br><span class="line">                    &#123;</span><br><span class="line">                         finalSuccess = NO;</span><br><span class="line">                         finalError = [self.assetReader error];</span><br><span class="line">                    &#125;</span><br><span class="line">                    // If the asset reader didn&apos;t fail, attempt to stop the asset writer and check for any errors.</span><br><span class="line">                    if (finalSuccess)</span><br><span class="line">                    &#123;</span><br><span class="line">                         finalSuccess = [self.assetWriter finishWriting];</span><br><span class="line">                         if (!finalSuccess)</span><br><span class="line">                              finalError = [self.assetWriter error];</span><br><span class="line">                    &#125;</span><br><span class="line">               &#125;</span><br><span class="line">               // Call the method to handle completion, and pass in the appropriate parameters to indicate whether reencoding was successful.</span><br><span class="line">               [self readingAndWritingDidFinishSuccessfully:finalSuccess withError:finalError];</span><br><span class="line">          &#125;);</span><br><span class="line">     &#125;</span><br><span class="line">     // Return success here to indicate whether the asset reader and writer were started successfully.</span><br><span class="line">     return success;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-4-4-处理完成"><a href="#4-4-4-处理完成" class="headerlink" title="4.4.4. 处理完成"></a>4.4.4. 处理完成</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">- (void)readingAndWritingDidFinishSuccessfully:(BOOL)success withError:(NSError *)error</span><br><span class="line">&#123;</span><br><span class="line">     if (!success)</span><br><span class="line">     &#123;</span><br><span class="line">          // If the reencoding process failed, we need to cancel the asset reader and writer.</span><br><span class="line">          [self.assetReader cancelReading];</span><br><span class="line">          [self.assetWriter cancelWriting];</span><br><span class="line">          dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">               // Handle any UI tasks here related to failure.</span><br><span class="line">          &#125;);</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">          // Reencoding was successful, reset booleans.</span><br><span class="line">          self.cancelled = NO;</span><br><span class="line">          self.videoFinished = NO;</span><br><span class="line">          self.audioFinished = NO;</span><br><span class="line">          dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">               // Handle any UI tasks here related to success.</span><br><span class="line">          &#125;);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-4-5-处理取消"><a href="#4-4-5-处理取消" class="headerlink" title="4.4.5. 处理取消"></a>4.4.5. 处理取消</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (void)cancel</span><br><span class="line">&#123;</span><br><span class="line">     // Handle cancellation asynchronously, but serialize it with the main queue.</span><br><span class="line">     dispatch_async(self.mainSerializationQueue, ^&#123;</span><br><span class="line">          // If we had audio data to reencode, we need to cancel the audio work.</span><br><span class="line">          if (self.assetWriterAudioInput)</span><br><span class="line">          &#123;</span><br><span class="line">               // Handle cancellation asynchronously again, but this time serialize it with the audio queue.</span><br><span class="line">               dispatch_async(self.rwAudioSerializationQueue, ^&#123;</span><br><span class="line">                    // Update the Boolean property indicating the task is complete and mark the input as finished if it hasn&apos;t already been marked as such.</span><br><span class="line">                    BOOL oldFinished = self.audioFinished;</span><br><span class="line">                    self.audioFinished = YES;</span><br><span class="line">                    if (oldFinished == NO)</span><br><span class="line">                    &#123;</span><br><span class="line">                         [self.assetWriterAudioInput markAsFinished];</span><br><span class="line">                    &#125;</span><br><span class="line">                    // Leave the dispatch group since the audio work is finished now.</span><br><span class="line">                    dispatch_group_leave(self.dispatchGroup);</span><br><span class="line">               &#125;);</span><br><span class="line">          &#125;</span><br><span class="line"> </span><br><span class="line">          if (self.assetWriterVideoInput)</span><br><span class="line">          &#123;</span><br><span class="line">               // Handle cancellation asynchronously again, but this time serialize it with the video queue.</span><br><span class="line">               dispatch_async(self.rwVideoSerializationQueue, ^&#123;</span><br><span class="line">                    // Update the Boolean property indicating the task is complete and mark the input as finished if it hasn&apos;t already been marked as such.</span><br><span class="line">                    BOOL oldFinished = self.videoFinished;</span><br><span class="line">                    self.videoFinished = YES;</span><br><span class="line">                    if (oldFinished == NO)</span><br><span class="line">                    &#123;</span><br><span class="line">                         [self.assetWriterVideoInput markAsFinished];</span><br><span class="line">                    &#125;</span><br><span class="line">                    // Leave the dispatch group, since the video work is finished now.</span><br><span class="line">                    dispatch_group_leave(self.dispatchGroup);</span><br><span class="line">               &#125;);</span><br><span class="line">          &#125;</span><br><span class="line">          // Set the cancelled Boolean property to YES to cancel any work on the main queue as well.</span><br><span class="line">          self.cancelled = YES;</span><br><span class="line">     &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-5-Asset-Output-Settings-Assistant"><a href="#4-5-Asset-Output-Settings-Assistant" class="headerlink" title="4.5.Asset Output Settings Assistant"></a>4.5.Asset Output Settings Assistant</h4><p>The AVOutputSettingsAssistant class aids in creating output-settings dictionaries for an asset reader or writer. This makes setup much simpler, especially for high frame rate H264 movies that have a number of specific presets.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">AVOutputSettingsAssistant *outputSettingsAssistant = [AVOutputSettingsAssistant outputSettingsAssistantWithPreset:&lt;some preset&gt;];</span><br><span class="line">CMFormatDescriptionRef audioFormat = [self getAudioFormat];</span><br><span class="line"> </span><br><span class="line">if (audioFormat != NULL)</span><br><span class="line">    [outputSettingsAssistant setSourceAudioFormat:(CMAudioFormatDescriptionRef)audioFormat];</span><br><span class="line"> </span><br><span class="line">CMFormatDescriptionRef videoFormat = [self getVideoFormat];</span><br><span class="line"> </span><br><span class="line">if (videoFormat != NULL)</span><br><span class="line">    [outputSettingsAssistant setSourceVideoFormat:(CMVideoFormatDescriptionRef)videoFormat];</span><br><span class="line"> </span><br><span class="line">CMTime assetMinVideoFrameDuration = [self getMinFrameDuration];</span><br><span class="line">CMTime averageFrameDuration = [self getAvgFrameDuration]</span><br><span class="line"> </span><br><span class="line">[outputSettingsAssistant setSourceVideoAverageFrameDuration:averageFrameDuration];</span><br><span class="line">[outputSettingsAssistant setSourceVideoMinFrameDuration:assetMinVideoFrameDuration];</span><br><span class="line"> </span><br><span class="line">AVAssetWriter *assetWriter = [AVAssetWriter assetWriterWithURL:&lt;some URL&gt; fileType:[outputSettingsAssistant outputFileType] error:NULL];</span><br><span class="line">AVAssetWriterInput *audioInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:[outputSettingsAssistant audioSettings] sourceFormatHint:audioFormat];</span><br><span class="line">AVAssetWriterInput *videoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:[outputSettingsAssistant videoSettings] sourceFormatHint:videoFormat];</span><br></pre></td></tr></table></figure>
+<h4 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">// Create a UIImage from sample buffer data</span><br><span class="line">- (UIImage *) imageFromSampleBuffer:(CMSampleBufferRef) sampleBuffer</span><br><span class="line">&#123;</span><br><span class="line">    // Get a CMSampleBuffer&apos;s Core Video image buffer for the media data</span><br><span class="line">    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">    // Lock the base address of the pixel buffer</span><br><span class="line">    CVPixelBufferLockBaseAddress(imageBuffer, 0);</span><br><span class="line"> </span><br><span class="line">    // Get the number of bytes per row for the pixel buffer</span><br><span class="line">    void *baseAddress = CVPixelBufferGetBaseAddress(imageBuffer);</span><br><span class="line"> </span><br><span class="line">    // Get the number of bytes per row for the pixel buffer</span><br><span class="line">    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);</span><br><span class="line">    // Get the pixel buffer width and height</span><br><span class="line">    size_t width = CVPixelBufferGetWidth(imageBuffer);</span><br><span class="line">    size_t height = CVPixelBufferGetHeight(imageBuffer);</span><br><span class="line"> </span><br><span class="line">    // Create a device-dependent RGB color space</span><br><span class="line">    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</span><br><span class="line"> </span><br><span class="line">    // Create a bitmap graphics context with the sample buffer data</span><br><span class="line">    CGContextRef context = CGBitmapContextCreate(baseAddress, width, height, 8,</span><br><span class="line">      bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);</span><br><span class="line">    // Create a Quartz image from the pixel data in the bitmap graphics context</span><br><span class="line">    CGImageRef quartzImage = CGBitmapContextCreateImage(context);</span><br><span class="line">    // Unlock the pixel buffer</span><br><span class="line">    CVPixelBufferUnlockBaseAddress(imageBuffer,0);</span><br><span class="line"> </span><br><span class="line">    // Free up the context and color space</span><br><span class="line">    CGContextRelease(context);</span><br><span class="line">    CGColorSpaceRelease(colorSpace);</span><br><span class="line"> </span><br><span class="line">    // Create an image object from the Quartz image</span><br><span class="line">    UIImage *image = [UIImage imageWithCGImage:quartzImage];</span><br><span class="line"> </span><br><span class="line">    // Release the Quartz image</span><br><span class="line">    CGImageRelease(quartzImage);</span><br><span class="line"> </span><br><span class="line">    return (image);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/视频-Video/" rel="tag"># 视频(Video)</a>
+          
+            <a href="/tags/音频-Audio/" rel="tag"># 音频(Audio)</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/15/20190413_iOS_VideoCaptureExercise/" rel="next" title="iOS视频采集实战(AVCaptureSession)">
+                <i class="fa fa-chevron-left"></i> iOS视频采集实战(AVCaptureSession)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/15/20190413_iOS_VideoCaptureExplain/" rel="prev" title="iOS视频流采集概述(AVCaptureSession)">
+                iOS视频流采集概述(AVCaptureSession) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
+                alt="小东邪 - Demon" />
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS-AVAsset"><span class="nav-number">1.</span> <span class="nav-text">GitHub地址(附代码) : iOS AVAsset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS-AVAsset"><span class="nav-number">2.</span> <span class="nav-text">简书地址     : iOS AVAsset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS-AVAsset"><span class="nav-number">3.</span> <span class="nav-text">博客地址     : iOS AVAsset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS-AVAsset"><span class="nav-number">4.</span> <span class="nav-text">掘金地址     : iOS AVAsset</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识预备"><span class="nav-number"></span> <span class="nav-text">知识预备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AVFoundation概览"><span class="nav-number"></span> <span class="nav-text">AVFoundation概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Asset的表示"><span class="nav-number"></span> <span class="nav-text">Asset的表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Media的表示"><span class="nav-number"></span> <span class="nav-text">Media的表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMTime"><span class="nav-number"></span> <span class="nav-text">CMTime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Assets使用"><span class="nav-number"></span> <span class="nav-text">1. Assets使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-创建Asset对象"><span class="nav-number">1.</span> <span class="nav-text">1.1. 创建Asset对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-初始化属性"><span class="nav-number">2.</span> <span class="nav-text">1.2. 初始化属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-访问用户相册"><span class="nav-number">3.</span> <span class="nav-text">1.3. 访问用户相册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-使用"><span class="nav-number">4.</span> <span class="nav-text">1.4. 使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-从Video中获取静止图像"><span class="nav-number">5.</span> <span class="nav-text">1.5.从Video中获取静止图像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-生成一张图片"><span class="nav-number">6.</span> <span class="nav-text">1.6. 生成一张图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-7-生成一系列图像"><span class="nav-number">7.</span> <span class="nav-text">1.7.生成一系列图像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-8-裁剪-转码一个视频文件"><span class="nav-number">8.</span> <span class="nav-text">1.8.裁剪,转码一个视频文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Playback"><span class="nav-number"></span> <span class="nav-text">2. Playback</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-播放assets"><span class="nav-number">1.</span> <span class="nav-text">2.1 播放assets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-处理不同类型asset"><span class="nav-number">2.</span> <span class="nav-text">2.2 处理不同类型asset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-播放Item"><span class="nav-number">3.</span> <span class="nav-text">2.3 播放Item</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-播放多个Items"><span class="nav-number">4.</span> <span class="nav-text">2.4. 播放多个Items</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-监听播放"><span class="nav-number">5.</span> <span class="nav-text">2.5. 监听播放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-使用AVPlayerLayer-播放视频文件"><span class="nav-number">6.</span> <span class="nav-text">2.6. 使用AVPlayerLayer 播放视频文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6-1-步骤"><span class="nav-number">6.1.</span> <span class="nav-text">2.6.1. 步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6-2-The-Player-View"><span class="nav-number">6.2.</span> <span class="nav-text">2.6.2. The Player View</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6-3-A-Simple-View-Controller"><span class="nav-number">6.3.</span> <span class="nav-text">2.6.3. A Simple View Controller</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-4-创建Asset"><span class="nav-number">7.</span> <span class="nav-text">2.6.4. 创建Asset</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6-5-响应状态变化"><span class="nav-number">7.1.</span> <span class="nav-text">2.6.5. 响应状态变化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-6-7-播放Item"><span class="nav-number">7.2.</span> <span class="nav-text">2.6.7. 播放Item</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Editing"><span class="nav-number"></span> <span class="nav-text">3.Editing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-新建Composition"><span class="nav-number">1.</span> <span class="nav-text">3.1 新建Composition</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-添加音视频数据"><span class="nav-number">2.</span> <span class="nav-text">3.2. 添加音视频数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-生成一个音量坡度"><span class="nav-number">3.</span> <span class="nav-text">3.3. 生成一个音量坡度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-自定义视频处理"><span class="nav-number">4.</span> <span class="nav-text">3.4 自定义视频处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-组合多个asset-保存到相册"><span class="nav-number">5.</span> <span class="nav-text">3.5 组合多个asset, 保存到相册</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-1-创建Composition"><span class="nav-number">5.1.</span> <span class="nav-text">3.5.1. 创建Composition</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-2-添加assets"><span class="nav-number">5.2.</span> <span class="nav-text">3.5.2. 添加assets</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-3-检查视频方向"><span class="nav-number">5.3.</span> <span class="nav-text">3.5.3. 检查视频方向</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-4-视频合成指令"><span class="nav-number">5.4.</span> <span class="nav-text">3.5.4. 视频合成指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-5-设置渲染尺寸和帧率"><span class="nav-number">5.5.</span> <span class="nav-text">3.5.5. 设置渲染尺寸和帧率</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-6-导出合成的视频"><span class="nav-number">5.6.</span> <span class="nav-text">3.5.6. 导出合成的视频</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-导出AVAsset"><span class="nav-number"></span> <span class="nav-text">4. 导出AVAsset</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-Reading-an-Asset"><span class="nav-number">2.</span> <span class="nav-text">4.1. Reading an Asset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-Writing-an-Asset"><span class="nav-number">3.</span> <span class="nav-text">4.2.Writing an Asset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-重新编码Assets"><span class="nav-number">4.</span> <span class="nav-text">4.3. 重新编码Assets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-总结-使用Asset-Reader-and-Writer串联去重新编码Asset"><span class="nav-number">5.</span> <span class="nav-text">4.4 总结: 使用Asset Reader and Writer串联去重新编码Asset</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#流程"><span class="nav-number">5.1.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-1-Handling-the-Initial-Setup"><span class="nav-number">5.2.</span> <span class="nav-text">4.4.1. Handling the Initial Setup</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-2-初始化Asset-Reader-and-Writer"><span class="nav-number">5.3.</span> <span class="nav-text">4.4.2 初始化Asset Reader and Writer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-3-重编码asset"><span class="nav-number">5.4.</span> <span class="nav-text">4.4.3. 重编码asset</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-4-处理完成"><span class="nav-number">5.5.</span> <span class="nav-text">4.4.4. 处理完成</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-5-处理取消"><span class="nav-number">5.6.</span> <span class="nav-text">4.4.5. 处理取消</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-Asset-Output-Settings-Assistant"><span class="nav-number">6.</span> <span class="nav-text">4.5.Asset Output Settings Assistant</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Other"><span class="nav-number">7.</span> <span class="nav-text">Other</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
