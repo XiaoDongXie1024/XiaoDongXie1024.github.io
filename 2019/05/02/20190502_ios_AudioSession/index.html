@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Apple通过audio sessions管理app, app与其他app, app与外部音频硬件间的行为.使用audio session可以向系统传达你将如何使用音频.audio session充当着app与系统间的中介.这样我们无需了解硬件相关却可以操控硬件行为.">
+<meta name="keywords" content="iOS,Audio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Audio Session:系统与应用程序的中介">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/02/20190502_ios_AudioSession/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="Apple通过audio sessions管理app, app与其他app, app与外部音频硬件间的行为.使用audio session可以向系统传达你将如何使用音频.audio session充当着app与系统间的中介.这样我们无需了解硬件相关却可以操控硬件行为.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/b9vj0TCGCe0pzM259gWEXjWPZTEkAXNXsxukPDpa41s!/r/dL4AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/GzfPv6aulxJ*cLI.rTjUiMETZwmwLuca3HxXoZpNJ7s!/r/dFIBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/UhncQ8gq3wp3lUoZU2pgmaAipvrx7.XlAXTzMmm191o!/r/dLkAAAAAAAAA">
+<meta property="og:updated_time" content="2019-05-02T14:32:00.254Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Audio Session:系统与应用程序的中介">
+<meta name="twitter:description" content="Apple通过audio sessions管理app, app与其他app, app与外部音频硬件间的行为.使用audio session可以向系统传达你将如何使用音频.audio session充当着app与系统间的中介.这样我们无需了解硬件相关却可以操控硬件行为.">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/b9vj0TCGCe0pzM259gWEXjWPZTEkAXNXsxukPDpa41s!/r/dL4AAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/05/02/20190502_ios_AudioSession/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Audio Session:系统与应用程序的中介 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/05/02/20190502_ios_AudioSession/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Audio Session:系统与应用程序的中介
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-02 22:32:00" itemprop="dateCreated datePublished" datetime="2019-05-02T22:32:00+08:00">2019-05-02</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/Audio/" itemprop="url" rel="index"><span itemprop="name">Audio</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/02/20190502_ios_AudioSession/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/02/20190502_ios_AudioSession/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/05/02/20190502_ios_AudioSession/" class="leancloud_visitors" data-flag-title="Audio Session:系统与应用程序的中介">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">Apple通过audio sessions管理app, app与其他app, app与外部音频硬件间的行为.使用audio session可以向系统传达你将如何使用音频.audio session充当着app与系统间的中介.这样我们无需了解硬件相关却可以操控硬件行为.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><p>Apple通过audio sessions管理app, app与其他app, app与外部音频硬件间的行为.使用audio session可以向系统传达你将如何使用音频.audio session充当着app与系统间的中介.这样我们无需了解硬件相关却可以操控硬件行为.</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/b9vj0TCGCe0pzM259gWEXjWPZTEkAXNXsxukPDpa41s!/r/dL4AAAAAAAAA" alt="1.Audio session"></p>
+<ul>
+<li>配置audio session类别与模式去告诉系统在app中你想怎么使用音频</li>
+<li>激活audio session使配置的类别与模式可以工作</li>
+<li>添加通知,响应重要的audio session通知,例如音频中断与硬件线路改变</li>
+<li>配置音频采样率,声道数等信息</li>
+</ul>
+<h3 id="1-配置Audio-Session"><a href="#1-配置Audio-Session" class="headerlink" title="1.配置Audio Session"></a>1.配置Audio Session</h3><h4 id="1-1-Audio-Session管理Audio"><a href="#1-1-Audio-Session管理Audio" class="headerlink" title="1.1. Audio Session管理Audio"></a>1.1. Audio Session管理Audio</h4><p>audio session是应用程序与系统间的中介,用于配置音频行为,APP启动时,会自动获得一个audio session的单例对象,配置并且激活它以让音频按照期望开始工作.</p>
+<h4 id="1-2-Categories代表Audio作用"><a href="#1-2-Categories代表Audio作用" class="headerlink" title="1.2. Categories代表Audio作用"></a>1.2. Categories代表Audio作用</h4><p>audio session category代表音频的主要行为.通过设置类别, 可以指明app是否使用的当前的输入或输出音频设备,以及当别的app中正在播放音频进入我们app时他们的音频是强制停止还是与我们的音频一起播放等等.</p>
+<p>AVFoundation中定义了很多audio session categories, 你可以根据需要自定义音频行为,很多类别支持播放,录制,录制与播放同时进行,当系统了解了你定义的音频规则,它将提供给你合适的路径去访问硬件资源.系统也将确保别的app中的音频以适合你应用的方式运行.</p>
+<p>一些categories可以根据Mode进一步定制,该模式用于专门指定类别的行为,例如当使用视频录制模式时,系统可能会选择一个不同于默认内置麦克风的麦克风,系统还可以针对录制调整麦克风的信号强度.</p>
+<h4 id="1-3-中断处理"><a href="#1-3-中断处理" class="headerlink" title="1.3. 中断处理"></a>1.3. 中断处理</h4><p>如果audio意外中断,系统会将aduio session置为停用状态,音频也会因此立即停止.当一个别的app的audio session被激活并且它的类别未设置与系统类别或你应用程序类别混合时,中断就会发生.你的应用程序在收到中断通知后应该保存当时的状态,以及更新用户界面等相关操作.通过注册AVAudioSessionInterruptionNotification可以观察中断的开始与结束点.</p>
+<h4 id="1-4-音频线路改变"><a href="#1-4-音频线路改变" class="headerlink" title="1.4. 音频线路改变"></a>1.4. 音频线路改变</h4><p>当用户做出连接,断开音频输入,输出设备时,(如:插拔耳机)音频线路发生变化,通过注册<code>AVAudioSessionRouteChangeNotification</code>可以在音频线路发生变化时做出相应处理.</p>
+<h4 id="1-5-Audio-Sessions控制设备配置"><a href="#1-5-Audio-Sessions控制设备配置" class="headerlink" title="1.5. Audio Sessions控制设备配置"></a>1.5. Audio Sessions控制设备配置</h4><p>App不能直接控制设备的硬件,但是audio session提供了一些接口去获取或设置一些高级的音频设置,如采样率,声道数等等.</p>
+<h4 id="1-6-Audio-Sessions保护用户隐私"><a href="#1-6-Audio-Sessions保护用户隐私" class="headerlink" title="1.6. Audio Sessions保护用户隐私"></a>1.6. Audio Sessions保护用户隐私</h4><p>App如果想使用音频录制功能必须请求用户授权,否则无法使用.</p>
+<h3 id="2-激活Audio-Session"><a href="#2-激活Audio-Session" class="headerlink" title="2. 激活Audio Session"></a>2. 激活Audio Session</h3><p>在设置了audio session的category, options, mode后,我们可以激活它以启动音频.</p>
+<h4 id="2-1-系统如何解决音频竞争"><a href="#2-1-系统如何解决音频竞争" class="headerlink" title="2.1. 系统如何解决音频竞争"></a>2.1. 系统如何解决音频竞争</h4><p>随着app的启动,内置的一些服务(短信,音乐,浏览器,电话等)也将在后台运行.前面的这些内置服务都可能产生音频,如有电话打来,有短信提示等等…</p>
+<h4 id="2-2-激活-停用Audio-Session"><a href="#2-2-激活-停用Audio-Session" class="headerlink" title="2.2. 激活,停用Audio Session"></a>2.2. 激活,停用Audio Session</h4><p>虽然AVFoundation中播放与录制可以自动激活你的audio session, 但你可以手动激活并且测试是否激活成功.</p>
+<p>系统会停用你的audio session当有电话打进来,闹钟响了,或是日历提醒等消息介入.当处理完这些介入的消息后,系统允许我们手动重新激活audio sesseion.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let session = AVAudioSession.sharedInstance()</span><br><span class="line">do &#123;</span><br><span class="line">    // 1) Configure your audio session category, options, and mode</span><br><span class="line">    // 2) Activate your audio session to enable your custom configuration</span><br><span class="line">    try session.setActive(true)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to activate audio session:  \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们使用AVFoundation对象(AVPlayer, AVAudioRecorder等),系统负责在中断结束时重新激活audio session.然而,如果你注册了通知去重新激活audio session,你可以验证是否激活成功并且更新用户界面.</p>
+<ul>
+<li>确保在后台运行的VoIP应用程序的音频会话仅在应用程序处理呼叫时才处于激活状态。在后台，若未收到呼叫,VoIP应用程序的音频会话不应该是激活的。</li>
+<li>确保使用录制类别的应用程序的音频会话仅在录制时处于激活状态。在录制开始和停止之前，请确保您的会话处于未激活状态，以允许播放其他声音，例如系统声音。</li>
+<li>如果应用程序支持后台音频播放或录制，但在应用程序未主动使用音频（或准备使用音频）时，在进入后台时停用其音频会话。这样做允许系统释放音频资源，以便其他进程可以使用它们。</li>
+</ul>
+<h4 id="2-3-检查别的Audio是否正在播放"><a href="#2-3-检查别的Audio是否正在播放" class="headerlink" title="2.3. 检查别的Audio是否正在播放"></a>2.3. 检查别的Audio是否正在播放</h4><p>当你的app被激活前,当前设备可能正在播放别的声音,如果你的app是一个游戏的app,知道别的声音来源显得十分重要,因为许多游戏允许同时播放别的音乐以增强用户体验.</p>
+<p>在app进入前台前,我们可以通过<code>applicationDidBecomeActive:</code>代理方法在其中使用<code>secondaryAudioShouldBeSilencedHint</code>属性来确定音频是否正在播放.当别的app正在播放的audio session为不可混音配置时,该值为true. app可以使用此属性消除次要音频.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">func setupNotifications() &#123;</span><br><span class="line">    NotificationCenter.default.addObserver(self,</span><br><span class="line">                                           selector: #selector(handleSecondaryAudio),</span><br><span class="line">                                           name: .AVAudioSessionSilenceSecondaryAudioHint,</span><br><span class="line">                                           object: AVAudioSession.sharedInstance())</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func handleSecondaryAudio(notification: Notification) &#123;</span><br><span class="line">    // Determine hint type</span><br><span class="line">    guard let userInfo = notification.userInfo,</span><br><span class="line">        let typeValue = userInfo[AVAudioSessionSilenceSecondaryAudioHintTypeKey] as? UInt,</span><br><span class="line">        let type = AVAudioSessionSilenceSecondaryAudioHintType(rawValue: typeValue) else &#123;</span><br><span class="line">            return</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    if type == .begin &#123;</span><br><span class="line">        // Other app audio started playing - mute secondary audio</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // Other app audio stopped playing - restart secondary audio</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-响应中断"><a href="#3-响应中断" class="headerlink" title="3. 响应中断"></a>3. 响应中断</h3><p>在app中断后可以通过代码做出响应.音频中断将会导致audio session停用,同时应用程序中音频立即终止.当一个来自其他app的竞争的audio session被激活且这个audio session类别不支持与你的app进行混音时,中断发生.注册通知后我们可以在得知音频中断后做出相应处理.</p>
+<p>App会因为中断被暂停,当用户接到电话时,闹钟,或其他系统事件被触发时,当中断结束后,App会继续运行,但是需要我们手动重新激活audio session.</p>
+<h4 id="3-1-中断的生命周期"><a href="#3-1-中断的生命周期" class="headerlink" title="3.1. 中断的生命周期"></a>3.1. 中断的生命周期</h4><p>下图简单展示了当收到facetime后app的audio session与系统的audio session间激活与未激活状态变化.<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/GzfPv6aulxJ*cLI.rTjUiMETZwmwLuca3HxXoZpNJ7s!/r/dFIBAAAAAAAA" alt="2.interruput_lifecycle"></p>
+<h4 id="3-2-中断处理方法"><a href="#3-2-中断处理方法" class="headerlink" title="3.2. 中断处理方法"></a>3.2. 中断处理方法</h4><p>通过注册监听中断的通知可以在中断来的时候进行处理.处理中断取决于你当前正在执行的操作:播放,录制,音频格式转换,读取音频数据包等等.一般而言,我们应尽量避免中断并且做到中断后尽快恢复.</p>
+<p>中断前</p>
+<ul>
+<li>保存状态与上下文</li>
+<li>更新用户界面</li>
+</ul>
+<p>中断后</p>
+<ul>
+<li>恢复状态与上下文</li>
+<li>更新用户界面</li>
+<li>重新激活audio session.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Audio technology</th>
+<th>How interruptions work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVFoundation framework</td>
+<td>系统在中断时会自动暂停录制与播放,当中断结束后重新激活audio session,恢复录制与播放</td>
+</tr>
+<tr>
+<td>Audio Queue Services, I/O audio unit</td>
+<td>系统会发出中断通知,开发者可以保存播放与录制状态并且在中断结束后重新激活audio session</td>
+</tr>
+<tr>
+<td>System Sound Services</td>
+<td>使用系统声音服务在中断来临时保持静音,如果中断结束,声音自动播放.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-3-处理Siri"><a href="#3-3-处理Siri" class="headerlink" title="3.3. 处理Siri"></a>3.3. 处理Siri</h4><p>当处理Siri时,与其他中断不同,我们在中断期间需要对Siri进行监听,如在中断期间,用户要求Siri去暂停开发者app中的音频播放,当app收到中断结束的通知时,不应该自动恢复播放.同时,用户界面需要跟Siri要求的保持一致.</p>
+<h4 id="3-4-监听中断"><a href="#3-4-监听中断" class="headerlink" title="3.4. 监听中断"></a>3.4. 监听中断</h4><p>注册<code>AVAudioSessionInterruptionNotification</code>通知可以监听中断.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">func registerForNotifications() &#123;</span><br><span class="line">    NotificationCenter.default.addObserver(self,</span><br><span class="line">                                           selector: #selector(handleInterruption),</span><br><span class="line">                                           name: .AVAudioSessionInterruption,</span><br><span class="line">                                           object: AVAudioSession.sharedInstance())</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func handleInterruption(_ notification: Notification) &#123;</span><br><span class="line">    // Handle interruption</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func handleInterruption(_ notification: Notification) &#123;</span><br><span class="line">    guard let info = notification.userInfo,</span><br><span class="line">        let typeValue = info[AVAudioSessionInterruptionTypeKey] as? UInt,</span><br><span class="line">        let type = AVAudioSessionInterruptionType(rawValue: typeValue) else &#123;</span><br><span class="line">            return</span><br><span class="line">    &#125;</span><br><span class="line">    if type == .began &#123;</span><br><span class="line">        // Interruption began, take appropriate actions (save state, update user interface)</span><br><span class="line">    &#125;</span><br><span class="line">    else if type == .ended &#123;</span><br><span class="line">        guard let optionsValue =</span><br><span class="line">            userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else &#123;</span><br><span class="line">                return</span><br><span class="line">        &#125;</span><br><span class="line">        let options = AVAudioSessionInterruptionOptions(rawValue: optionsValue)</span><br><span class="line">        if options.contains(.shouldResume) &#123;</span><br><span class="line">            // Interruption Ended - playback should resume</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 无法确保在开始中断后一定有一个结束中断,所以,如果没有结束中断,我们在app重新播放音频时需要总是检查aduio session是否被激活.</p>
+</blockquote>
+<h4 id="3-5-响应媒体服务器重置操作"><a href="#3-5-响应媒体服务器重置操作" class="headerlink" title="3.5. 响应媒体服务器重置操作"></a>3.5. 响应媒体服务器重置操作</h4><p>media server通过一个共享服务器进程提供了音频和其他多媒体功能.尽管很少见,但是如果在你的app正在运行时收到一条重置命令,可以通过注册<code>AVAudioSessionMediaServicesWereResetNotification</code>通知监听media server是否重置.收到通知后需要做如下操作.</p>
+<ul>
+<li>销毁音频对象并且创建新的音频对象(如:players,recorders,converters,audio queues)</li>
+<li>重置所有audio状态,包括AVAudioSession全部属性</li>
+<li>在合适时机重新激活AVAudioSession对象.</li>
+</ul>
+<p>注册<code>AVAudioSessionMediaServicesWereLostNotification</code>可以在media server不可用时收到通知.</p>
+<blockquote>
+<p>如果开发者的应用程序中需要重置功能,如设置中有重置选项,可以使用这个方法轻松重置.</p>
+</blockquote>
+<h3 id="4-线路改变"><a href="#4-线路改变" class="headerlink" title="4. 线路改变"></a>4. 线路改变</h3><p>audio hardware route指定的设备音频硬件线路发生改变.当用户插拔耳机,系统会自动改变硬件的线路.开发者可以注册<code>AVAudioSessionRouteChangeNotification</code>通知在线路变化时作出相应调整.</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/UhncQ8gq3wp3lUoZU2pgmaAipvrx7.XlAXTzMmm191o!/r/dLkAAAAAAAAA" alt="3.audio_route_change"></p>
+<p>如上图,系统在app启动时会确定一套音频线路,而后程序运行期间会继续监听当前活跃的音频线路,在录制期间,用户可能插拔耳机,系统会发送一份改变线路的通知告诉开发者同时音频停止,开发者可以通过代码决定是否重新激活.</p>
+<p>播放与录制稍有不同,播放时如果用户拔掉耳机,默认暂停音频,如果插上耳机,默认继续播放.</p>
+<h4 id="4-1-监听Audio线路变化"><a href="#4-1-监听Audio线路变化" class="headerlink" title="4.1. 监听Audio线路变化"></a>4.1. 监听Audio线路变化</h4><p>原因</p>
+<ul>
+<li>插拔耳机</li>
+<li>连接,断开蓝牙耳机</li>
+<li>插拔USB音频设备</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func setupNotifications() &#123;</span><br><span class="line">    NotificationCenter.default.addObserver(self,</span><br><span class="line">                                           selector: #selector(handleRouteChange),</span><br><span class="line">                                           name: .AVAudioSessionRouteChange,</span><br><span class="line">                                           object: AVAudioSession.sharedInstance())</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func handleRouteChange(_ notification: Notification) &#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>userInfo</code>中提供了关于线路改变的详细信息.可以查询改变原因通过字典中的<code>AVAudioSessionRouteChangeReason</code>,如当新的设备接入时,原因为<code>AVAudioSessionRouteChangeReason</code>,移除时为<code>AVAudioSessionRouteChangeReasonOldDeviceUnavailable</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func handleRouteChange(_ notification: Notification) &#123;</span><br><span class="line">    guard let userInfo = notification.userInfo,</span><br><span class="line">        let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,</span><br><span class="line">        let reason = AVAudioSessionRouteChangeReason(rawValue:reasonValue) else &#123;</span><br><span class="line">            return</span><br><span class="line">    &#125;</span><br><span class="line">    switch reason &#123;</span><br><span class="line">    case .newDeviceAvailable:</span><br><span class="line">        // Handle new device available.</span><br><span class="line">    case .oldDeviceUnavailable:</span><br><span class="line">        // Handle old device removed.</span><br><span class="line">    default: ()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当有音频硬件插入时,你可以查询audio session的<code>currentRoute</code>属性去确定当前音频输出的位置.它将返回一个<code>AVAudioSessionRouteDescription</code>对象包含audio session全部的输入输出信息.当一个音频硬件被移除时,我们也可以从该对象中查询上一个线路.在以上两种情况中,我们都可以查询<code>outputs</code>属性,通过返回的<code>AVAudioSessionPortDescription</code>对象提供了音频输出的全部信息.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">func handleRouteChange(notification: NSNotification) &#123;</span><br><span class="line">    guard let userInfo = notification.userInfo,</span><br><span class="line">        let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,</span><br><span class="line">        let reason = AVAudioSessionRouteChangeReason(rawValue:reasonValue) else &#123;</span><br><span class="line">            return</span><br><span class="line">    &#125;</span><br><span class="line">    switch reason &#123;</span><br><span class="line">    case .newDeviceAvailable:</span><br><span class="line">        let session = AVAudioSession.sharedInstance()</span><br><span class="line">        for output in session.currentRoute.outputs where output.portType == AVAudioSessionPortHeadphones &#123;</span><br><span class="line">            headphonesConnected = true</span><br><span class="line">        &#125;</span><br><span class="line">    case .oldDeviceUnavailable:</span><br><span class="line">        if let previousRoute =</span><br><span class="line">            userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription &#123;</span><br><span class="line">            for output in previousRoute.outputs where output.portType == AVAudioSessionPortHeadphones &#123;</span><br><span class="line">                headphonesConnected = false</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    default: ()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-配置设备硬件"><a href="#5-配置设备硬件" class="headerlink" title="5. 配置设备硬件"></a>5. 配置设备硬件</h3><p>使用audio session属性,可以在运行时优化硬件音频行为.这样可以让代码适配运行设备的特性.这样做同样适用于用户对音频硬件作出的更改.</p>
+<h4 id="5-1-配置初始音频参数"><a href="#5-1-配置初始音频参数" class="headerlink" title="5.1. 配置初始音频参数"></a>5.1. 配置初始音频参数</h4><p>使用audio session指定音频设备的设置,如采样率, I/O缓冲区时间.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Preferred sample rate</th>
+<th>Preferred I/O buffer duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High value</td>
+<td>Example: 48 kHz, + High audio quality, – Large file or buffer size</td>
+<td>Example: 500 mS, + Less-frequent file access, – Longer latency</td>
+</tr>
+<tr>
+<td>Low value</td>
+<td>Example: 8 kHz, + Small file or buffer size, – Low audio quality</td>
+<td>Example: 5 mS,+ Low latency, – Frequent file access</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Note: 默认音频输入输出缓冲时间(I/O buffer duration)为大多数应用提供足够的相应时间,如44.1kHz音频大概为20ms响应一次,你可以设置更低的延迟但相应数据量每次过来的也会降低,根据自己的需求进行选择.</p>
+</blockquote>
+<h4 id="5-2-设置"><a href="#5-2-设置" class="headerlink" title="5.2. 设置"></a>5.2. 设置</h4><p>在激活audio session前必须完成设置内容.如果你正在运行audio session, 先停用它,然后改变设置重新激活.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">let session = AVAudioSession.sharedInstance()</span><br><span class="line"> </span><br><span class="line">// Configure category and mode</span><br><span class="line">do &#123;</span><br><span class="line">    try session.setCategory(AVAudioSessionCategoryRecord, mode: AVAudioSessionModeDefault)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to set category:  \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Set preferred sample rate</span><br><span class="line">do &#123;</span><br><span class="line">    try session.setPreferredSampleRate(44_100)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to set preferred sample rate:  \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Set preferred I/O buffer duration</span><br><span class="line">do &#123;</span><br><span class="line">    try session.setPreferredIOBufferDuration(0.005)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to set preferred I/O buffer duration:  \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Activate the audio session</span><br><span class="line">do &#123;</span><br><span class="line">    try session.setActive(true)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to activate session. \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Query the audio session&apos;s ioBufferDuration and sampleRate properties</span><br><span class="line">// to determine if the preferred values were set</span><br><span class="line">print(&quot;Audio Session ioBufferDuration: \(session.ioBufferDuration), sampleRate: \(session.sampleRate)&quot;)</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-3-选择-配置麦克风"><a href="#5-3-选择-配置麦克风" class="headerlink" title="5.3. 选择,配置麦克风"></a>5.3. 选择,配置麦克风</h4><p>一个设备可能有多个麦克风(内置,外接),iOS会根据当前使用的audio session mode自动选择一个.mode指定了输入数字信号处理(DSP)和可能的线路.输入线路针对每种模式的用例进行了优化,设置mode还可能影响正在使用的音频线路.</p>
+<p>开发者可以手动选择麦克风,甚至可以设置polar pattern如果硬件支持.</p>
+<blockquote>
+<p>在使用任何音频设备之前，请为您的应用设置音频会话类别和模式，然后激活音频会话。</p>
+</blockquote>
+<ul>
+<li>设置Preferred Input</li>
+</ul>
+<p>为了找到当前设备连接的音频输入设备,可以使用audio session的<code>availableInputs</code>属性,该属性返回一个<code>AVAudioSessionPortDescription</code>对象的数组,描述当前可用输入设备端口,端口用<code>portType</code>进行标识.可以使用<code>setPreferredInput:error:</code>设置可用的音频输入设备.</p>
+<ul>
+<li>设置Preferred Data Source</li>
+</ul>
+<p>部分端口如内置麦克风,USB等支持数据源(data source),应用程序可以通过查询端口的<code>dataSources</code>属性发现可用的数据源.对于内置麦克风，返回的数据源描述对象代表每个单独的麦克风。不同的设备为内置麦克风返回不同的值。例如，iPhone 4和iPhone 4S有两个麦克风：底部和顶部。 iPhone 5有三个麦克风：底部，前部和后部。</p>
+<p>可以通过数据源描述的<code>location</code>属性（上，下）和<code>orientation</code>属性（前，后等）的组合来识别各个内置麦克风。应用程序可以使用AVAudioSessionPortDescription对象的setPreferredDataSource：error：方法设置首选数据源。</p>
+<ul>
+<li>设置 Preferred Polar Pattern</li>
+</ul>
+<p>某些iOS设备支持为某些内置麦克风配置麦克风极性模式。麦克风的极性模式定义了其对声音相对于声源方向的灵敏度。使用<code>supportedPolarPatterns</code>属性返回数据源是否支持此模式,此属性返回数据源支持的极坐标模式数组（如心形或全向），或者在没有可选模式时返回nil。如果数据源具有许多支持的极坐标模式，则可以使用数据源描述的setPreferredPolarPattern：error：方法设置首选极坐标模式。</p>
+<ul>
+<li>选择特定麦克风并且设置polar pattern.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">// Preferred Mic = Front, Preferred Polar Pattern = Cardioid</span><br><span class="line">let preferredMicOrientation = AVAudioSessionOrientationFront</span><br><span class="line">let preferredPolarPattern = AVAudioSessionPolarPatternCardioid</span><br><span class="line"> </span><br><span class="line">// Retrieve your configured and activated audio session</span><br><span class="line">let session = AVAudioSession.sharedInstance()</span><br><span class="line"> </span><br><span class="line">// Get available inputs</span><br><span class="line">guard let inputs = session.availableInputs else &#123; return &#125;</span><br><span class="line"> </span><br><span class="line">// Find built-in mic</span><br><span class="line">guard let builtInMic = inputs.first(where: &#123;</span><br><span class="line">    $0.portType == AVAudioSessionPortBuiltInMic</span><br><span class="line">&#125;) else &#123; return &#125;</span><br><span class="line"> </span><br><span class="line">// Find the data source at the specified orientation</span><br><span class="line">guard let dataSource = builtInMic.dataSources?.first (where: &#123;</span><br><span class="line">    $0.orientation == preferredMicOrientation</span><br><span class="line">&#125;) else &#123; return &#125;</span><br><span class="line"> </span><br><span class="line">// Set data source&apos;s polar pattern</span><br><span class="line">do &#123;</span><br><span class="line">    try dataSource.setPreferredPolarPattern(preferredPolarPattern)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to preferred polar pattern: \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Set the data source as the input&apos;s preferred data source</span><br><span class="line">do &#123;</span><br><span class="line">    try builtInMic.setPreferredDataSource(dataSource)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to preferred dataSource: \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Set the built-in mic as the preferred input</span><br><span class="line">// This call will be a no-op if already selected</span><br><span class="line">do &#123;</span><br><span class="line">    try session.setPreferredInput(builtInMic)</span><br><span class="line">&#125; catch let error as NSError &#123;</span><br><span class="line">    print(&quot;Unable to preferred input: \(error.localizedDescription)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// Print Active Configuration</span><br><span class="line">session.currentRoute.inputs.forEach &#123; portDesc in</span><br><span class="line">    print(&quot;Port: \(portDesc.portType)&quot;)</span><br><span class="line">    if let ds = portDesc.selectedDataSource &#123;</span><br><span class="line">        print(&quot;Name: \(ds.dataSourceName)&quot;)</span><br><span class="line">        print(&quot;Polar Pattern: \(ds.selectedPolarPattern ?? &quot;[none]&quot;)&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Running this code on an iPhone 6s produces the following console output:</span><br><span class="line"></span><br><span class="line">Port: MicrophoneBuiltIn</span><br><span class="line">Name: Front</span><br><span class="line">Polar Pattern: Cardioid</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="5-4-模拟器运行"><a href="#5-4-模拟器运行" class="headerlink" title="5.4. 模拟器运行"></a>5.4. 模拟器运行</h4><p>可以在模拟器或设备上运行您的应用。但是，Simulator不会模拟不同进程或音频线路更改中的音频会话之间的大多数交互。在Simulator中运行应用程序时，您不能：</p>
+<ul>
+<li>调用中断</li>
+<li>模拟插入或拔出耳机</li>
+<li>更改静音开关的设置</li>
+<li>模拟屏幕锁定</li>
+<li>测试音频混合行为 - 即播放音频以及来自其他应用（例如音乐应用）的音频</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#if arch(i386) || arch(x86_64)</span><br><span class="line">    // Execute subset of code that works in the Simulator</span><br><span class="line">#else</span><br><span class="line">    // Execute device-only code as well as the other code</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<h3 id="保护用户隐私"><a href="#保护用户隐私" class="headerlink" title="保护用户隐私"></a>保护用户隐私</h3><p>为了保护用户隐私，应用必须在录制音频之前询问并获得用户的许可。如果用户未授予许可，则仅记录静音。当您使用支持录制的类别并且应用程序尝试使用输入线路时，系统会自动提示用户获得权限。</p>
+<p>您可以使用<code>requestRecordPermission：</code>方法手动请求权限，而不是等待系统提示用户提供记录权限。使用此方法可以让您的应用获得权限，而不会中断应用的自然流动，从而获得更好的用户体验。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AVAudioSession.sharedInstance().requestRecordPermission &#123; granted in</span><br><span class="line">    if granted &#123;</span><br><span class="line">        // User granted access. Present recording interface.</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // Present message to user indicating that recording</span><br><span class="line">        // can&apos;t be performed until they change their preference</span><br><span class="line">        // under Settings -&gt; Privacy -&gt; Microphone</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>从iOS 10开始，所有访问任何设备麦克风的应用都必须静态声明其意图。为此，应用程序现在必须在其Info.plist文件中包含NSMicrophoneUsageDescription键，并为此密钥提供目的字符串。当系统提示用户允许访问时，此字符串将显示为警报的一部分。如果应用程序尝试访问任何设备的麦克风而没有此键和值，则应用程序将终止。</p>
+</blockquote>
+<hr>
+<h4 id="Apple-官方文档"><a href="#Apple-官方文档" class="headerlink" title="Apple 官方文档"></a><a href="https://developer.apple.com/library/archive/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40007875-CH1-SW1" target="_blank" rel="noopener">Apple 官方文档</a></h4>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/Audio/" rel="tag"># Audio</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/02/20190502_ios_CoreAudio/" rel="next" title="Core Audio音频基础概述">
+                <i class="fa fa-chevron-left"></i> Core Audio音频基础概述
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-配置Audio-Session"><span class="nav-number">2.</span> <span class="nav-text">1.配置Audio Session</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-Audio-Session管理Audio"><span class="nav-number">2.1.</span> <span class="nav-text">1.1. Audio Session管理Audio</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Categories代表Audio作用"><span class="nav-number">2.2.</span> <span class="nav-text">1.2. Categories代表Audio作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-中断处理"><span class="nav-number">2.3.</span> <span class="nav-text">1.3. 中断处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-音频线路改变"><span class="nav-number">2.4.</span> <span class="nav-text">1.4. 音频线路改变</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Audio-Sessions控制设备配置"><span class="nav-number">2.5.</span> <span class="nav-text">1.5. Audio Sessions控制设备配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-Audio-Sessions保护用户隐私"><span class="nav-number">2.6.</span> <span class="nav-text">1.6. Audio Sessions保护用户隐私</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-激活Audio-Session"><span class="nav-number">3.</span> <span class="nav-text">2. 激活Audio Session</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-系统如何解决音频竞争"><span class="nav-number">3.1.</span> <span class="nav-text">2.1. 系统如何解决音频竞争</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-激活-停用Audio-Session"><span class="nav-number">3.2.</span> <span class="nav-text">2.2. 激活,停用Audio Session</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-检查别的Audio是否正在播放"><span class="nav-number">3.3.</span> <span class="nav-text">2.3. 检查别的Audio是否正在播放</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-响应中断"><span class="nav-number">4.</span> <span class="nav-text">3. 响应中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-中断的生命周期"><span class="nav-number">4.1.</span> <span class="nav-text">3.1. 中断的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-中断处理方法"><span class="nav-number">4.2.</span> <span class="nav-text">3.2. 中断处理方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-处理Siri"><span class="nav-number">4.3.</span> <span class="nav-text">3.3. 处理Siri</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-监听中断"><span class="nav-number">4.4.</span> <span class="nav-text">3.4. 监听中断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-响应媒体服务器重置操作"><span class="nav-number">4.5.</span> <span class="nav-text">3.5. 响应媒体服务器重置操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-线路改变"><span class="nav-number">5.</span> <span class="nav-text">4. 线路改变</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-监听Audio线路变化"><span class="nav-number">5.1.</span> <span class="nav-text">4.1. 监听Audio线路变化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-配置设备硬件"><span class="nav-number">6.</span> <span class="nav-text">5. 配置设备硬件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-配置初始音频参数"><span class="nav-number">6.1.</span> <span class="nav-text">5.1. 配置初始音频参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-设置"><span class="nav-number">6.2.</span> <span class="nav-text">5.2. 设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-选择-配置麦克风"><span class="nav-number">6.3.</span> <span class="nav-text">5.3. 选择,配置麦克风</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-模拟器运行"><span class="nav-number">6.4.</span> <span class="nav-text">5.4. 模拟器运行</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保护用户隐私"><span class="nav-number">7.</span> <span class="nav-text">保护用户隐私</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Apple-官方文档"><span class="nav-number">7.1.</span> <span class="nav-text">Apple 官方文档</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
