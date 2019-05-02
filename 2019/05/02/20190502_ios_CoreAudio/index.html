@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Core Audio提供了数字音频服务为iOS与OS X, 它提供了一系列框架去处理音频..">
+<meta name="keywords" content="iOS,Audio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Core Audio音频基础概述">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/02/20190502_ios_CoreAudio/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="Core Audio提供了数字音频服务为iOS与OS X, 它提供了一系列框架去处理音频..">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uLiEevdTNZfrNOkJr0pgXy.Jh6bmNEXYgJ*74TjQNeM!/r/dEYBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/WrxXreCci9SD1FXwGkYD3pByiLVDKDLSmSA6mDsHOJo!/r/dLYAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/L6egDhMoLMrWQVegHkDWIUCJBeExmxn57nHUkSpIsaQ!/r/dFQBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qyKG1wvvBt3dbHKLADndydaEymMohKH4ig6JCtvvGyE!/r/dL4AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/u0I9rsGNg2DrdoCztINpy9k4YJqRMt*G2qNpanQ.lR0!/r/dDMBAAAAAAAA">
+<meta property="og:updated_time" content="2019-05-02T08:09:21.210Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Core Audio音频基础概述">
+<meta name="twitter:description" content="Core Audio提供了数字音频服务为iOS与OS X, 它提供了一系列框架去处理音频..">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uLiEevdTNZfrNOkJr0pgXy.Jh6bmNEXYgJ*74TjQNeM!/r/dEYBAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/05/02/20190502_ios_CoreAudio/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Core Audio音频基础概述 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/05/02/20190502_ios_CoreAudio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Core Audio音频基础概述
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-02 15:27:32 / Modified: 16:09:21" itemprop="dateCreated datePublished" datetime="2019-05-02T15:27:32+08:00">2019-05-02</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/Audio/" itemprop="url" rel="index"><span itemprop="name">Audio</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/02/20190502_ios_CoreAudio/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/02/20190502_ios_CoreAudio/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/05/02/20190502_ios_CoreAudio/" class="leancloud_visitors" data-flag-title="Core Audio音频基础概述">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">Core Audio提供了数字音频服务为iOS与OS X, 它提供了一系列框架去处理音频..</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="Core-Audio"><a href="#Core-Audio" class="headerlink" title="Core Audio"></a>Core Audio</h3><p>Core Audio提供了数字音频服务为iOS与OS X, 它提供了一系列框架去处理音频.</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uLiEevdTNZfrNOkJr0pgXy.Jh6bmNEXYgJ*74TjQNeM!/r/dEYBAAAAAAAA" alt="1.Core Audio"></p>
+<p>Core Audio中包含我们最常用的Audio Toolbox与Audio Unit框架.</p>
+<ul>
+<li>使用Audio Queue做录制,播放,暂停,循环与同步音频</li>
+<li>使用Audio File, Converter, Codec Services去从磁盘读取与写入以及执行音频转换等功能.</li>
+<li>使用Audio Unit与Audio Processing Graph在应用程序中管理音频单元.在OS X中可以自定义audio units.</li>
+<li>使用Music Sequencing Services播放基于MIDI控制的音频数据</li>
+<li>使用Core Audio Clock Services用于音频和MIDI同步以及时间格式管理</li>
+<li>使用System Sound Services播放系统声音与界面的音效.</li>
+</ul>
+<p>Core Audio在iOS中针对移动平台的计算资源作出了优化,同时,音频服务必须严格由系统进行管理,特别是HAL与I/O Kit,然而Apple也提供了只在iOS平台中才有的服务,如Audio Session Service将帮助我们管理音频上下文.<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/WrxXreCci9SD1FXwGkYD3pByiLVDKDLSmSA6mDsHOJo!/r/dLYAAAAAAAAA" alt="2.iOS_Core Audio"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/L6egDhMoLMrWQVegHkDWIUCJBeExmxn57nHUkSpIsaQ!/r/dFQBAAAAAAAA" alt="3.CoreAudioLevel"></p>
+<h4 id="1-Digital-Audio与Linear-PCM"><a href="#1-Digital-Audio与Linear-PCM" class="headerlink" title="1. Digital Audio与Linear PCM"></a>1. Digital Audio与Linear PCM</h4><p>PCM是最常用的无损压缩数字音频格式数据,根据采样率以规则间隔测量模拟(真实世界)数字音频信号并将每个采集到的样本转换为数值来创建PCM数据.如标准光盘（CD）音频使用44.1 kHz的采样率，16位整数描述每个样本 - 构成分辨率或位深度。</p>
+<ul>
+<li>sample:一个采样点是对单声道采集到声音的数值</li>
+<li>frame:一帧数据是一组时间一致的samples,如双声道声音文件中一帧有两个samples,一个左声道,一个右声道.</li>
+<li>packet:一个或多个连续帧的集合.在线性PCM中,一个packet总是单帧.在其他压缩格式中,一个packet定义给定音频数据格式的最小有意义的帧组。</li>
+</ul>
+<p>iOS中使用integer与fixed-point音频数据,目的是在处理音频数据时增加计算速度,减小电池能耗.iOS也提供了来自Audio Converter Services的Converter audio unit服务.</p>
+<p>iOS与OS X中,Core Audio提供了最常用的文件格式用于存储域播放音频数据.</p>
+<h4 id="2-Audio-Unit"><a href="#2-Audio-Unit" class="headerlink" title="2.Audio Unit"></a>2.Audio Unit</h4><p>Apple针对移动平台对iOS的Audio Unit作出了效率与性能优化,在开发中我们必须将audio unit静态编译进APP,所以无法使用别的APP中的Audio Unit.</p>
+<h4 id="3-HAL-Hardware-Abstraction-Layer"><a href="#3-HAL-Hardware-Abstraction-Layer" class="headerlink" title="3.HAL(Hardware Abstraction Layer)"></a>3.HAL(Hardware Abstraction Layer)</h4><p>大多情况下,我们无法直接与HAL进行交互,Apple提供了一个特别的audio unit,即OS X中的AUHAL, iOS中的AURemoteIO, 我们可以通过它们让音频与硬件交互.</p>
+<h4 id="4-Properties-Scopes-and-Elements"><a href="#4-Properties-Scopes-and-Elements" class="headerlink" title="4.Properties, Scopes, and Elements"></a>4.Properties, Scopes, and Elements</h4><p>Core Audio接口中使用property管理对象的行为与状态.</p>
+<ul>
+<li>属性通常用易记忆的关键字格式,如kAudioFilePropertyFileFormat or kAudioQueueDeviceProperty_NumberChannels.</li>
+<li>属性值适用于特定的数据类型,如void*, Float64, AudioChannelLayout…</li>
+<li>Core Audio对象有一个内部结构,其中每一部分都有属于自己的属性,如一个audio unit对象都有一个input scope, output scope, global scope. 每个scope由一个或多个elements(类似于音频总线)组成.</li>
+</ul>
+<h4 id="5-回调函数"><a href="#5-回调函数" class="headerlink" title="5.回调函数"></a>5.回调函数</h4><p>Core Audio中常用回调函数以实现音频数据通信,回调函数常有一下功能</p>
+<ul>
+<li>提供给应用程序音频数据(如:用麦克风进行录制,将麦克风采集的数据通过回调函数传给使用者)</li>
+<li>从应用程序中请求音频数据(如:播放回调)</li>
+<li>监听某个对象状态的变化</li>
+</ul>
+<p>为了去使用回调函数,我们需要做以下两件事情</p>
+<ul>
+<li>注册回调函数(如实现录制,播放回调,需要我们在初始化时提供一个函数)</li>
+<li>实现回调函数的功能.(实现初始化时提供的函数)</li>
+</ul>
+<blockquote>
+<p>Note: 在OC中,回调函数是一个C语言形式的函数,我们回调OC本类对象作为对象传入其中, 所以回调函数中不能直接引用<code>self.xxx</code>,需要借助传入的OC对象去实现本类的功能.</p>
+</blockquote>
+<h4 id="6-音频数据格式"><a href="#6-音频数据格式" class="headerlink" title="6. 音频数据格式"></a>6. 音频数据格式</h4><p>Core Audio封装了音频数据格式，我们只需要对给定结构体赋正确的参数即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">struct AudioStreamBasicDescription &#123;</span><br><span class="line">    Float64 mSampleRate;</span><br><span class="line">    UInt32  mFormatID;</span><br><span class="line">    UInt32  mFormatFlags;</span><br><span class="line">    UInt32  mBytesPerPacket;</span><br><span class="line">    UInt32  mFramesPerPacket;</span><br><span class="line">    UInt32  mBytesPerFrame;</span><br><span class="line">    UInt32  mChannelsPerFrame;</span><br><span class="line">    UInt32  mBitsPerChannel;</span><br><span class="line">    UInt32  mReserved;</span><br><span class="line">&#125;;</span><br><span class="line">typedef struct AudioStreamBasicDescription  AudioStreamBasicDescription;</span><br><span class="line"></span><br><span class="line">struct  AudioStreamPacketDescription &#123;</span><br><span class="line">    SInt64  mStartOffset;</span><br><span class="line">    UInt32  mVariableFramesInPacket;</span><br><span class="line">    UInt32  mDataByteSize;</span><br><span class="line">&#125;;</span><br><span class="line">typedef struct AudioStreamPacketDescription AudioStreamPacketDescription;</span><br></pre></td></tr></table></figure>
+<p>注意，上面结构体中<code>mReserved</code>是Apple的保留参数，必须为0. 其他一些参数在特定情况下也需为0，如：压缩音频格式每个sample使用不同数量的bits。对于这些格式，mBitsPerChannel成员的值为0。</p>
+<ul>
+<li>为AudioStreamBasicDescription赋值</li>
+</ul>
+<p>你可以手动为ASBD的成员赋值，如果有些值是你不知道的，可以赋0，Core Audio将自动选择适当的值。</p>
+<ul>
+<li>标准的音频数据格式</li>
+</ul>
+<p>iOS: 线性PCM 16bit integer, Noninterleaved linear PCM 8.24bit 定点samples</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct AudioStreamBasicDescription &#123;</span><br><span class="line">    mSampleRate       = 44100.0;</span><br><span class="line">    mFormatID         = kAudioFormatLinearPCM;</span><br><span class="line">    mFormatFlags      = kAudioFormatFlagsAudioUnitCanonical;</span><br><span class="line">    mBitsPerChannel   = 8 * sizeof (AudioUnitSampleType);                    // 32 bits</span><br><span class="line">    mChannelsPerFrame = 2;</span><br><span class="line">    mBytesPerFrame    = mChannelsPerFrame * sizeof (AudioUnitSampleType);    // 8 bytes</span><br><span class="line">    mFramesPerPacket  = 1;</span><br><span class="line">    mBytesPerPacket   = mFramesPerPacket * mBytesPerFrame;     // 8 bytes</span><br><span class="line">    mReserved         = 0;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="7-Magic-Cookie"><a href="#7-Magic-Cookie" class="headerlink" title="7. Magic Cookie"></a>7. Magic Cookie</h4><p>在Core Audio中，magic cookie表示被附加到压缩音频数据(文件或流)中的元数据(metadata)。元数据为解码器提供了正确解码文件或流所需要的详细信息。Core Audio可以复制，读取，使用元数据包含的信息。</p>
+<p>下面的例子展示了如何将一个文件中magic cookie拷贝提供给audio queue.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void) copyMagicCookieToQueue: (AudioQueueRef) queue fromFile: (AudioFileID) file &#123;</span><br><span class="line"> </span><br><span class="line">    UInt32 propertySize = sizeof (UInt32);</span><br><span class="line"> </span><br><span class="line">    OSStatus result = AudioFileGetPropertyInfo (</span><br><span class="line">                            file,</span><br><span class="line">                            kAudioFilePropertyMagicCookieData,</span><br><span class="line">                            &amp;propertySize,</span><br><span class="line">                            NULL</span><br><span class="line">                        );</span><br><span class="line"> </span><br><span class="line">    if (!result &amp;&amp; propertySize) &#123;</span><br><span class="line"> </span><br><span class="line">        char *cookie = (char *) malloc (propertySize);</span><br><span class="line"> </span><br><span class="line">        AudioFileGetProperty (</span><br><span class="line">            file,</span><br><span class="line">            kAudioFilePropertyMagicCookieData,</span><br><span class="line">            &amp;propertySize,</span><br><span class="line">            cookie</span><br><span class="line">        );</span><br><span class="line"> </span><br><span class="line">        AudioQueueSetProperty (</span><br><span class="line">            queue,</span><br><span class="line">            kAudioQueueProperty_MagicCookie,</span><br><span class="line">            cookie,</span><br><span class="line">            propertySize</span><br><span class="line">        );</span><br><span class="line"> </span><br><span class="line">        free (cookie);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="8-Audio-Data-Packets"><a href="#8-Audio-Data-Packets" class="headerlink" title="8.Audio Data Packets"></a>8.Audio Data Packets</h4><p>音频数据包(packet)是一个或多个帧的集合，对于特定音频格式，它是有意义的最小帧集合，因此它是最佳表示一段时间音频数据的单位。</p>
+<ul>
+<li>CBR(固定的比特率):PCM,IMA,ADPCM,所有packet具有相同size.</li>
+<li>VBR(可变的比特率):AAC,MP3,Apple Lossless,所有packet都具有相同的帧数，但是每一帧中的位数不同。</li>
+<li>VFR(可变的帧率): 每个包中具有不同的帧数，没有这种类型常用的格式。</li>
+</ul>
+<p>在CBR，VBR的格式中，对于给定的音频文件或流，每秒钟的包数是固定的，</p>
+<h4 id="9-数据格式转换"><a href="#9-数据格式转换" class="headerlink" title="9.数据格式转换"></a>9.数据格式转换</h4><p>使用audio converter可以改变音频采样率，交错或不交错，以及压缩与未压缩数据格式相互转换。</p>
+<ul>
+<li>将压缩数据格式(如AAC)转成线性PCM格式</li>
+<li>将线性PCM格式转成其他格式</li>
+<li>在16位signed integer线性PCM与8.24定点PCM间相互转换。</li>
+</ul>
+<h4 id="10-音频文件"><a href="#10-音频文件" class="headerlink" title="10.音频文件"></a>10.音频文件</h4><p>Core Audio中使用Audio File Service为创建与访问音频文件及包含在其中元数据提供了一个强大的抽象。我们不仅可以使用文件的ID,type,数据格式，还可以添加标记，循环，回放等等功能。</p>
+<ul>
+<li><p>创建一个音频文件</p>
+<ul>
+<li>确定文件路径(CFURL/NSURL)</li>
+<li>确定文件标识符(ex CAF:kAudioFileCAFType)</li>
+<li>放在文件中的ABSD。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AudioFileCreateWithURL (</span><br><span class="line">    audioFileURL,</span><br><span class="line">    kAudioFileCAFType,</span><br><span class="line">    &amp;audioFormat,</span><br><span class="line">    kAudioFileFlags_EraseFile,</span><br><span class="line">    &amp;audioFileID   // the function provides the new file object here</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>打开一个音频文件<br>使用<code>AudioFileOpenURL</code>函数打开一个文件，提供URL,文件类型，访问权限成功后返回一个文件ID,使用这个ID以及常用函数可以检索我们需要的文件信息。下面列举了一些常用函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kAudioFilePropertyFileFormat</span><br><span class="line">kAudioFilePropertyDataFormat</span><br><span class="line">kAudioFilePropertyMagicCookieData</span><br><span class="line">kAudioFilePropertyChannelLayout</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当一个VBR文件过大时，检索信息速度会较慢，可以使用<code>kAudioFilePropertyPacketSizeUpperBound and kAudioFilePropertyEstimatedDuration.</code>这两个函数快速获取近似值。</p>
+<ul>
+<li><p>读写文件</p>
+<ul>
+<li>读写包仅仅针对VBR数据</li>
+<li>使用基于包的操作更容易计算时间</li>
+</ul>
+</li>
+<li><p>扩展<br>Core Audio提供了一个的API，称为扩展音频文件服务。该接口包含音频文件服务和音频转换器服务中的基本功能，提供与线性PCM之间的自动数据转换</p>
+</li>
+<li><p>iPhone 支持的Audio file格式</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Format name</th>
+<th>Format filename extensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIFF</td>
+<td>.aif,.aiff</td>
+</tr>
+<tr>
+<td>CAF</td>
+<td>.caf</td>
+</tr>
+<tr>
+<td>MPEG-1,layer 3</td>
+<td>.mp3</td>
+</tr>
+<tr>
+<td>MPEG-2 or MPEG-4 ADTS</td>
+<td>.aac</td>
+</tr>
+<tr>
+<td>MPEG-4</td>
+<td>.m4a, .mp4</td>
+</tr>
+<tr>
+<td>WAV</td>
+<td>.wav</td>
+</tr>
+<tr>
+<td>AC-3 (Dolby Digital)</td>
+<td>.ac3</td>
+</tr>
+<tr>
+<td>Enhanced AC-3 (Dolby Digital Plus)</td>
+<td>.ec3</td>
+</tr>
+</tbody>
+</table>
+<p>iOS与OS X中原生音频文件格式为CAF(Core Audio Format),它可以支持平台中任意音频数据格式。它没有大小限制，可以支持多种元数据，如声道信息，文本注释等</p>
+<h4 id="11-音频流"><a href="#11-音频流" class="headerlink" title="11.音频流"></a>11.音频流</h4><p>与音频文件不同,我们无法确定一个audio file stream(音频流)的开始与结束点.因为我们往往是通过网络接受音频流数据,开始与结束的时机取决于用户的交互,并且,音频流数据也无法保证一定可以获取,因为网络传输中可能会存储在丢帧,暂停等等情况.</p>
+<p>Audio File Service可以通过解析(parse)让我们使用音频流.通过回调函数获取parse到的一系列音频数据.</p>
+<h4 id="12-Audio-Sessions-配合Core-Audio工作"><a href="#12-Audio-Sessions-配合Core-Audio工作" class="headerlink" title="12.Audio Sessions: 配合Core Audio工作"></a>12.Audio Sessions: 配合Core Audio工作</h4><p>在iOS中,有时我们需要处理高优先级任务,如接电话,如果当前APP正在播放视频,我们必须做出符合用户期望的事情以协调APP与系统电话.Audio Session对象充当了两者之间的一个中介.每个iPhone应用程序只有一个audio session,通过配置其属性以使用.</p>
+<p>开始之前,我们要明确下面几个问题</p>
+<ul>
+<li>如何让应用程序响应一些意外中断,如接电话</li>
+<li>你打算让你的音频与其他应用程序中的音频混合起来,还是打算对它们做静音操作</li>
+<li>应用程序如何响应音频线路改变,如用户插拔耳机</li>
+</ul>
+<p>为了解决上面的问题,我们需要配置audio session使用如下特性</p>
+<table>
+<thead>
+<tr>
+<th>Audio Session feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Categories</td>
+<td>一个category标识着一组音频行为的键,通过设置分类,可以表明音频的行为,如锁屏时是否应该继续播放音频.</td>
+</tr>
+<tr>
+<td>Interruptions and route changes</td>
+<td>当音频被中断或音频线路发生改变时,audio session将发送一个通知,通过接收通知以作出相应响应.</td>
+</tr>
+<tr>
+<td>Hardware characteristics</td>
+<td>通过audio session可以查询当前设备的一些硬件信息,如采样率,声道数,输入源设备等</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Audio Session默认行为<ul>
+<li>当用户将手机按键中的静音拨动时,音频将会被静音</li>
+<li>当用户按下锁屏键时,音频会被静音</li>
+<li>当你的音频启用时,当前正在播放的其他应用程序的音频会被静音</li>
+</ul>
+</li>
+</ul>
+<p>以上行为是audio session默认分类(kAudioSessionCategory_SoloAmbientSound)的行为</p>
+<ul>
+<li>中断:停用与激活(Deactivation and Activation)<br>默认的audio session中缺少一个重要功能就是在中断后无法恢复.audio session有两个重要状态:激活,停用.音频仅能够在激活状态下使用.</li>
+</ul>
+<p>启动时,默认的audio session是激活状态,然而,如果有电话打进来(interruption),audio session马上处于停用状态且应用程序音频停止.如果用户选择忽略当前电话,你的应用程序继续运行,但是audio session仍是未激活状态,音频无法继续工作.</p>
+<p>如果应用程序中使用OpenAL, I/O unit, Audio Queue Services,我们必须写一个监听中断的回调函数,在中断结束后重新激活audio session.</p>
+<ul>
+<li>决定输入源是否可用</li>
+</ul>
+<p>使用录制功能的APP是否能录制取决于当前选择的硬件音频输入端,使用<code>kAudioSessionProperty_AudioInputAvailable</code>可以测试当前输入端是否可用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">UInt32 audioInputIsAvailable;</span><br><span class="line">UInt32 propertySize = sizeof (audioInputIsAvailable);</span><br><span class="line"> </span><br><span class="line">AudioSessionGetProperty (</span><br><span class="line">    kAudioSessionProperty_AudioInputAvailable,</span><br><span class="line">    &amp;propertySize,</span><br><span class="line">    &amp;audioInputIsAvailable // A nonzero value on output means that</span><br><span class="line">                           // audio input is available</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>使用Audio Session</li>
+</ul>
+<p>应用程序仅有一个audio session分类在同一时间(此规则的一个例外是使用System Sound Services播放的音频 - 用于警报和用户界面声音效果的API。此类音频始终使用最低优先级的音频会话类别),</p>
+<h4 id="13-使用AVAudioPlayer播放"><a href="#13-使用AVAudioPlayer播放" class="headerlink" title="13.使用AVAudioPlayer播放"></a>13.使用AVAudioPlayer播放</h4><p>如果你的应用程序不需要双声道,精确同步以及播放网络流音频,可以使用<code>AVAudioPlayer</code>类实现简单的音频播放.</p>
+<p>以下使用范围</p>
+<ul>
+<li>播放任意时间段音频</li>
+<li>从文件或内存中播放音频</li>
+<li>循环音频</li>
+<li>同时播放多个音频</li>
+<li>控制正在播放每个声音相对播放水平</li>
+<li>寻找音频文件中特定点,支持快进快退</li>
+<li>获取音量</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">NSString *soundFilePath =</span><br><span class="line">                [[NSBundle mainBundle] pathForResource: @&quot;sound&quot;</span><br><span class="line">                                                ofType: @&quot;wav&quot;];</span><br><span class="line"> </span><br><span class="line">NSURL *fileURL = [[NSURL alloc] initFileURLWithPath: soundFilePath];</span><br><span class="line"> </span><br><span class="line">AVAudioPlayer *newPlayer =</span><br><span class="line">                [[AVAudioPlayer alloc] initWithContentsOfURL: fileURL</span><br><span class="line">                                                       error: nil];</span><br><span class="line">[fileURL release];</span><br><span class="line"> </span><br><span class="line">self.player = newPlayer;</span><br><span class="line">[newPlayer release];</span><br><span class="line"> </span><br><span class="line">[self.player prepareToPlay];</span><br><span class="line">[self.player setDelegate: self];</span><br><span class="line"></span><br><span class="line">- (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player</span><br><span class="line">                        successfully: (BOOL) flag &#123;</span><br><span class="line">    if (flag == YES) &#123;</span><br><span class="line">        [self.button setTitle: @&quot;Play&quot; forState: UIControlStateNormal];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (IBAction) playOrPause: (id) sender &#123;</span><br><span class="line"> </span><br><span class="line">    // if already playing, then pause</span><br><span class="line">    if (self.player.playing) &#123;</span><br><span class="line">        [self.button setTitle: @&quot;Play&quot; forState: UIControlStateHighlighted];</span><br><span class="line">        [self.button setTitle: @&quot;Play&quot; forState: UIControlStateNormal];</span><br><span class="line">        [self.player pause];</span><br><span class="line"> </span><br><span class="line">    // if stopped or paused, start playing</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        [self.button setTitle: @&quot;Pause&quot; forState: UIControlStateHighlighted];</span><br><span class="line">        [self.button setTitle: @&quot;Pause&quot; forState: UIControlStateNormal];</span><br><span class="line">        [self.player play];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    [self.player setVolume: 1.0];    // available range is 0.0 through 1.0</span><br></pre></td></tr></table></figure>
+<h4 id="14-录制与播放-Audio-Queue-Services"><a href="#14-录制与播放-Audio-Queue-Services" class="headerlink" title="14.录制与播放 Audio Queue Services"></a>14.录制与播放 Audio Queue Services</h4><p>Audio Queue Services提供了一种低开销,直接的方式去录制和播放音频,它使你的应用程序使用硬件(麦克风与扬声器)录制与播放并且无需了解硬件接口.它也让我们使用复杂的编解码器而无需了解编解码器的工作原理.</p>
+<p>Audio Queue提供了更精确的定时播放以支持预定播放与同步,你可以使用它去同步多个音频播放队列,同时播放声音,独立控制每个队里的音量以及循环播放.</p>
+<p>Audio Queue与AVAudioPlayer两者是在iPhone上播放音频的唯一方式</p>
+<ul>
+<li>录制与播放的回调函数</li>
+</ul>
+<p>通过属性与回调函数让我们与audio queue对象间交互.对于录制,我们通过回调函数接收音频数据.<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qyKG1wvvBt3dbHKLADndydaEymMohKH4ig6JCtvvGyE!/r/dL4AAAAAAAAA" alt="5.record_audioqueue"></p>
+<p>对于播放回调,当你的音频播放队列需要播放一个音频数据时它将被调用.你的回调函数将从磁盘读取指定数量的音频数据包然后将它们封装在audio queue对象的buffer中.audio queue将按顺序播放这些buffer.<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/u0I9rsGNg2DrdoCztINpy9k4YJqRMt*G2qNpanQ.lR0!/r/dDMBAAAAAAAA" alt="5.play_audioqueue"></p>
+<ul>
+<li>创建Audio Queue<ul>
+<li>AudioQueueNewInput:创建录制audio queue对象</li>
+<li>AudioQueueNewOutput: 创建播放audio queue对象</li>
+</ul>
+</li>
+</ul>
+<p>实现一个播放队列</p>
+<p>a. 创建一个结构体管理audio queue需要的信息,如音频格式,采样率等等</p>
+<p>b. 定义一个回调函数管理audio queue buffers,这个回调函数使用Audio File Services去读取你想要播放的文件.</p>
+<p>c. 初始化audio queue并且使用AudioQueueNewOutput创建对象.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">static const int kNumberBuffers = 3;</span><br><span class="line">// Create a data structure to manage information needed by the audio queue</span><br><span class="line">struct myAQStruct &#123;</span><br><span class="line">    AudioFileID                     mAudioFile;</span><br><span class="line">    CAStreamBasicDescription        mDataFormat;</span><br><span class="line">    AudioQueueRef                   mQueue;</span><br><span class="line">    AudioQueueBufferRef             mBuffers[kNumberBuffers];</span><br><span class="line">    SInt64                          mCurrentPacket;</span><br><span class="line">    UInt32                          mNumPacketsToRead;</span><br><span class="line">    AudioStreamPacketDescription    *mPacketDescs;</span><br><span class="line">    bool                            mDone;</span><br><span class="line">&#125;;</span><br><span class="line">// Define a playback audio queue callback function</span><br><span class="line">static void AQTestBufferCallback(</span><br><span class="line">    void                   *inUserData,</span><br><span class="line">    AudioQueueRef          inAQ,</span><br><span class="line">    AudioQueueBufferRef    inCompleteAQBuffer</span><br><span class="line">) &#123;</span><br><span class="line">    myAQStruct *myInfo = (myAQStruct *)inUserData;</span><br><span class="line">    if (myInfo-&gt;mDone) return;</span><br><span class="line">    UInt32 numBytes;</span><br><span class="line">    UInt32 nPackets = myInfo-&gt;mNumPacketsToRead;</span><br><span class="line"> </span><br><span class="line">    AudioFileReadPackets (</span><br><span class="line">        myInfo-&gt;mAudioFile,</span><br><span class="line">        false,</span><br><span class="line">        &amp;numBytes,</span><br><span class="line">        myInfo-&gt;mPacketDescs,</span><br><span class="line">        myInfo-&gt;mCurrentPacket,</span><br><span class="line">        &amp;nPackets,</span><br><span class="line">        inCompleteAQBuffer-&gt;mAudioData</span><br><span class="line">    );</span><br><span class="line">    if (nPackets &gt; 0) &#123;</span><br><span class="line">        inCompleteAQBuffer-&gt;mAudioDataByteSize = numBytes;</span><br><span class="line">        AudioQueueEnqueueBuffer (</span><br><span class="line">            inAQ,</span><br><span class="line">            inCompleteAQBuffer,</span><br><span class="line">            (myInfo-&gt;mPacketDescs ? nPackets : 0),</span><br><span class="line">            myInfo-&gt;mPacketDescs</span><br><span class="line">        );</span><br><span class="line">        myInfo-&gt;mCurrentPacket += nPackets;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        AudioQueueStop (</span><br><span class="line">            myInfo-&gt;mQueue,</span><br><span class="line">            false</span><br><span class="line">        );</span><br><span class="line">        myInfo-&gt;mDone = true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// Instantiate an audio queue object</span><br><span class="line">AudioQueueNewOutput (</span><br><span class="line">    &amp;myInfo.mDataFormat,</span><br><span class="line">    AQTestBufferCallback,</span><br><span class="line">    &amp;myInfo,</span><br><span class="line">    CFRunLoopGetCurrent(),</span><br><span class="line">    kCFRunLoopCommonModes,</span><br><span class="line">    0,</span><br><span class="line">    &amp;myInfo.mQueue</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>控制Audio Queue播放的音量</li>
+</ul>
+<p>Audio queue对象提供了两种方式控制播放音量,一种是直接设置,如下,设置后可以立即生效.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Float32 volume = 1;</span><br><span class="line">AudioQueueSetParameter (</span><br><span class="line">    myAQstruct.audioQueueObject,</span><br><span class="line">    kAudioQueueParam_Volume,</span><br><span class="line">    volume</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>另一种是使用<code>AudioQueueEnqueueBufferWithParameters</code>,设置后在audio queue buffer开始播放时生效.</p>
+<ul>
+<li>Indicating Audio Queue Playback Level</li>
+</ul>
+<p>通过查询audio queue对象的<code>kAudioQueueProperty_CurrentLevelMeterDB</code>属性可以获取当前播放的级别.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct AudioQueueLevelMeterState &#123;</span><br><span class="line">    Float32     mAveragePower;</span><br><span class="line">    Float32     mPeakPower;</span><br><span class="line">&#125;;  AudioQueueLevelMeterState;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>同时播放多个声音</li>
+</ul>
+<p>为了同时播放多个音频,需要为每个音频创建一个播放audio queue对象.对于每个audio queue,使用<code>AudioQueueEnqueueBufferWithParameters</code>函数安排第一个音频buffer同时启动。</p>
+<p>同时播放多个音频,音频格式显得至关重要,因为iOS中某些音频格式使用了高效的硬件编解码器,只能在设备上播放以下格式之一的单个实例.</p>
+<p>a. AAC</p>
+<p>b. ALAC</p>
+<p>c. MP3</p>
+<p>如果要播放高质量同步的音频,需要使用线性PCM或IMA4格式.</p>
+<p>a. 线性PCM和IMA / ADPCM（IMA4）音频您可以在iOS中同时播放多个线性PCM或IMA4格式声音，而不会产生CPU资源问题。</p>
+<p>b. AAC，MP3和Apple Lossless（ALAC）一次只能播放一首此类声音</p>
+<h4 id="15-使用OpenAL定位播放"><a href="#15-使用OpenAL定位播放" class="headerlink" title="15.使用OpenAL定位播放"></a>15.使用OpenAL定位播放</h4><p>开源的OpenAL音频API（可在OpenAL框架中使用，构建于Core Audio之上）针对播放期间的声音定位进行了优化。使用OpenGL建模的界面，OpenAL可以轻松播放，定位，混合和移动声音,OpenAL和OpenGL共享一个通用坐标系统，使您可以同步音频和视频。OpenAL直接使用Core Audio的I / O audio unit），从而实现最低延迟播放。OpenAL是在iPhone和iPod touch上播放游戏应用中的声音效果的最佳选择。</p>
+<h4 id="16-系统声音"><a href="#16-系统声音" class="headerlink" title="16.系统声音"></a>16.系统声音</h4><p>Audio Toolbox中的AudioServices.h提供了系统的声音服务,当你仅仅想播放一个系统的短音频时,它将是最好的选择,iOS中播放系统声音最不不能超过30秒.</p>
+<p>在iOS中,调用<code>AudioServicesPlaySystemSound</code>可以立即播放,你也可以调用<code>AudioServicesPlayAlertSound</code>提示用户是否播放.</p>
+<p>调用<code>AudioServicesPlaySystemSound</code>时使用<code>kSystemSoundID_Vibrate</code>常量可以显式设置振动效果.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;AudioToolbox/AudioToolbox.h&gt;</span><br><span class="line">#include &lt;CoreFoundation/CoreFoundation.h&gt;</span><br><span class="line"> </span><br><span class="line">// Define a callback to be called when the sound is finished</span><br><span class="line">// playing. Useful when you need to free memory after playing.</span><br><span class="line">static void MyCompletionCallback (</span><br><span class="line">    SystemSoundID  mySSID,</span><br><span class="line">    void * myURLRef</span><br><span class="line">) &#123;</span><br><span class="line">        AudioServicesDisposeSystemSoundID (mySSID);</span><br><span class="line">        CFRelease (myURLRef);</span><br><span class="line">        CFRunLoopStop (CFRunLoopGetCurrent());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">int main (int argc, const char * argv[]) &#123;</span><br><span class="line">    // Set up the pieces needed to play a sound.</span><br><span class="line">    SystemSoundID    mySSID;</span><br><span class="line">    CFURLRef        myURLRef;</span><br><span class="line">    myURLRef = CFURLCreateWithFileSystemPath (</span><br><span class="line">        kCFAllocatorDefault,</span><br><span class="line">        CFSTR (&quot;../../ComedyHorns.aif&quot;),</span><br><span class="line">        kCFURLPOSIXPathStyle,</span><br><span class="line">        FALSE</span><br><span class="line">    );</span><br><span class="line"> </span><br><span class="line">    // create a system sound ID to represent the sound file</span><br><span class="line">    OSStatus error = AudioServicesCreateSystemSoundID (myURLRef, &amp;mySSID);</span><br><span class="line"> </span><br><span class="line">    // Register the sound completion callback.</span><br><span class="line">    // Again, useful when you need to free memory after playing.</span><br><span class="line">    AudioServicesAddSystemSoundCompletion (</span><br><span class="line">        mySSID,</span><br><span class="line">        NULL,</span><br><span class="line">        NULL,</span><br><span class="line">        MyCompletionCallback,</span><br><span class="line">        (void *) myURLRef</span><br><span class="line">    );</span><br><span class="line"> </span><br><span class="line">    // Play the sound file.</span><br><span class="line">    AudioServicesPlaySystemSound (mySSID);</span><br><span class="line"> </span><br><span class="line">    // Invoke a run loop on the current thread to keep the application</span><br><span class="line">    // running long enough for the sound to play; the sound completion</span><br><span class="line">    // callback later stops this run loop.</span><br><span class="line">    CFRunLoopRun ();</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="17-Audio-Unit"><a href="#17-Audio-Unit" class="headerlink" title="17.Audio Unit"></a>17.Audio Unit</h4><p>在iOS中，Audio Unit为应用程序提供了实现低延迟输入和输出的机制。它们还提供某些DSP功能.</p>
+<p>iOS中Audio Unit输入输出使用8.24位定点线性PCM音频数据.唯一例外的是以下情况.</p>
+<ul>
+<li>3D mix unit: 允许任意数量的单声道输入，每个输入可以是8位或16位线性PCM.在8.24位定点PCM中提供一个立体声输出,3D混音器单元对其输入执行采样率转换，并对每个输入通道提供大量控制。此控件包括这些更改的音量，静音，平移，距离衰减和速率控制。以编程方式，这是kAudioUnitSubType_AU3DMixerEmbedded单元。</li>
+<li>Multichannel mixer unit: 允许任意数量的单声道或立体声输入，每个输入可以是16位线性或8.24位定点PCM。在8.24位定点PCM中提供一个立体声输出。您的应用程序可以静音和取消静音每个输入通道以及控制其音量。以编程方式，这是kAudioUnitSubType_MultiChannelMixer单元。</li>
+<li>Converter unit: 提供采样率，位深度和位格式（线性到定点）转换。 iPhone converter unit’s的规范数据格式是8.24位定点PCM。它转换为此格式或从此格式转换。以编程方式，这是kAudioUnitSubType_AUConverter单元。</li>
+<li>I/O unit:提供实时音频输入和输出，并根据需要执行采样率转换。以编程方式，这是kAudioUnitSubType_RemoteIO单元。</li>
+<li>iPod EQ unit:提供可在应用程序中使用的简单均衡器，并在内置iPhone iPod应用程序中提供相同的预设。 iPod EQ单元使用8.24位定点PCM输入和输出。以编程方式，这是kAudioUnitSubType_AUiPodEQ单元。</li>
+</ul>
+<p>每个Audio Unit的唯一标识符由类型,子类型,制造商代码(type, subtype, and manufacturer code)确定.每种子类型更加精确的描述了audio unit的用途.Audio Unit使用属性配置音频信息,如 Properties, Scopes, and Elements.每种audio unit需要一些指定属性,</p>
+<h4 id="18-编解码器"><a href="#18-编解码器" class="headerlink" title="18.编解码器"></a>18.编解码器</h4><p>iOS中可以用的录制和播放编解码器来平衡音频质量，应用程序开发的灵活性，硬件功能和电池寿命。</p>
+<h4 id="19-Audio-Processing-Graphs"><a href="#19-Audio-Processing-Graphs" class="headerlink" title="19.Audio Processing Graphs"></a>19.Audio Processing Graphs</h4><p>AUGraph:定义了一组复杂的音频执行任务.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/Audio/" rel="tag"># Audio</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/15/20190415_iOS_AVAssetExplain/" rel="next" title="iOS AVAsset讲解">
+                <i class="fa fa-chevron-left"></i> iOS AVAsset讲解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Audio"><span class="nav-number">1.</span> <span class="nav-text">Core Audio</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Digital-Audio与Linear-PCM"><span class="nav-number">1.1.</span> <span class="nav-text">1. Digital Audio与Linear PCM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Audio-Unit"><span class="nav-number">1.2.</span> <span class="nav-text">2.Audio Unit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-HAL-Hardware-Abstraction-Layer"><span class="nav-number">1.3.</span> <span class="nav-text">3.HAL(Hardware Abstraction Layer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Properties-Scopes-and-Elements"><span class="nav-number">1.4.</span> <span class="nav-text">4.Properties, Scopes, and Elements</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-回调函数"><span class="nav-number">1.5.</span> <span class="nav-text">5.回调函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-音频数据格式"><span class="nav-number">1.6.</span> <span class="nav-text">6. 音频数据格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Magic-Cookie"><span class="nav-number">1.7.</span> <span class="nav-text">7. Magic Cookie</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Audio-Data-Packets"><span class="nav-number">1.8.</span> <span class="nav-text">8.Audio Data Packets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-数据格式转换"><span class="nav-number">1.9.</span> <span class="nav-text">9.数据格式转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-音频文件"><span class="nav-number">1.10.</span> <span class="nav-text">10.音频文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-音频流"><span class="nav-number">1.11.</span> <span class="nav-text">11.音频流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Audio-Sessions-配合Core-Audio工作"><span class="nav-number">1.12.</span> <span class="nav-text">12.Audio Sessions: 配合Core Audio工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-使用AVAudioPlayer播放"><span class="nav-number">1.13.</span> <span class="nav-text">13.使用AVAudioPlayer播放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-录制与播放-Audio-Queue-Services"><span class="nav-number">1.14.</span> <span class="nav-text">14.录制与播放 Audio Queue Services</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15-使用OpenAL定位播放"><span class="nav-number">1.15.</span> <span class="nav-text">15.使用OpenAL定位播放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#16-系统声音"><span class="nav-number">1.16.</span> <span class="nav-text">16.系统声音</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#17-Audio-Unit"><span class="nav-number">1.17.</span> <span class="nav-text">17.Audio Unit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#18-编解码器"><span class="nav-number">1.18.</span> <span class="nav-text">18.编解码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#19-Audio-Processing-Graphs"><span class="nav-number">1.19.</span> <span class="nav-text">19.Audio Processing Graphs</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

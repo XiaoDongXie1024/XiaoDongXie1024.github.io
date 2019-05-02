@@ -15,10 +15,10 @@
 
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
@@ -74,7 +74,7 @@
 
 
 
-  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
 
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/10/26/record/"/>
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/10/26/record/">
 
 
 
@@ -230,7 +230,7 @@
           
           <li class="menu-item menu-item-桃花岛">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
   </li>
         
         
@@ -238,7 +238,7 @@
           
           <li class="menu-item menu-item-时间轴">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
   </li>
         
         
@@ -246,7 +246,7 @@
           
           <li class="menu-item menu-item-武功秘籍">
     <a href="/categories/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
   </li>
         
         
@@ -254,7 +254,7 @@
           
           <li class="menu-item menu-item-江湖地位">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
   </li>
         
         
@@ -262,7 +262,7 @@
           
           <li class="menu-item menu-item-江湖历程">
     <a href="/about/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
   </li>
 
       
@@ -362,7 +362,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -418,11 +418,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              Views:  
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -448,7 +447,7 @@
         <p class="description"></p>
 
 <a id="more"></a>
-<h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC"><a href="#本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC" class="headerlink" title="本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC."></a>本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC.</h3><h3 id="原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API"><a href="#原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API" class="headerlink" title="原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API"></a>原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API</h3><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><p><img src="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="——————————————————–"><a href="#——————————————————–" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h3 id="本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC"><a href="#本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC" class="headerlink" title="本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC."></a>本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC.</h3><h3 id="原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API"><a href="#原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API" class="headerlink" title="原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API"></a>原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API</h3><h3 id="——————————————————–-1"><a href="#——————————————————–-1" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><p><img src="http://upload-images.jianshu.io/upload_images/5086522-8907c13cbe4a39f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
 <h3 id="本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义"><a href="#本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义" class="headerlink" title="本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义."></a>本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义.</h3><h3 id="——————————————————–-2"><a href="#——————————————————–-2" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h4 id="GitHub地址-附代码-PCM-gt-AAC"><a href="#GitHub地址-附代码-PCM-gt-AAC" class="headerlink" title="GitHub地址(附代码) : PCM-&gt;AAC"></a>GitHub地址(附代码) : <a href="https://github.com/ChengyangLi/XDXPCMToAACDemo" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h4 id="简书地址-PCM-gt-AAC"><a href="#简书地址-PCM-gt-AAC" class="headerlink" title="简书地址     : PCM-&gt;AAC"></a>简书地址     : <a href="http://www.jianshu.com/p/e2d072b9e4d8" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h4 id="博客地址-PCM-gt-AAC"><a href="#博客地址-PCM-gt-AAC" class="headerlink" title="博客地址     : PCM-&gt;AAC"></a>博客地址     : <a href="https://chengyangli.github.io/2017/03/24/record" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h4 id="掘金地址-PCM-gt-AAC"><a href="#掘金地址-PCM-gt-AAC" class="headerlink" title="掘金地址     : PCM-&gt;AAC"></a>掘金地址     : <a href="https://juejin.im/post/5a8fdd915188255de20105ef" target="_blank" rel="noopener">PCM-&gt;AAC</a></h4><h3 id="——————————————————–-3"><a href="#——————————————————–-3" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="实现方式：（下文两种实现方式，挑选自己适合的）"><a href="#实现方式：（下文两种实现方式，挑选自己适合的）" class="headerlink" title="实现方式：（下文两种实现方式，挑选自己适合的）"></a>实现方式：（下文两种实现方式，挑选自己适合的）</h2><h3 id="1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式"><a href="#1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式" class="headerlink" title="1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式"></a>1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式</h3><h3 id="2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"><a href="#2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。" class="headerlink" title="2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"></a>2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。</h3><h3 id="AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。"><a href="#AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。" class="headerlink" title="AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。"></a>AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。</h3><h3 id="——————————————————–-4"><a href="#——————————————————–-4" class="headerlink" title="——————————————————–"></a>——————————————————–</h3><h2 id="一-本文需要基本知识点"><a href="#一-本文需要基本知识点" class="headerlink" title="一.本文需要基本知识点"></a>一.本文需要基本知识点</h2><h3 id="C语言相关函数："><a href="#C语言相关函数：" class="headerlink" title="C语言相关函数："></a>C语言相关函数：</h3><p>1.memset：<br>原型： void <em> memset(void </em> <strong>b, int </strong>c, size_t __len);<br>解释：将s中当前位置后面的n个字节(typedef unsigned int size_t) 用ch替换并返回s<br>作用：在一段内存块中填充某个特定的值，它是对较大的结构体或数组进行清零操作的一种最快方法。</p>
 <p>2.memcpy：<br>原型： void <em> memcpy(void </em> dest, const void * src, size_t n);<br>解释：从源src所指的内存地址的起始位置开始拷贝n个字节到目标dest所指的内存地址的起始位置中</p>
 <p>3.void     free(void *);<br>解释：释放内存，需要将malloc出来的内存统统释放掉，对于结构体要先将结构体中malloc出来的释放掉最后再释放掉结构体本身。</p>
@@ -586,9 +585,9 @@
 <p> outputPacketDescriptions数组是每次转换的AAC编码后各个包的描述,但这里每次只转换一包数据(由传入的packetSize决定)。调用AudioConverterFillComplexBuffer触发转码，他的第二个参数是填充原始音频数据的回调。转码完成后，会将转码的数据存放在它的第五个参数中(bufferList).</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"> // 录制声音功能</span><br><span class="line"> -(void)startVoiceDemo</span><br><span class="line">&#123;</span><br><span class="line">    NSArray *searchPaths    = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);</span><br><span class="line">    NSString *documentPath  = [[searchPaths objectAtIndex:0] stringByAppendingPathComponent:@&quot;VoiceDemo&quot;];</span><br><span class="line">    OSStatus status;</span><br><span class="line">    </span><br><span class="line">    // Get the full path to our file.</span><br><span class="line">    NSString *fullFileName  = [NSString stringWithFormat:@&quot;%@.%@&quot;,[[XDXDateTool shareXDXDateTool] getDateWithFormat_yyyy_MM_dd_HH_mm_ss],@&quot;caf&quot;];</span><br><span class="line">    NSString *filePath      = [documentPath stringByAppendingPathComponent:fullFileName];</span><br><span class="line">    [mRecordFilePath release];</span><br><span class="line">    mRecordFilePath         = [filePath copy];;</span><br><span class="line">    CFURLRef url            = CFURLCreateWithString(kCFAllocatorDefault, (CFStringRef)filePath, NULL);</span><br><span class="line">    </span><br><span class="line">    // create the audio file</span><br><span class="line">    status                  = AudioFileCreateWithURL(url, kAudioFileMPEG4Type, &amp;_targetDes, kAudioFileFlags_EraseFile, &amp;mRecordFile);</span><br><span class="line">    if (status != noErr) &#123;</span><br><span class="line">        // log4cplus_info(&quot;Audio Recoder&quot;,&quot;AudioFileCreateWithURL Failed, status:%d&quot;,(int)status);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    CFRelease(url);</span><br><span class="line">    </span><br><span class="line">    // add magic cookie contain header file info for VBR data</span><br><span class="line">    [self copyEncoderCookieToFile];</span><br><span class="line">    </span><br><span class="line">    mNeedsVoiceDemo         = YES;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__FUNCTION__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>##—————————————————————- Audio Unit ————————————————</p>
-<h3 id="1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1"><a href="#1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1" class="headerlink" title="1. What is Audio Unit ？ AudioUnit官方文档,  优秀博客1"></a>1. What is Audio Unit ？ <a href="https://developer.apple.com/library/content/documentation/MusicAudio/Conceptual/AudioUnitHostingGuide_iOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009492-CH1-SW1" target="_blank" rel="noopener">AudioUnit官方文档</a>,  <a href="http://www.qingpingshan.com/rjbc/ios/303625.html" target="_blank" rel="noopener">优秀博客1</a></h3><p>1). AudioUnit是 iOS提供的为了支持混音，均衡，格式转换，实时输入输出用于录制，回放，离线渲染和实时回话(VOIP)，这让我们可以动态加载和使用，即从iOS应用程序中接收这些强大而灵活的插件。它是iOS音频中最低层，所以除非你需要合成声音的实时播放，低延迟的I/O，或特定声音的特定特点。<br>    Audio unit scopes and elements ：<br>    <img src="https://cl.ly/30073m1G2s1Z/Snip20170727_3.png" alt=""></p>
+<h3 id="1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1"><a href="#1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1" class="headerlink" title="1. What is Audio Unit ？ AudioUnit官方文档,  优秀博客1"></a>1. What is Audio Unit ？ <a href="https://developer.apple.com/library/content/documentation/MusicAudio/Conceptual/AudioUnitHostingGuide_iOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009492-CH1-SW1" target="_blank" rel="noopener">AudioUnit官方文档</a>,  <a href="http://www.qingpingshan.com/rjbc/ios/303625.html" target="_blank" rel="noopener">优秀博客1</a></h3><p>1). AudioUnit是 iOS提供的为了支持混音，均衡，格式转换，实时输入输出用于录制，回放，离线渲染和实时回话(VOIP)，这让我们可以动态加载和使用，即从iOS应用程序中接收这些强大而灵活的插件。它是iOS音频中最低层，所以除非你需要合成声音的实时播放，低延迟的I/O，或特定声音的特定特点。<br>    Audio unit scopes and elements ：<br>    <img src="https://cl.ly/30073m1G2s1Z/Snip20170727_3.png" alt></p>
 <ul>
-<li><p>上图是一个AudioUnit的组成结构，A scope 主要使用到的输入kAudioUnitScope_Input和输出kAudioUnitScope_Output。Element 是嵌套在audio unit scope的编程上下文。<br><img src="https://cl.ly/0D161n0C1T0u/Image%202017-07-28%20at%205.24.45%20PM.png" alt=""></p>
+<li><p>上图是一个AudioUnit的组成结构，A scope 主要使用到的输入kAudioUnitScope_Input和输出kAudioUnitScope_Output。Element 是嵌套在audio unit scope的编程上下文。<br><img src="https://cl.ly/0D161n0C1T0u/Image%202017-07-28%20at%205.24.45%20PM.png" alt></p>
 </li>
 <li><p>AudioUnit 的Remote IO有2个element，大部分代码和文献都用bus代替element，两者同义，bus0就是输出,bus 1代表输入，播放音频文件就是在bus 0传送数据，bus 1输入在Remote IO 默认是关闭的，在录音的状态下 需要把bus 1设置成开启状态。</p>
 </li>
@@ -636,7 +635,7 @@
 <blockquote>
 <p>解析 </p>
 </blockquote>
-<p>设置原格式与转码格式并创建_encodeConvertRef转码器对象完成相关初始化操作，值得注意的是targetDes.mFramesPerPacket设置为1024，AAC软编码需要喂给转换器1024个样点才开始编码，不可随意更改，原因如下图,由AAC编码器决定。<br><img src="https://cl.ly/0Y2O3r3Y0l42/Screen%20Shot%202017-05-03%20at%205.28.14%20PM.png" alt=""></p>
+<p>设置原格式与转码格式并创建_encodeConvertRef转码器对象完成相关初始化操作，值得注意的是targetDes.mFramesPerPacket设置为1024，AAC软编码需要喂给转换器1024个样点才开始编码，不可随意更改，原因如下图,由AAC编码器决定。<br><img src="https://cl.ly/0Y2O3r3Y0l42/Screen%20Shot%202017-05-03%20at%205.28.14%20PM.png" alt></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (void)initRecordeCallback &#123;</span><br><span class="line">    // 设置回调，有两种方式，一种是采集pcm的BUFFER使用系统回调中的参数，另一种是使用我们自己的，本例中使用的是自己的，所以回调中的ioData为空。</span><br><span class="line">    </span><br><span class="line">    // 方法1：</span><br><span class="line">    AURenderCallbackStruct recordCallback;</span><br><span class="line">    recordCallback.inputProc        = RecordCallback;</span><br><span class="line">    recordCallback.inputProcRefCon  = (__bridge void *)self;</span><br><span class="line">    OSStatus status                 = AudioUnitSetProperty(_audioUnit,</span><br><span class="line">                                                           kAudioOutputUnitProperty_SetInputCallback,</span><br><span class="line">                                                           kAudioUnitScope_Global,</span><br><span class="line">                                                           INPUT_BUS,</span><br><span class="line">                                                           &amp;recordCallback,</span><br><span class="line">                                                           sizeof(recordCallback));</span><br><span class="line">                                                           </span><br><span class="line">    	// 方法2:</span><br><span class="line">      AURenderCallbackStruct renderCallback;</span><br><span class="line">      renderCallback.inputProc		  = RecordCallback;</span><br><span class="line">      renderCallback.inputProcRefCon   = (__bridge void *)self;</span><br><span class="line">      AudioUnitSetProperty(_rioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &amp; RecordCallback, sizeof(RecordCallback));</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    if (status != noErr) &#123;</span><br><span class="line">//        log4cplus_info(&quot;Audio Recoder&quot;, &quot;Audio Unit set record Callback failed, status : %d \n&quot;,status);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>解析</p>
@@ -680,14 +679,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
         <p>WeChat Pay</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
         <p>Alipay</p>
       </div>
     
@@ -826,9 +825,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
-                alt="小东邪 - Demon" />
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
             
               <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
               <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
@@ -841,7 +838,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-count">31</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -884,7 +881,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -984,7 +983,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–"><span class="nav-number">1.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC"><span class="nav-number">2.</span> <span class="nav-text">本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API"><span class="nav-number">3.</span> <span class="nav-text">原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-1"><span class="nav-number">4.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义"><span class="nav-number">5.</span> <span class="nav-text">本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-2"><span class="nav-number">6.</span> <span class="nav-text">——————————————————–</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-PCM-gt-AAC"><span class="nav-number">6.1.</span> <span class="nav-text">GitHub地址(附代码) : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-PCM-gt-AAC"><span class="nav-number">6.2.</span> <span class="nav-text">简书地址     : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-PCM-gt-AAC"><span class="nav-number">6.3.</span> <span class="nav-text">博客地址     : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-PCM-gt-AAC"><span class="nav-number">6.4.</span> <span class="nav-text">掘金地址     : PCM-&gt;AAC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-3"><span class="nav-number">7.</span> <span class="nav-text">——————————————————–</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方式：（下文两种实现方式，挑选自己适合的）"><span class="nav-number"></span> <span class="nav-text">实现方式：（下文两种实现方式，挑选自己适合的）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式"><span class="nav-number">1.</span> <span class="nav-text">1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"><span class="nav-number">2.</span> <span class="nav-text">2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。"><span class="nav-number">3.</span> <span class="nav-text">AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-4"><span class="nav-number">4.</span> <span class="nav-text">——————————————————–</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-本文需要基本知识点"><span class="nav-number"></span> <span class="nav-text">一.本文需要基本知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C语言相关函数："><span class="nav-number">1.</span> <span class="nav-text">C语言相关函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OC-中部分知识点："><span class="nav-number">2.</span> <span class="nav-text">OC 中部分知识点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#音频基础知识"><span class="nav-number">3.</span> <span class="nav-text">音频基础知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-AudioQueue"><span class="nav-number"></span> <span class="nav-text">二.AudioQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简述：在iOS和Mac-OS-X中，音频队列是一个用来录制和播放音频的软件对象，他用AudioQueueRef这个不透明数据类型来表示，该类型在AudioQueue-h头文件中声明。"><span class="nav-number">1.</span> <span class="nav-text">1.简述：在iOS和Mac OS X中，音频队列是一个用来录制和播放音频的软件对象，他用AudioQueueRef这个不透明数据类型来表示，该类型在AudioQueue.h头文件中声明。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-工作："><span class="nav-number">2.</span> <span class="nav-text">2.工作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-结构："><span class="nav-number">3.</span> <span class="nav-text">3.结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#它的架构很大程度上依赖于这个音频队列是用来录制还是用来播放的。不同之处在于音频队列如何连接到它的输入和输入，还有它的回调函数所扮演的角色。"><span class="nav-number">3.1.</span> <span class="nav-text">它的架构很大程度上依赖于这个音频队列是用来录制还是用来播放的。不同之处在于音频队列如何连接到它的输入和输入，还有它的回调函数所扮演的角色。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-调用步骤，首先将项目设置为MRC-在控制器中配置audioSession基本设置-基本设置，不会谷歌-，导入该头文件，直接在需要时机调用该类startRecord与stopRecord方法，另外还提供了生成录音文件的功能，具体参考github中的代码。"><span class="nav-number">4.</span> <span class="nav-text">4.调用步骤，首先将项目设置为MRC,在控制器中配置audioSession基本设置(基本设置，不会谷歌)，导入该头文件，直接在需要时机调用该类startRecord与stopRecord方法，另外还提供了生成录音文件的功能，具体参考github中的代码。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-设置AudioStreamBasicDescription-基本信息"><span class="nav-number">5.</span> <span class="nav-text">(1).设置AudioStreamBasicDescription 基本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-设置采集数据的格式，采集PCM必须按照如下设置，参考苹果官方文档，不同需求自己另行修改"><span class="nav-number">6.</span> <span class="nav-text">(2).设置采集数据的格式，采集PCM必须按照如下设置，参考苹果官方文档，不同需求自己另行修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-将PCM转成AAC一些基本设置"><span class="nav-number">7.</span> <span class="nav-text">(3).将PCM转成AAC一些基本设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-设置最终音频文件的头部信息-此类写法为将pcm转为AAC的写法"><span class="nav-number">8.</span> <span class="nav-text">(4).设置最终音频文件的头部信息(此类写法为将pcm转为AAC的写法)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-AudioQueue中注册的回调函数"><span class="nav-number">9.</span> <span class="nav-text">(5).AudioQueue中注册的回调函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1"><span class="nav-number">10.</span> <span class="nav-text">1. What is Audio Unit ？ AudioUnit官方文档,  优秀博客1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-相关概念解析"><span class="nav-number">11.</span> <span class="nav-text">2.相关概念解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用步骤："><span class="nav-number">12.</span> <span class="nav-text">3. 使用步骤：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-代码解析"><span class="nav-number">13.</span> <span class="nav-text">4.代码解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。"><span class="nav-number">14.</span> <span class="nav-text">总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考：CoreAudio-Audio-Unit-转码操作-AudioUnit-Audio-Unit-回声消除-AudioQueue-直播基础"><span class="nav-number">14.1.</span> <span class="nav-text">参考：CoreAudio, Audio Unit, 转码操作, AudioUnit, Audio Unit, 回声消除, AudioQueue, 直播基础</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–"><span class="nav-number">1.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据-本例采用AudioQueue-AudioUnit两种方式存储-即-可采集到两种声音数据-一种为PCM-一种为转换后的AAC"><span class="nav-number">2.</span> <span class="nav-text">本例需求：将Mic采集的PCM转成AAC，可得到两种不同数据,本例采用AudioQueue/AudioUnit两种方式存储,即: 可采集到两种声音数据,一种为PCM,一种为转换后的AAC.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue-AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C-API"><span class="nav-number">3.</span> <span class="nav-text">原理：由于公司需求更改为Mic采集的pcm一路提供给WebRTC使用，另一路将pcm转为aac，将aac提供给直播用的API。因此应该先让Mic采集原始pcm数据，采用AudioQueue/AudioUnit两种方式采集，然后在回调函数中将其转换为aac提供给C++API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-1"><span class="nav-number">4.</span> <span class="nav-text">——————————————————–</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本例中仅包含部分代码-建议下载代码详细看-在关键代码中都有注释中可以看到难理解的含义"><span class="nav-number">5.</span> <span class="nav-text">本例中仅包含部分代码,建议下载代码详细看,在关键代码中都有注释中可以看到难理解的含义.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-2"><span class="nav-number">6.</span> <span class="nav-text">——————————————————–</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-PCM-gt-AAC"><span class="nav-number">6.1.</span> <span class="nav-text">GitHub地址(附代码) : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-PCM-gt-AAC"><span class="nav-number">6.2.</span> <span class="nav-text">简书地址     : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-PCM-gt-AAC"><span class="nav-number">6.3.</span> <span class="nav-text">博客地址     : PCM-&gt;AAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-PCM-gt-AAC"><span class="nav-number">6.4.</span> <span class="nav-text">掘金地址     : PCM-&gt;AAC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-3"><span class="nav-number">7.</span> <span class="nav-text">——————————————————–</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方式：（下文两种实现方式，挑选自己适合的）"><span class="nav-number"></span> <span class="nav-text">实现方式：（下文两种实现方式，挑选自己适合的）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-AudioQueue-若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换-PCM-gt-AAC等-等功能可采用这种方式"><span class="nav-number">1.</span> <span class="nav-text">1.AudioQueue : 若对延迟要求不高，可实现录制，播放，暂停，回退，同步，转换(PCM-&gt;AAC等)等功能可采用这种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-AudioUnit-：-比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。"><span class="nav-number">2.</span> <span class="nav-text">2.AudioUnit ： 比AudioQueue更加底层，可实现高性能，低延迟，并且包括去除回声，混音等等功能。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio-Queue的底层产生的，之前说过，Audio-ToolBox是基于Audio-Unit的，回调函数的波动要到底层才能解决。"><span class="nav-number">3.</span> <span class="nav-text">AudioQueue为什么会出现波动的情况？解决方法？这种波动的原因是在Audio Queue的底层产生的，之前说过，Audio ToolBox是基于Audio Unit的，回调函数的波动要到底层才能解决。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#——————————————————–-4"><span class="nav-number">4.</span> <span class="nav-text">——————————————————–</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-本文需要基本知识点"><span class="nav-number"></span> <span class="nav-text">一.本文需要基本知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C语言相关函数："><span class="nav-number">1.</span> <span class="nav-text">C语言相关函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OC-中部分知识点："><span class="nav-number">2.</span> <span class="nav-text">OC 中部分知识点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#音频基础知识"><span class="nav-number">3.</span> <span class="nav-text">音频基础知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-AudioQueue"><span class="nav-number"></span> <span class="nav-text">二.AudioQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简述：在iOS和Mac-OS-X中，音频队列是一个用来录制和播放音频的软件对象，他用AudioQueueRef这个不透明数据类型来表示，该类型在AudioQueue-h头文件中声明。"><span class="nav-number">1.</span> <span class="nav-text">1.简述：在iOS和Mac OS X中，音频队列是一个用来录制和播放音频的软件对象，他用AudioQueueRef这个不透明数据类型来表示，该类型在AudioQueue.h头文件中声明。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-工作："><span class="nav-number">2.</span> <span class="nav-text">2.工作：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-结构："><span class="nav-number">3.</span> <span class="nav-text">3.结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#它的架构很大程度上依赖于这个音频队列是用来录制还是用来播放的。不同之处在于音频队列如何连接到它的输入和输入，还有它的回调函数所扮演的角色。"><span class="nav-number">3.1.</span> <span class="nav-text">它的架构很大程度上依赖于这个音频队列是用来录制还是用来播放的。不同之处在于音频队列如何连接到它的输入和输入，还有它的回调函数所扮演的角色。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-调用步骤，首先将项目设置为MRC-在控制器中配置audioSession基本设置-基本设置，不会谷歌-，导入该头文件，直接在需要时机调用该类startRecord与stopRecord方法，另外还提供了生成录音文件的功能，具体参考github中的代码。"><span class="nav-number">4.</span> <span class="nav-text">4.调用步骤，首先将项目设置为MRC,在控制器中配置audioSession基本设置(基本设置，不会谷歌)，导入该头文件，直接在需要时机调用该类startRecord与stopRecord方法，另外还提供了生成录音文件的功能，具体参考github中的代码。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-设置AudioStreamBasicDescription-基本信息"><span class="nav-number">5.</span> <span class="nav-text">(1).设置AudioStreamBasicDescription 基本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-设置采集数据的格式，采集PCM必须按照如下设置，参考苹果官方文档，不同需求自己另行修改"><span class="nav-number">6.</span> <span class="nav-text">(2).设置采集数据的格式，采集PCM必须按照如下设置，参考苹果官方文档，不同需求自己另行修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-将PCM转成AAC一些基本设置"><span class="nav-number">7.</span> <span class="nav-text">(3).将PCM转成AAC一些基本设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-设置最终音频文件的头部信息-此类写法为将pcm转为AAC的写法"><span class="nav-number">8.</span> <span class="nav-text">(4).设置最终音频文件的头部信息(此类写法为将pcm转为AAC的写法)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-AudioQueue中注册的回调函数"><span class="nav-number">9.</span> <span class="nav-text">(5).AudioQueue中注册的回调函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-What-is-Audio-Unit-？-AudioUnit官方文档-优秀博客1"><span class="nav-number">10.</span> <span class="nav-text">1. What is Audio Unit ？ AudioUnit官方文档,  优秀博客1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-相关概念解析"><span class="nav-number">11.</span> <span class="nav-text">2.相关概念解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用步骤："><span class="nav-number">12.</span> <span class="nav-text">3. 使用步骤：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-代码解析"><span class="nav-number">13.</span> <span class="nav-text">4.代码解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。"><span class="nav-number">14.</span> <span class="nav-text">总结：开始写这篇文章是在三月初刚刚接触音频相关项目，当时直接使用AudioQueue来进行操作，可慢慢发现由于公司项目对直播要求很高，AudioQueue中有些致命缺点比如：回调时间无法精确控制，采集出来的数据大小问题，以及无法消除回声问题，所以二次重新开发采用AudioUnit，在本例中我已经将两种写法都总结出来，可根据需求决定到底使用哪种，Demo中也有两套API的封装，转码逻辑基本相同，但也有略微差别，后续如果有问题也可以问我，简信我就好，如果帮到你可以帮忙在gitHub里点颗星星，欢迎转载。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考：CoreAudio-Audio-Unit-转码操作-AudioUnit-Audio-Unit-回声消除-AudioQueue-直播基础"><span class="nav-number">14.1.</span> <span class="nav-text">参考：CoreAudio, Audio Unit, 转码操作, AudioUnit, Audio Unit, 回声消除, AudioQueue, 直播基础</span></a></li></ol></li></ol></li></div>
             
 
           </div>

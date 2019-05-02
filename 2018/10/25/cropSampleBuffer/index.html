@@ -15,10 +15,10 @@
 
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 
 
@@ -32,8 +32,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -56,9 +56,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
@@ -74,7 +74,7 @@
 
 
 
-  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
 
 
 
@@ -133,7 +133,7 @@
 
 
 
-  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/10/25/cropSampleBuffer/"/>
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/10/25/cropSampleBuffer/">
 
 
 
@@ -229,7 +229,7 @@
           
           <li class="menu-item menu-item-桃花岛">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />桃花岛</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
   </li>
         
         
@@ -237,7 +237,7 @@
           
           <li class="menu-item menu-item-时间轴">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />时间轴</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
   </li>
         
         
@@ -245,7 +245,7 @@
           
           <li class="menu-item menu-item-武功秘籍">
     <a href="/categories/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />武功秘籍</a>
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
   </li>
         
         
@@ -253,7 +253,7 @@
           
           <li class="menu-item menu-item-江湖地位">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />江湖地位</a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
   </li>
         
         
@@ -261,7 +261,7 @@
           
           <li class="menu-item menu-item-江湖历程">
     <a href="/about/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br />江湖历程</a>
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
   </li>
 
       
@@ -361,7 +361,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -417,11 +417,10 @@
 
           
             <span class="post-meta-divider">|</span>
-            <span class="post-meta-item-icon"
-            >
+            <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
              Views:  
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
 
@@ -488,9 +487,9 @@
 <li><p>CoreImage and UIKit coordinates （CoreImage 与 UIKit坐标系问题）：我在开始做的时候跟正常一样用设定的位置对图像进行切割，但是发现，切出来的位置不对，通过上网查阅发现一个有趣的现象CoreImage 与 UIKit坐标系不相同<br>如下图：<br>正常UIKit坐标系是以左上角为原点：</p>
 </li>
 </ul>
-<p><img src="https://cl.ly/0O070Z391Y3m/Snip20170802_2.png" alt=""></p>
+<p><img src="https://cl.ly/0O070Z391Y3m/Snip20170802_2.png" alt></p>
 <p>而CoreImage坐标系是以左下角为原点：（在CoreImage中，每个图像的坐标系是独立于设备的）</p>
-<p><img src="https://cl.ly/1B3X230y0l1m/Snip20170802_1.png" alt=""></p>
+<p><img src="https://cl.ly/1B3X230y0l1m/Snip20170802_1.png" alt></p>
 <p>所以切割的时候一定要注意转换Y，X的位置是正确的，Y是相反的。</p>
 <ul>
 <li>如果要进行页面渲染，需要一个和OpenGL缓冲兼容的图像。用相机API创建的图像已经兼容，您可以马上映射他们进行输入。假设你从已有画面中截取一个新的画面，用作其他处理，你必须创建一种特殊的属性用来创建图像。对于图像的属性必须有宽高 作为字典的Key.因此创建字典的关键几步不可省略。</li>
@@ -530,14 +529,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay"/>
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
         <p>WeChat Pay</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay"/>
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
         <p>Alipay</p>
       </div>
     
@@ -676,9 +675,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image"
-                src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA"
-                alt="小东邪 - Demon" />
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
             
               <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
               <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
@@ -691,7 +688,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-count">31</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -734,7 +731,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -834,7 +833,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS开发中截取相机部分画面，切割sampleBuffer（Crop-sample-buffer）"><span class="nav-number">1.</span> <span class="nav-text">iOS开发中截取相机部分画面，切割sampleBuffer（Crop sample buffer）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本例需求：在类似直播的功能界面-二维码扫描，人脸识别或其他需求中的功能界面或其他需求中需要从相机捕获的画面中单独截取出一部分区域。"><span class="nav-number">1.1.</span> <span class="nav-text">本例需求：在类似直播的功能界面,二维码扫描，人脸识别或其他需求中的功能界面或其他需求中需要从相机捕获的画面中单独截取出一部分区域。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理：由于需要截取相机捕获整个画面其中一部分，所以也就必须拿到那一部分画面的数据，又因为相机AVCaptureVideoDataOutputSampleBufferDelegate中的sampleBuffer为系统私有的数据结构不可直接操作，所以需要将其转换成可以切割的数据结构再进行切割，网上有种思路说将sampleBuffer间接转换为UIImage再对图片切割，这种思路繁琐且性能低，本例将sampleBuffer转换为CoreImage中的CIImage-性能相对较高且降低代码繁琐度。"><span class="nav-number">1.2.</span> <span class="nav-text">原理：由于需要截取相机捕获整个画面其中一部分，所以也就必须拿到那一部分画面的数据，又因为相机AVCaptureVideoDataOutputSampleBufferDelegate中的sampleBuffer为系统私有的数据结构不可直接操作，所以需要将其转换成可以切割的数据结构再进行切割，网上有种思路说将sampleBuffer间接转换为UIImage再对图片切割，这种思路繁琐且性能低，本例将sampleBuffer转换为CoreImage中的CIImage,性能相对较高且降低代码繁琐度。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最终效果如下，-绿色框中即为截图的画面，长按可以移动。"><span class="nav-number">1.3.</span> <span class="nav-text">最终效果如下， 绿色框中即为截图的画面，长按可以移动。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-Crop-sample-buffer"><span class="nav-number">1.3.1.</span> <span class="nav-text">GitHub地址(附代码) : Crop sample buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-Crop-sample-buffer"><span class="nav-number">1.3.2.</span> <span class="nav-text">简书地址     : Crop sample buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-Crop-sample-buffer"><span class="nav-number">1.3.3.</span> <span class="nav-text">博客地址     : Crop sample buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-Crop-sample-buffer"><span class="nav-number">1.3.4.</span> <span class="nav-text">掘金地址     : Crop sample buffer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意：使用ARC与MRC下代码有所区别，已经在项目中标注好，主要为管理全局的CIContext对象，它在初始化的方法中编译器没有对其进行retain-所以，调用会报错。"><span class="nav-number">2.</span> <span class="nav-text">注意：使用ARC与MRC下代码有所区别，已经在项目中标注好，主要为管理全局的CIContext对象，它在初始化的方法中编译器没有对其进行retain,所以，调用会报错。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用场景"><span class="nav-number">2.1.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本配置"><span class="nav-number">3.</span> <span class="nav-text">基本配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现途径"><span class="nav-number">4.</span> <span class="nav-text">实现途径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-利用CPU软件截取-CPU进行计算并切割，消耗性能较大"><span class="nav-number">4.1.</span> <span class="nav-text">1.利用CPU软件截取(CPU进行计算并切割，消耗性能较大)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-利用-硬件截取-利用Apple官方公开的方法利用硬件进行切割，性能较好，-但仍有问题待解决"><span class="nav-number">4.2.</span> <span class="nav-text">2.利用 硬件截取(利用Apple官方公开的方法利用硬件进行切割，性能较好， 但仍有问题待解决)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析"><span class="nav-number">4.3.</span> <span class="nav-text">解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用CPU截取"><span class="nav-number">5.</span> <span class="nav-text">利用CPU截取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TODO-："><span class="nav-number">5.1.</span> <span class="nav-text">TODO ：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在硬件切割-GPU-的过程中发现-ciContext-render-ciImage-toCVPixelBuffer-pixelBuffer-渲染时间不断增加，导致掉帧，而ciContext只初始化一次，并未发生内存泄露，如果input-resolution-为-2k-切割720P-在7plus上性能较好，其他机型和尺寸则掉帧严重。而软件切割-CPU-虽然CPU使用率相比GPU提高15-左右但是性能相对稳定，掉帧也只有在长时间直播后偶尔发生，但是CPU使用率较高。"><span class="nav-number">5.1.0.1.</span> <span class="nav-text">在硬件切割(GPU)的过程中发现 [ciContext render:ciImage toCVPixelBuffer:pixelBuffer]; 渲染时间不断增加，导致掉帧，而ciContext只初始化一次，并未发生内存泄露，如果input resolution 为 2k, 切割720P 在7plus上性能较好，其他机型和尺寸则掉帧严重。而软件切割(CPU)虽然CPU使用率相比GPU提高15%左右但是性能相对稳定，掉帧也只有在长时间直播后偶尔发生，但是CPU使用率较高。</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS开发中截取相机部分画面，切割sampleBuffer（Crop-sample-buffer）"><span class="nav-number">1.</span> <span class="nav-text">iOS开发中截取相机部分画面，切割sampleBuffer（Crop sample buffer）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本例需求：在类似直播的功能界面-二维码扫描，人脸识别或其他需求中的功能界面或其他需求中需要从相机捕获的画面中单独截取出一部分区域。"><span class="nav-number">1.1.</span> <span class="nav-text">本例需求：在类似直播的功能界面,二维码扫描，人脸识别或其他需求中的功能界面或其他需求中需要从相机捕获的画面中单独截取出一部分区域。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理：由于需要截取相机捕获整个画面其中一部分，所以也就必须拿到那一部分画面的数据，又因为相机AVCaptureVideoDataOutputSampleBufferDelegate中的sampleBuffer为系统私有的数据结构不可直接操作，所以需要将其转换成可以切割的数据结构再进行切割，网上有种思路说将sampleBuffer间接转换为UIImage再对图片切割，这种思路繁琐且性能低，本例将sampleBuffer转换为CoreImage中的CIImage-性能相对较高且降低代码繁琐度。"><span class="nav-number">1.2.</span> <span class="nav-text">原理：由于需要截取相机捕获整个画面其中一部分，所以也就必须拿到那一部分画面的数据，又因为相机AVCaptureVideoDataOutputSampleBufferDelegate中的sampleBuffer为系统私有的数据结构不可直接操作，所以需要将其转换成可以切割的数据结构再进行切割，网上有种思路说将sampleBuffer间接转换为UIImage再对图片切割，这种思路繁琐且性能低，本例将sampleBuffer转换为CoreImage中的CIImage,性能相对较高且降低代码繁琐度。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最终效果如下，-绿色框中即为截图的画面，长按可以移动。"><span class="nav-number">1.3.</span> <span class="nav-text">最终效果如下， 绿色框中即为截图的画面，长按可以移动。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-Crop-sample-buffer"><span class="nav-number">1.3.1.</span> <span class="nav-text">GitHub地址(附代码) : Crop sample buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-Crop-sample-buffer"><span class="nav-number">1.3.2.</span> <span class="nav-text">简书地址     : Crop sample buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-Crop-sample-buffer"><span class="nav-number">1.3.3.</span> <span class="nav-text">博客地址     : Crop sample buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-Crop-sample-buffer"><span class="nav-number">1.3.4.</span> <span class="nav-text">掘金地址     : Crop sample buffer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意：使用ARC与MRC下代码有所区别，已经在项目中标注好，主要为管理全局的CIContext对象，它在初始化的方法中编译器没有对其进行retain-所以，调用会报错。"><span class="nav-number">2.</span> <span class="nav-text">注意：使用ARC与MRC下代码有所区别，已经在项目中标注好，主要为管理全局的CIContext对象，它在初始化的方法中编译器没有对其进行retain,所以，调用会报错。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用场景"><span class="nav-number">2.1.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本配置"><span class="nav-number">3.</span> <span class="nav-text">基本配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现途径"><span class="nav-number">4.</span> <span class="nav-text">实现途径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-利用CPU软件截取-CPU进行计算并切割，消耗性能较大"><span class="nav-number">4.1.</span> <span class="nav-text">1.利用CPU软件截取(CPU进行计算并切割，消耗性能较大)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-利用-硬件截取-利用Apple官方公开的方法利用硬件进行切割，性能较好，-但仍有问题待解决"><span class="nav-number">4.2.</span> <span class="nav-text">2.利用 硬件截取(利用Apple官方公开的方法利用硬件进行切割，性能较好， 但仍有问题待解决)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析"><span class="nav-number">4.3.</span> <span class="nav-text">解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用CPU截取"><span class="nav-number">5.</span> <span class="nav-text">利用CPU截取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TODO-："><span class="nav-number">5.1.</span> <span class="nav-text">TODO ：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在硬件切割-GPU-的过程中发现-ciContext-render-ciImage-toCVPixelBuffer-pixelBuffer-渲染时间不断增加，导致掉帧，而ciContext只初始化一次，并未发生内存泄露，如果input-resolution-为-2k-切割720P-在7plus上性能较好，其他机型和尺寸则掉帧严重。而软件切割-CPU-虽然CPU使用率相比GPU提高15-左右但是性能相对稳定，掉帧也只有在长时间直播后偶尔发生，但是CPU使用率较高。"><span class="nav-number">5.1.0.1.</span> <span class="nav-text">在硬件切割(GPU)的过程中发现 [ciContext render:ciImage toCVPixelBuffer:pixelBuffer]; 渲染时间不断增加，导致掉帧，而ciContext只初始化一次，并未发生内存泄露，如果input resolution 为 2k, 切割720P 在7plus上性能较好，其他机型和尺寸则掉帧严重。而软件切割(CPU)虽然CPU使用率相比GPU提高15%左右但是性能相对稳定，掉帧也只有在长时间直播后偶尔发生，但是CPU使用率较高。</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
