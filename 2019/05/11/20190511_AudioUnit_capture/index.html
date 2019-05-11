@@ -110,25 +110,25 @@
 
 
 
-  <meta name="description" content="需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新.">
-<meta name="keywords" content="iOS, WebView, 上拉刷新, JS交互，加载进度条">
+  <meta name="description" content="iOS中使用Audio unit实现音频数据采集,直接采集PCM无损数据, Audio Unit不能直接采集压缩数据,在以后的文章会讲到音频压缩.">
+<meta name="keywords" content="iOS,Audio,Audio Unit,Core Audio">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS WKWebView UI增强(上拉刷新，JS交互，加载进度条)">
-<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/11/06/20181106_iOS_WKWebViewUI/index.html">
+<meta property="og:title" content="Audio Unit采集音频实战">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/11/20190511_AudioUnit_capture/index.html">
 <meta property="og:site_name" content="小东邪 Show Time">
-<meta property="og:description" content="需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新.">
+<meta property="og:description" content="iOS中使用Audio unit实现音频数据采集,直接采集PCM无损数据, Audio Unit不能直接采集压缩数据,在以后的文章会讲到音频压缩.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-06T08:16:31.000Z">
+<meta property="og:updated_time" content="2019-05-11T10:03:48.998Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS WKWebView UI增强(上拉刷新，JS交互，加载进度条)">
-<meta name="twitter:description" content="需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新.">
+<meta name="twitter:title" content="Audio Unit采集音频实战">
+<meta name="twitter:description" content="iOS中使用Audio unit实现音频数据采集,直接采集PCM无损数据, Audio Unit不能直接采集压缩数据,在以后的文章会讲到音频压缩.">
 
 
 
 
 
 
-  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/11/06/20181106_iOS_WKWebViewUI/">
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/05/11/20190511_AudioUnit_capture/">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>iOS WKWebView UI增强(上拉刷新，JS交互，加载进度条) | 小东邪 Show Time</title>
+  <title>Audio Unit采集音频实战 | 小东邪 Show Time</title>
   
 
 
@@ -307,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/11/06/20181106_iOS_WKWebViewUI/">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/05/11/20190511_AudioUnit_capture/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="小东邪 - Demon">
@@ -324,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS WKWebView UI增强(上拉刷新，JS交互，加载进度条)
+          <h1 class="post-title" itemprop="name headline">Audio Unit采集音频实战
               
             
           </h1>
@@ -349,7 +349,7 @@
                 
               
 
-              <time title="Created: 2018-11-06 16:16:31" itemprop="dateCreated datePublished" datetime="2018-11-06T16:16:31+08:00">2018-11-06</time>
+              <time title="Created: 2019-05-11 18:03:48" itemprop="dateCreated datePublished" datetime="2019-05-11T18:03:48+08:00">2019-05-11</time>
             
 
             
@@ -374,7 +374,7 @@
                   , 
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/WebView/" itemprop="url" rel="index"><span itemprop="name">WebView</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/音频-Audio/" itemprop="url" rel="index"><span itemprop="name">音频(Audio)</span></a></span>
 
                 
                 
@@ -389,8 +389,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/06/20181106_iOS_WKWebViewUI/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/11/06/20181106_iOS_WKWebViewUI/" itemprop="commentsCount"></span>
+                <a href="/2019/05/11/20190511_AudioUnit_capture/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/11/20190511_AudioUnit_capture/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -398,7 +398,7 @@
 
           
           
-             <span id="/2018/11/06/20181106_iOS_WKWebViewUI/" class="leancloud_visitors" data-flag-title="iOS WKWebView UI增强(上拉刷新，JS交互，加载进度条)">
+             <span id="/2019/05/11/20190511_AudioUnit_capture/" class="leancloud_visitors" data-flag-title="Audio Unit采集音频实战">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -422,7 +422,7 @@
           
 
           
-              <div class="post-description">需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新.</div>
+              <div class="post-description">iOS中使用Audio unit实现音频数据采集,直接采集PCM无损数据, Audio Unit不能直接采集压缩数据,在以后的文章会讲到音频压缩.</div>
           
 
         </div>
@@ -441,24 +441,6 @@
         <p class="description"></p>
 
 <a id="more"></a>
-<h3 id="需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新"><a href="#需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新" class="headerlink" title="需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新"></a>需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新</h3><hr>
-<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
-<li>了解WKWebView基本初始化及使用</li>
-</ul>
-<hr>
-<h4 id="GitHub地址-附代码-iOS-WKWebView-UI增强"><a href="#GitHub地址-附代码-iOS-WKWebView-UI增强" class="headerlink" title="GitHub地址(附代码) : iOS WKWebView UI增强"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXWKWebViewUpgrade" target="_blank" rel="noopener">iOS WKWebView UI增强</a></h4><h4 id="简书地址-iOS-WKWebView-UI增强"><a href="#简书地址-iOS-WKWebView-UI增强" class="headerlink" title="简书地址     : iOS WKWebView UI增强"></a>简书地址     : <a href="https://www.jianshu.com/p/a85c9bd4cff9" target="_blank" rel="noopener">iOS WKWebView UI增强</a></h4><h4 id="博客地址-iOS-WKWebView-UI增强"><a href="#博客地址-iOS-WKWebView-UI增强" class="headerlink" title="博客地址     : iOS WKWebView UI增强"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2018/11/06/20181106_iOS_WKWebViewUI/">iOS WKWebView UI增强</a></h4><h4 id="掘金地址-iOS-WKWebView-UI增强"><a href="#掘金地址-iOS-WKWebView-UI增强" class="headerlink" title="掘金地址     : iOS WKWebView UI增强"></a>掘金地址     : <a href="https://juejin.im/post/5be14a8be51d452078512727" target="_blank" rel="noopener">iOS WKWebView UI增强</a></h4><hr>
-<h3 id="1-与JS交互"><a href="#1-与JS交互" class="headerlink" title="1. 与JS交互"></a>1. 与JS交互</h3><p>如需与JS交互可在初始化时配置WKWebViewConfiguration对象,然后注册<code>[[_webView configuration].userContentController addScriptMessageHandler:self name:@&quot;getMessage&quot;];</code> </p>
-<p>如上我们添加了一个名为getMessage的通知，例如，前端页面里有一个登陆按钮，前端小伙伴仅仅需要在登陆方法的最后加上如下代码即可在用户点击前端界面的登陆按钮时通知我们，注意getMessage两端必须一致！</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    window.webkit.messageHandlers.getMessage.postMessage(jsonStr)</span><br><span class="line">&#125; catch(error) &#123;</span><br><span class="line">    console.log(error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后我们即可通过该方法接收到前端页面上某次点击事件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message &#123;</span><br><span class="line">    log4cplus_info(&quot;XDX_LOG&quot;, &quot;%s - %s receive the message name is %s, message content is %s.&quot;, ModuleName, __func__,[NSString stringWithFormat:@&quot;%@&quot;,message.name].UTF8String, [NSString stringWithFormat:@&quot;%@&quot;,message.body].UTF8String);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-上拉刷新"><a href="#2-上拉刷新" class="headerlink" title="2. 上拉刷新"></a>2. 上拉刷新</h3><p>2-1 .如需上拉刷新功能，可直接使用MJRefresh,仅仅在初始化时如下配置即可,然后在<code>didStartProvisionalNavigation</code>开始加载网页时结束刷新即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">    TVUMJRefreshNormalHeader *header = [TVUMJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRefresh)];</span><br><span class="line">    [header setTitle:@&quot;Pull down to refresh&quot; forState:TVUMJRefreshStateIdle];</span><br><span class="line">    [header setTitle:@&quot;Release to refresh&quot; forState:TVUMJRefreshStatePulling];</span><br><span class="line">    [header setTitle:@&quot;Loading ...&quot; forState:TVUMJRefreshStateRefreshing];</span><br><span class="line">    header.lastUpdatedTimeLabel.hidden = YES;</span><br><span class="line">    self.webView.scrollView.mj_header = header;</span><br><span class="line">    </span><br><span class="line">- (void)headerRefresh&#123;</span><br><span class="line">    // If user enter our app (not network), the URL is NULL even if we have already setted.</span><br><span class="line">    if (!self.webView.URL) &#123;</span><br><span class="line">        log4cplus_error(&quot;XDX_LOG&quot;, &quot;Refresh webview error, current URL is NULL !&quot;);</span><br><span class="line">        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.yourWebAddress] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:XDX_URL_TIMEOUT];</span><br><span class="line">        [self.webView loadRequest:request];</span><br><span class="line">    &#125;</span><br><span class="line">    [self.webView reload];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)endRefresh&#123;</span><br><span class="line">    [self.webView.scrollView.mj_header endRefreshing];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation &#123;</span><br><span class="line">    [self endRefresh];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2-2. 注意，因为WKWebview内部的UIScrollView与上滑手势冲突，所以我们还需要实现重写下面方法，该方法表示如果与前端页面手势冲突则双方都将执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer &#123;</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="3-进度条加载"><a href="#3-进度条加载" class="headerlink" title="3. 进度条加载"></a>3. 进度条加载</h3><p>3-1. 初始化UIProgressView<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) UIProgressView    *progressView;</span><br><span class="line"></span><br><span class="line">    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 0.8)];</span><br><span class="line">    self.progressView.progressTintColor = [UIColor greenColor];</span><br><span class="line">    //设置进度条的高度，下面这句代码表示进度条的宽度变为原来的1倍，高度变为原来的1.5倍.</span><br><span class="line">    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.5f);</span><br><span class="line">    [self.webView addSubview:self.progressView];</span><br></pre></td></tr></table></figure></p>
-<p>3-2. 当网页加载时显示ProgressView<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation &#123;</span><br><span class="line">    [self endRefresh];</span><br><span class="line">    </span><br><span class="line">    if ([self.progressView isDescendantOfView:self.webView]) &#123;</span><br><span class="line">        self.progressView.hidden = NO;</span><br><span class="line">        self.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.5f);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>3-3. 为webView添加通知 <code>[self.webView addObserver:self forKeyPath:@&quot;estimatedProgress&quot; options:NSKeyValueObservingOptionNew context:nil];</code></p>
-<p>3-3. 在通知中检测是否加载完成时进度条消失<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary&lt;NSString *,id&gt; *)change context:(void *)context &#123;</span><br><span class="line">    if ([self.progressView isDescendantOfView:self.webView]) &#123;</span><br><span class="line">        if ([keyPath isEqualToString:@&quot;estimatedProgress&quot;]) &#123;</span><br><span class="line">            self.progressView.progress = self.webView.estimatedProgress;</span><br><span class="line">            if (self.progressView.progress == 1) &#123;</span><br><span class="line">                /*</span><br><span class="line">                 *添加一个简单的动画，将progressView的Height变为1.4倍，在开始加载网页的代理中会恢复为1.5倍</span><br><span class="line">                 *动画时长0.25s，延时0.3s后开始动画</span><br><span class="line">                 *动画结束后将progressView隐藏</span><br><span class="line">                 */</span><br><span class="line">                </span><br><span class="line">                __weak ViewController *weakSelf = self;</span><br><span class="line">                [UIView animateWithDuration:0.25f delay:0.3f options:UIViewAnimationOptionCurveEaseOut animations:^&#123;</span><br><span class="line">                    weakSelf.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.4f);</span><br><span class="line">                &#125; completion:^(BOOL finished) &#123;</span><br><span class="line">                    weakSelf.progressView.hidden = YES;</span><br><span class="line">                    </span><br><span class="line">                &#125;];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -510,7 +492,7 @@
           
             <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-            <a href="/tags/WebView/" rel="tag"># WebView</a>
+            <a href="/tags/音频-Audio/" rel="tag"># 音频(Audio)</a>
           
         </div>
       
@@ -523,8 +505,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/26/H264H265Encoder/" rel="next" title="H264,H265 Encoder">
-                <i class="fa fa-chevron-left"></i> H264,H265 Encoder
+              <a href="/2019/05/11/20190511_audioFile_record/" rel="next" title="Audio File 音频文件录制(AudioQueue,AudioUnit,AudioConverter音频来源)">
+                <i class="fa fa-chevron-left"></i> Audio File 音频文件录制(AudioQueue,AudioUnit,AudioConverter音频来源)
               </a>
             
           </div>
@@ -532,10 +514,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/23/20181123_iOS_SDKBundle/" rel="prev" title="SDK中使用资源文件">
-                SDK中使用资源文件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -614,17 +592,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -774,22 +743,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新"><span class="nav-number">1.</span> <span class="nav-text">需求：WKWebView的一些增加模块，例如上拉刷新，JS交互，加载进度条等等持续更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS-WKWebView-UI增强"><span class="nav-number">2.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS WKWebView UI增强</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS-WKWebView-UI增强"><span class="nav-number">2.2.</span> <span class="nav-text">简书地址     : iOS WKWebView UI增强</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS-WKWebView-UI增强"><span class="nav-number">2.3.</span> <span class="nav-text">博客地址     : iOS WKWebView UI增强</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS-WKWebView-UI增强"><span class="nav-number">2.4.</span> <span class="nav-text">掘金地址     : iOS WKWebView UI增强</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-与JS交互"><span class="nav-number">3.</span> <span class="nav-text">1. 与JS交互</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-上拉刷新"><span class="nav-number">4.</span> <span class="nav-text">2. 上拉刷新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-进度条加载"><span class="nav-number">5.</span> <span class="nav-text">3. 进度条加载</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
