@@ -110,18 +110,18 @@
 
 
 
-  <meta name="description" content="一生负气成今日，四海无人对夕阳.">
-<meta name="keywords" content="小东邪">
+  <meta name="description" content="iOS中将采集到的原始音频数据(PCM)进行编码以得到压缩数据类型(AAC...).">
+<meta name="keywords" content="iOS,Audio, AudioConverter, AudioEncoder">
 <meta property="og:type" content="article">
-<meta property="og:title" content="小东邪 Show Time">
+<meta property="og:title" content="音频编码 Audio Converter">
 <meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/15/20190515_audioEncoder/index.html">
 <meta property="og:site_name" content="小东邪 Show Time">
-<meta property="og:description" content="一生负气成今日，四海无人对夕阳.">
+<meta property="og:description" content="iOS中将采集到的原始音频数据(PCM)进行编码以得到压缩数据类型(AAC...).">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-14T16:09:11.728Z">
+<meta property="og:updated_time" content="2019-05-14T16:14:42.711Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小东邪 Show Time">
-<meta name="twitter:description" content="一生负气成今日，四海无人对夕阳.">
+<meta name="twitter:title" content="音频编码 Audio Converter">
+<meta name="twitter:description" content="iOS中将采集到的原始音频数据(PCM)进行编码以得到压缩数据类型(AAC...).">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title> | 小东邪 Show Time</title>
+  <title>音频编码 Audio Converter | 小东邪 Show Time</title>
   
 
 
@@ -324,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">音频编码 Audio Converter
               
             
           </h1>
@@ -349,12 +349,37 @@
                 
               
 
-              <time title="Created: 2019-05-15 00:09:11" itemprop="dateCreated datePublished" datetime="2019-05-15T00:09:11+08:00">2019-05-15</time>
+              <time title="Created: 2019-05-15 00:14:42" itemprop="dateCreated datePublished" datetime="2019-05-15T00:14:42+08:00">2019-05-15</time>
             
 
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/音频-Audio/" itemprop="url" rel="index"><span itemprop="name">音频(Audio)</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -373,7 +398,7 @@
 
           
           
-             <span id="/2019/05/15/20190515_audioEncoder/" class="leancloud_visitors" data-flag-title>
+             <span id="/2019/05/15/20190515_audioEncoder/" class="leancloud_visitors" data-flag-title="音频编码 Audio Converter">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -397,6 +422,8 @@
           
 
           
+              <div class="post-description">iOS中将采集到的原始音频数据(PCM)进行编码以得到压缩数据类型(AAC...).</div>
+          
 
         </div>
       </header>
@@ -411,7 +438,75 @@
       
 
       
-        
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>iOS中将采集到的原始音频数据(PCM)进行编码以得到压缩数据类型(AAC…).</p>
+<p>本例最终实现的是通过Audio Unit采集到PCM数据,将其压缩转为AAC数据,并以录制的形式保存在沙盒中.可调整编码后音频数据格式,采样率,编码器类型等参数.</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>利用Audio Toolbox Framework中的Audio Converter可以实现音频数据编码,即将PCM数据转为其他压缩格式.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>Core Audio基本原理:<a href="https://www.jianshu.com/p/a89543307089" target="_blank" rel="noopener">简书</a>,<a href="https://juejin.im/post/5cca9e99f265da03a54c2bc0" target="_blank" rel="noopener">掘金</a>,<a href="https://xiaodongxie1024.github.io/2019/05/06/20190502_ios_CoreAudio/">博客</a></li>
+<li>Audio Unit概念篇:<a href="https://www.jianshu.com/p/24dd0b815311" target="_blank" rel="noopener">简书</a>,<a href="https://juejin.im/post/5cd053b051882541332f5bdb" target="_blank" rel="noopener">掘金</a>,<a href="https://xiaodongxie1024.github.io/2019/05/06/20190506_ios_AudioUnit/">博客</a></li>
+<li>音频采集: Audio Unit <a href="https://www.jianshu.com/p/85baf0629981" target="_blank" rel="noopener">简书</a>,<a href="https://juejin.im/post/5cd69e5ff265da037371a3c7" target="_blank" rel="noopener">掘金</a>,<a href="https://xiaodongxie1024.github.io/2019/05/11/20190511_AudioUnit_capture/">博客</a></li>
+<li>音视频基础知识</li>
+<li>C,C++基本知识</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-音频编码"><a href="#GitHub地址-附代码-音频编码" class="headerlink" title="GitHub地址(附代码) : 音频编码"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXAudioEncoder" target="_blank" rel="noopener">音频编码</a></h4><h4 id="简书地址-音频编码"><a href="#简书地址-音频编码" class="headerlink" title="简书地址     : 音频编码"></a>简书地址     : <a href="https://www.jianshu.com/p/b131e24717af" target="_blank" rel="noopener">音频编码</a></h4><h4 id="掘金地址-音频编码"><a href="#掘金地址-音频编码" class="headerlink" title="掘金地址     : 音频编码"></a>掘金地址     : <a href="https://juejin.im/post/5cdae84df265da036902ba09" target="_blank" rel="noopener">音频编码</a></h4><h4 id="博客地址-音频编码"><a href="#博客地址-音频编码" class="headerlink" title="博客地址     : 音频编码"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/05/15/20190515_audioEncoder/">音频编码</a></h4><hr>
+<h3 id="1-初始化"><a href="#1-初始化" class="headerlink" title="1.初始化"></a>1.初始化</h3><h4 id="1-1-初始化编码器"><a href="#1-1-初始化编码器" class="headerlink" title="1.1. 初始化编码器"></a>1.1. 初始化编码器</h4><p>初始化编码器实例, 通过指定原始数据格式,最终编码后的格式,采样率,以及使用硬编还是软编,以下是具体步骤.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)initWithSourceFormat:(AudioStreamBasicDescription)sourceFormat destFormatID:(AudioFormatID)destFormatID sampleRate:(float)sampleRate isUseHardwareEncode:(BOOL)isUseHardwareEncode &#123;</span><br><span class="line">    if (self = [super init]) &#123;</span><br><span class="line">        mSourceFormat   = sourceFormat;</span><br><span class="line">        mAudioConverter = [self configureEncoderBySourceFormat:sourceFormat</span><br><span class="line">                                                    destFormat:&amp;mDestinationFormat</span><br><span class="line">                                                  destFormatID:destFormatID</span><br><span class="line">                                                    sampleRate:sampleRate</span><br><span class="line">                                           isUseHardwareEncode:isUseHardwareEncode];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-配置编码后ASBD音频流信息"><a href="#1-2-配置编码后ASBD音频流信息" class="headerlink" title="1.2. 配置编码后ASBD音频流信息"></a>1.2. 配置编码后ASBD音频流信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">AudioStreamBasicDescription destinationFormat = &#123;&#125;;</span><br><span class="line">   destinationFormat.mSampleRate = sampleRate;</span><br><span class="line">   if (destFormatID == kAudioFormatLinearPCM) &#123;</span><br><span class="line">       NSLog(@&quot;Not get PCM format after encoding !&quot;);</span><br><span class="line">       return NULL;</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">       destinationFormat.mFormatID = destFormatID;</span><br><span class="line">       </span><br><span class="line">       // For iLBC, the number of channels must be 1.</span><br><span class="line">       destinationFormat.mChannelsPerFrame = (destFormatID == kAudioFormatiLBC ? 1 : sourceFormat.mChannelsPerFrame);</span><br><span class="line">       </span><br><span class="line">       // Use AudioFormat API to fill out the rest of the description.</span><br><span class="line">       size = sizeof(destinationFormat);</span><br><span class="line">       if (![self checkError:AudioFormatGetProperty(kAudioFormatProperty_FormatInfo, 0, NULL, &amp;size, &amp;destinationFormat) withErrorString:@&quot;AudioFormatGetProperty couldn&apos;t fill out the destination data format&quot;]) &#123;</span><br><span class="line">           return NULL;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   memcpy(destFormat, &amp;destinationFormat, sizeof(AudioStreamBasicDescription));</span><br></pre></td></tr></table></figure>
+<p>对音频做编码操作,实际就是将PCM格式转为如AAC等音频压缩格式(VBR格式),通过<code>kAudioFormatProperty_FormatInfo</code>属性可以自动获取指定音频格式的参数信息.</p>
+<blockquote>
+<p>注意: 如果音频格式是iLBC, 声道数只能为1.</p>
+</blockquote>
+<h4 id="1-3-选择编码器类型"><a href="#1-3-选择编码器类型" class="headerlink" title="1.3. 选择编码器类型"></a>1.3. 选择编码器类型</h4><p><code>AudioClassDescription</code>结构体描述了系统使用音频编码器信息,其中最重要的就是指定使用硬编或软编。然后编码器的数量，即数组的个数，由当前的声道数决定。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// encoder conut by channels.</span><br><span class="line">  AudioClassDescription requestedCodecs[destinationFormat.mChannelsPerFrame];</span><br><span class="line">  const OSType subtype = destFormatID;</span><br><span class="line">  for (int i = 0; i &lt; destinationFormat.mChannelsPerFrame; i++) &#123;</span><br><span class="line">      AudioClassDescription codec = &#123;</span><br><span class="line">          kAudioEncoderComponentType,</span><br><span class="line">          subtype,</span><br><span class="line">          isUseHardwareEncode ? kAppleHardwareAudioCodecManufacturer : kAppleSoftwareAudioCodecManufacturer,</span><br><span class="line">      &#125;;</span><br><span class="line">      requestedCodecs[i] = codec;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：硬编即利用设备GPU硬件完成高效编码，降低CPU消耗. 软编就是传统的通过CPU计算。</p>
+</blockquote>
+<h4 id="1-4-创建编码器"><a href="#1-4-创建编码器" class="headerlink" title="1.4. 创建编码器"></a>1.4. 创建编码器</h4><p><code>AudioConverterNewSpecific</code>: 通过指定编码器来创建audio converter实例对象.第3,4个<br>分别是编码器的数量与编码器描述,同上,与声道数保持一致.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Create the AudioConverterRef.</span><br><span class="line">   AudioConverterRef converter = NULL;</span><br><span class="line">   if (![self checkError:AudioConverterNewSpecific(&amp;sourceFormat, &amp;destinationFormat, destinationFormat.mChannelsPerFrame, requestedCodecs, &amp;converter) withErrorString:@&quot;AudioConverterNew failed&quot;]) &#123;</span><br><span class="line">       return NULL;</span><br><span class="line">   &#125;else &#123;</span><br><span class="line">       printf(&quot;Audio converter create successful \n&quot;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-5-设置码率"><a href="#1-5-设置码率" class="headerlink" title="1.5. 设置码率"></a>1.5. 设置码率</h4><p>我们可以手动设置需要的码率,如果没有特殊要求一般可以根据采样率使用建议值,如下.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    If encoding to AAC set the bitrate kAudioConverterEncodeBitRate is a UInt32 value containing</span><br><span class="line">    the number of bits per second to aim for when encoding data when you explicitly set the bit rate</span><br><span class="line">    and the sample rate, this tells the encoder to stick with both bit rate and sample rate</span><br><span class="line">    but there are combinations (also depending on the number of channels) which will not be allowed</span><br><span class="line">    if you do not explicitly set a bit rate the encoder will pick the correct value for you depending</span><br><span class="line">    on samplerate and number of channels bit rate also scales with the number of channels,</span><br><span class="line">    therefore one bit rate per sample rate can be used for mono cases and if you have stereo or more,</span><br><span class="line">    you can multiply that number by the number of channels.</span><br><span class="line">    */</span><br><span class="line">   </span><br><span class="line">   if (destinationFormat.mFormatID == kAudioFormatMPEG4AAC) &#123;</span><br><span class="line">       UInt32 outputBitRate = 64000;</span><br><span class="line">       </span><br><span class="line">       UInt32 propSize = sizeof(outputBitRate);</span><br><span class="line">       </span><br><span class="line">       if (destinationFormat.mSampleRate &gt;= 44100) &#123;</span><br><span class="line">           outputBitRate = 192000;</span><br><span class="line">       &#125; else if (destinationFormat.mSampleRate &lt; 22000) &#123;</span><br><span class="line">           outputBitRate = 32000;</span><br><span class="line">       &#125;</span><br><span class="line">       outputBitRate *= destinationFormat.mChannelsPerFrame;</span><br><span class="line">       </span><br><span class="line">       // Set the bit rate depending on the sample rate chosen.</span><br><span class="line">       if (![self checkError:AudioConverterSetProperty(converter, kAudioConverterEncodeBitRate, propSize, &amp;outputBitRate) withErrorString:@&quot;AudioConverterSetProperty kAudioConverterEncodeBitRate failed!&quot;]) &#123;</span><br><span class="line">           return NULL;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       // Get it back and print it out.</span><br><span class="line">       AudioConverterGetProperty(converter, kAudioConverterEncodeBitRate, &amp;propSize, &amp;outputBitRate);</span><br><span class="line">       printf (&quot;AAC Encode Bitrate: %u\n&quot;, (unsigned int)outputBitRate);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-6-设置中断后是否可恢复"><a href="#1-6-设置中断后是否可恢复" class="headerlink" title="1.6. 设置中断后是否可恢复"></a>1.6. 设置中断后是否可恢复</h4><p><code>kAudioConverterPropertyCanResumeFromInterruption</code>: 设置converter能否在中断后恢复.</p>
+<p>如果没有显式实现该属性或get此属性返回错误,说明当前不是硬编,如果此查询返回1表明编码器可以在中断后恢复.否则不能恢复.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/*</span><br><span class="line"> Can the Audio Converter resume after an interruption?</span><br><span class="line"> this property may be queried at any time after construction of the Audio Converter after setting its output format</span><br><span class="line"> there&apos;s no clear reason to prefer construction time, interruption time, or potential resumption time but we prefer</span><br><span class="line"> construction time since it means less code to execute during or after interruption time.</span><br><span class="line"> */</span><br><span class="line">BOOL canResumeFromInterruption = YES;</span><br><span class="line">UInt32 canResume = 0;</span><br><span class="line">size = sizeof(canResume);</span><br><span class="line">OSStatus error = AudioConverterGetProperty(converter, kAudioConverterPropertyCanResumeFromInterruption, &amp;size, &amp;canResume);</span><br><span class="line"></span><br><span class="line">if (error == noErr) &#123;</span><br><span class="line">    /*</span><br><span class="line">     we recieved a valid return value from the GetProperty call</span><br><span class="line">     if the property&apos;s value is 1, then the codec CAN resume work following an interruption</span><br><span class="line">     if the property&apos;s value is 0, then interruptions destroy the codec&apos;s state and we&apos;re done</span><br><span class="line">     */</span><br><span class="line">    </span><br><span class="line">    if (canResume == 0) &#123;</span><br><span class="line">        canResumeFromInterruption = NO;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    printf(&quot;Audio Converter %s continue after interruption!\n&quot;, (!canResumeFromInterruption ? &quot;CANNOT&quot; : &quot;CAN&quot;));</span><br><span class="line">    </span><br><span class="line">&#125; else &#123;</span><br><span class="line">    /*</span><br><span class="line">     if the property is unimplemented (kAudioConverterErr_PropertyNotSupported, or paramErr returned in the case of PCM),</span><br><span class="line">     then the codec being used is not a hardware codec so we&apos;re not concerned about codec state</span><br><span class="line">     we are always going to be able to resume conversion after an interruption</span><br><span class="line">     */</span><br><span class="line">    </span><br><span class="line">    if (error == kAudioConverterErr_PropertyNotSupported) &#123;</span><br><span class="line">        printf(&quot;kAudioConverterPropertyCanResumeFromInterruption property not supported - see comments in source for more info.\n&quot;);</span><br><span class="line">        </span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        printf(&quot;AudioConverterGetProperty kAudioConverterPropertyCanResumeFromInterruption result %d, paramErr is OK if PCM\n&quot;, (int)error);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    error = noErr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-编码"><a href="#2-编码" class="headerlink" title="2.编码"></a>2.编码</h3><h4 id="2-1-估算音频大小"><a href="#2-1-估算音频大小" class="headerlink" title="2.1. 估算音频大小"></a>2.1. 估算音频大小</h4><p><code>kAudioConverterPropertyMaximumOutputPacketSize</code>: 可以查询编码后音频数据最大数值.此值常用来估算音频编码后最大值.可以通过此值为音频数据分配空间.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">UInt32 outputSizePerPacket = destFormat.mBytesPerPacket;</span><br><span class="line">    if (outputSizePerPacket == 0) &#123;</span><br><span class="line">        // if the destination format is VBR, we need to get max size per packet from the converter</span><br><span class="line">        UInt32 size = sizeof(outputSizePerPacket);</span><br><span class="line">        if (![self checkError:AudioConverterGetProperty(audioConverter, kAudioConverterPropertyMaximumOutputPacketSize, &amp;size, &amp;outputSizePerPacket) withErrorString:@&quot;AudioConverterGetProperty kAudioConverterPropertyMaximumOutputPacketSize failed!&quot;]) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-为编码后音频数据预分配内存"><a href="#2-2-为编码后音频数据预分配内存" class="headerlink" title="2.2. 为编码后音频数据预分配内存"></a>2.2. 为编码后音频数据预分配内存</h4><p>我们可以将2.1中算出的最大size为这个Buffer list分配内存,也可用原始音频数据的大小为其分配内存,因为我们无法直接得知编码后数据到底是多大,所以用估算出来的最大值或原始数据大小分配内存都可以生效,因为最终编码器会将有效大小的值赋值进去.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Set up output buffer list.</span><br><span class="line">    AudioBufferList fillBufferList = &#123;&#125;;</span><br><span class="line">    fillBufferList.mNumberBuffers = 1;</span><br><span class="line">    fillBufferList.mBuffers[0].mNumberChannels  = destFormat.mChannelsPerFrame;</span><br><span class="line">    fillBufferList.mBuffers[0].mDataByteSize    = theOutputBufferSize;</span><br><span class="line">    fillBufferList.mBuffers[0].mData            = malloc(theOutputBufferSize * sizeof(char));</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-3-编码音频数据"><a href="#2-3-编码音频数据" class="headerlink" title="2.3. 编码音频数据"></a>2.3. 编码音频数据</h4><p>解析<code>AudioConverterFillComplexBuffer</code>:用来编码音频数据.同时需要指定回调函数(C语言函数),</p>
+<p>第二个参数即指定回调函数,此回调函数中主要做的是为即将编码的数据进行赋值,即我们要把原始音频数据赋值给回调函数中的<code>ioData</code>参数,这是我们在编码前最后一次控制原始音频数据,此回调函数执行后即完成了编码的过程,新的数据会填充到第五个参数中,也就是我们上面预定义的<code>fillBufferList</code>. </p>
+<ul>
+<li><code>userInfo</code>: 自定义一个结构体,用来与编码回调函数间交互以传递数据.在这里是将原始音频数据信息传给编码回调函数中.</li>
+<li><code>ioOutputDataPackets</code>: 填入函数中时表示原始音频数据包的数量,而函数调用完成时表示转换后输出的音频数据包总数</li>
+<li><code>outputPacketDescriptions</code>: 转换完成后,如果此参数非空,表示转换器输出使用的音频数据包描述,它必须提前分配好内存,以让转换器赋值到其中.</li>
+</ul>
+<p>最终,我们将转换后得到的AAC数据以回调函数的形式传给调用者.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">OSStatus EncodeConverterComplexInputDataProc(AudioConverterRef              inAudioConverter,</span><br><span class="line">                                             UInt32                         *ioNumberDataPackets,</span><br><span class="line">                                             AudioBufferList                *ioData,</span><br><span class="line">                                             AudioStreamPacketDescription   **outDataPacketDescription,</span><br><span class="line">                                             void                           *inUserData) &#123;</span><br><span class="line">    XDXConverterInfoType *info = (XDXConverterInfoType *)inUserData;</span><br><span class="line">    ioData-&gt;mNumberBuffers              = 1;</span><br><span class="line">    ioData-&gt;mBuffers[0].mData           = info-&gt;sourceBuffer;</span><br><span class="line">    ioData-&gt;mBuffers[0].mNumberChannels = info-&gt;sourceChannelsPerFrame;</span><br><span class="line">    ioData-&gt;mBuffers[0].mDataByteSize   = info-&gt;sourceDataSize;</span><br><span class="line">    </span><br><span class="line">    return noErr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)encodeFormatByConverter:(AudioConverterRef)audioConverter sourceBuffer:(void *)sourceBuffer sourceBufferSize:(UInt32)sourceBufferSize sourceFormat:(AudioStreamBasicDescription)sourceFormat dest:(AudioStreamBasicDescription)destFormat completeHandler:(void(^)(AudioBufferList *destBufferList, UInt32 outputPackets, AudioStreamPacketDescription *outputPacketDescriptions))completeHandler &#123;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    XDXConverterInfoType userInfo   = &#123;0&#125;;</span><br><span class="line">    userInfo.sourceBuffer           = sourceBuffer;</span><br><span class="line">    userInfo.sourceDataSize         = sourceBufferSize;</span><br><span class="line">    userInfo.sourceChannelsPerFrame = sourceFormat.mChannelsPerFrame;</span><br><span class="line">    </span><br><span class="line">    UInt32 numberOutputPackets = 1;</span><br><span class="line">    UInt32 theOutputBufferSize = sourceBufferSize;</span><br><span class="line">    UInt32 ioOutputDataPackets = numberOutputPackets;</span><br><span class="line">    AudioStreamPacketDescription outputPacketDescriptions;</span><br><span class="line">    // Convert data</span><br><span class="line">    OSStatus status = AudioConverterFillComplexBuffer(audioConverter,</span><br><span class="line">                                                      EncodeConverterComplexInputDataProc,</span><br><span class="line">                                                      &amp;userInfo,</span><br><span class="line">                                                      &amp;ioOutputDataPackets,</span><br><span class="line">                                                      &amp;fillBufferList,</span><br><span class="line">                                                      &amp;outputPacketDescriptions);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    // if interrupted in the process of the conversion call, we must handle the error appropriately</span><br><span class="line">    if (status != noErr) &#123;</span><br><span class="line">        if (status == kAudioConverterErr_HardwareInUse) &#123;</span><br><span class="line">            printf(&quot;Audio Converter returned kAudioConverterErr_HardwareInUse!\n&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (![self checkError:status withErrorString:@&quot;AudioConverterFillComplexBuffer error!&quot;]) &#123;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        if (ioOutputDataPackets == 0) &#123;</span><br><span class="line">            // This is the EOF condition.</span><br><span class="line">            status = noErr;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        completeHandler(&amp;fillBufferList, ioOutputDataPackets, &amp;outputPacketDescriptions);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-模块对接"><a href="#3-模块对接" class="headerlink" title="3. 模块对接"></a>3. 模块对接</h3><p>因为音频编码要依赖音频采集,所以我们这里以audio unit采集为例作示范,即使用audio unit采集pcm数据然后使用此模块编码得到aac数据.如需了解请参考如下链接</p>
+<ul>
+<li>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXAudioUnitCapture" target="_blank" rel="noopener">Audio Unit Capture</a></li>
+<li>简书地址     : <a href="https://www.jianshu.com/p/85baf0629981" target="_blank" rel="noopener">Audio Unit Capture</a></li>
+<li>掘金地址     : <a href="https://juejin.im/post/5cd69e5ff265da037371a3c7" target="_blank" rel="noopener">Audio Unit Capture</a></li>
+<li>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/05/11/20190511_AudioUnit_capture/">Audio Unit Capture</a></li>
+</ul>
+<h4 id="3-1-初始化编码器"><a href="#3-1-初始化编码器" class="headerlink" title="3.1. 初始化编码器"></a>3.1. 初始化编码器</h4><p>如下,在音频采集的类中声明一个编码器实例变量,然后初始化它. 仅仅需要设置原始数据格式,编码后的格式,采样率,使用硬编,软编即可.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) XDXAduioEncoder *audioEncoder;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">        self-&gt;_audioEncoder = [[XDXAduioEncoder alloc] initWithSourceFormat:m_audioDataFormat</span><br><span class="line">                                                               destFormatID:kAudioFormatMPEG4AAC</span><br><span class="line">                                                                 sampleRate:44100</span><br><span class="line">                                                        isUseHardwareEncode:YES];</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-编码音频数据"><a href="#3-2-编码音频数据" class="headerlink" title="3.2. 编码音频数据"></a>3.2. 编码音频数据</h4><p>在Audio Unit采集PCM音频数据的回调中将PCM数据送入编码器,然后在回调函数中将得到的AAC数据其写入文件.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">static OSStatus AudioCaptureCallback(void                       *inRefCon,</span><br><span class="line">                                     AudioUnitRenderActionFlags *ioActionFlags,</span><br><span class="line">                                     const AudioTimeStamp       *inTimeStamp,</span><br><span class="line">                                     UInt32                     inBusNumber,</span><br><span class="line">                                     UInt32                     inNumberFrames,</span><br><span class="line">                                     AudioBufferList            *ioData) &#123;</span><br><span class="line">    AudioUnitRender(m_audioUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, m_buffList);</span><br><span class="line">    </span><br><span class="line">    XDXAudioCaptureManager *manager = (__bridge XDXAudioCaptureManager *)inRefCon;</span><br><span class="line"></span><br><span class="line">    void    *bufferData = m_buffList-&gt;mBuffers[0].mData;</span><br><span class="line">    UInt32   bufferSize = m_buffList-&gt;mBuffers[0].mDataByteSize;</span><br><span class="line">    </span><br><span class="line">    [manager.audioEncoder encodeAudioWithSourceBuffer:bufferData</span><br><span class="line">                                       sourceBufferSize:bufferSize</span><br><span class="line">                                        completeHandler:^(AudioBufferList * _Nonnull destBufferList, UInt32 outputPackets, AudioStreamPacketDescription * _Nonnull outputPacketDescriptions) &#123;</span><br><span class="line">                                            if (manager.isRecordVoice) &#123;</span><br><span class="line">                                                [[XDXAudioFileHandler getInstance] writeFileWithInNumBytes:destBufferList-&gt;mBuffers-&gt;mDataByteSize</span><br><span class="line">                                                                                              ioNumPackets:outputPackets</span><br><span class="line">                                                                                                  inBuffer:destBufferList-&gt;mBuffers-&gt;mData</span><br><span class="line">                                                                                              inPacketDesc:outputPacketDescriptions];</span><br><span class="line">                                            &#125;</span><br><span class="line">                                            </span><br><span class="line">                                            free(destBufferList-&gt;mBuffers-&gt;mData);</span><br><span class="line">                                        &#125;];</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    return noErr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-释放内存"><a href="#3-4-释放内存" class="headerlink" title="3.4. 释放内存"></a>3.4. 释放内存</h4><p>使用完编码后的音频数据,记得释放内存.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free(destBufferList-&gt;mBuffers-&gt;mData);</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-文件录制"><a href="#4-文件录制" class="headerlink" title="4. 文件录制"></a>4. 文件录制</h3><p>此部分可参考另一篇文章: 音频文件录制</p>
+<ul>
+<li>简书地址     : <a href="https://www.jianshu.com/p/e7dcb24fa8e1" target="_blank" rel="noopener">Audio File Record</a></li>
+<li>掘金地址     : <a href="https://juejin.im/post/5cd67705f265da038b20367b" target="_blank" rel="noopener">Audio File Record</a></li>
+<li>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/05/11/20190511_AudioQueue_capture/">Audio File Record</a></li>
+</ul>
+<h3 id="5-释放编码器资源"><a href="#5-释放编码器资源" class="headerlink" title="5. 释放编码器资源"></a>5. 释放编码器资源</h3><p>如需释放内存,请保证编码器工作彻底结束后再释放内存.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)freeEncoder &#123;</span><br><span class="line">    if (mAudioConverter) &#123;</span><br><span class="line">        AudioConverterDispose(mAudioConverter);</span><br><span class="line">        mAudioConverter = NULL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -457,6 +552,16 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/音频-Audio/" rel="tag"># 音频(Audio)</a>
+          
+            <a href="/tags/编解码-Encode-Decode/" rel="tag"># 编解码(Encode/Decode)</a>
+          
+        </div>
       
 
       
@@ -554,8 +659,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -707,6 +821,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-音频编码"><span class="nav-number">3.1.</span> <span class="nav-text">GitHub地址(附代码) : 音频编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-音频编码"><span class="nav-number">3.2.</span> <span class="nav-text">简书地址     : 音频编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-音频编码"><span class="nav-number">3.3.</span> <span class="nav-text">掘金地址     : 音频编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-音频编码"><span class="nav-number">3.4.</span> <span class="nav-text">博客地址     : 音频编码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-初始化"><span class="nav-number">4.</span> <span class="nav-text">1.初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-初始化编码器"><span class="nav-number">4.1.</span> <span class="nav-text">1.1. 初始化编码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-配置编码后ASBD音频流信息"><span class="nav-number">4.2.</span> <span class="nav-text">1.2. 配置编码后ASBD音频流信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-选择编码器类型"><span class="nav-number">4.3.</span> <span class="nav-text">1.3. 选择编码器类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-创建编码器"><span class="nav-number">4.4.</span> <span class="nav-text">1.4. 创建编码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-设置码率"><span class="nav-number">4.5.</span> <span class="nav-text">1.5. 设置码率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-设置中断后是否可恢复"><span class="nav-number">4.6.</span> <span class="nav-text">1.6. 设置中断后是否可恢复</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-编码"><span class="nav-number">5.</span> <span class="nav-text">2.编码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-估算音频大小"><span class="nav-number">5.1.</span> <span class="nav-text">2.1. 估算音频大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-为编码后音频数据预分配内存"><span class="nav-number">5.2.</span> <span class="nav-text">2.2. 为编码后音频数据预分配内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-编码音频数据"><span class="nav-number">5.3.</span> <span class="nav-text">2.3. 编码音频数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-模块对接"><span class="nav-number">6.</span> <span class="nav-text">3. 模块对接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-初始化编码器"><span class="nav-number">6.1.</span> <span class="nav-text">3.1. 初始化编码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-编码音频数据"><span class="nav-number">6.2.</span> <span class="nav-text">3.2. 编码音频数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-释放内存"><span class="nav-number">6.3.</span> <span class="nav-text">3.4. 释放内存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-文件录制"><span class="nav-number">7.</span> <span class="nav-text">4. 文件录制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-释放编码器资源"><span class="nav-number">8.</span> <span class="nav-text">5. 释放编码器资源</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
