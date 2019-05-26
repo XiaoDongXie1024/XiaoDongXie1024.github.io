@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在移动端做音视频开发不同于基本的UI业务逻辑工作,音视频开发需要你懂得音视频中一些基本概念,针对编解码而言,我们必须提前懂得编解码器的一些特性,码流的结构,码流中一些重要信息如sps,pps,vps,start code以及基本的工作原理,而大多同学都只是一知半解,所以导致代码中的部分内容虽可以简单理解却不知其意,所以,在这里总结出了当前主流的H.264,H.265编码相关的原理,以供学习.">
+<meta name="keywords" content="iOS,Encoder,Decoder,H.264, H.265">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(推荐阅读)H264, H265硬件编解码基础及码流分析">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/26/20190526_ios_encoder/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="在移动端做音视频开发不同于基本的UI业务逻辑工作,音视频开发需要你懂得音视频中一些基本概念,针对编解码而言,我们必须提前懂得编解码器的一些特性,码流的结构,码流中一些重要信息如sps,pps,vps,start code以及基本的工作原理,而大多同学都只是一知半解,所以导致代码中的部分内容虽可以简单理解却不知其意,所以,在这里总结出了当前主流的H.264,H.265编码相关的原理,以供学习.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c32474c86a?w=287&h=229&f=png&s=90732">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c3268d7663?w=606&h=324&f=jpeg&s=23032">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/IKXoQyFqrlZri*x5Hrf69hD*adeR66BBMgJa7LRiyQw!/r/dL4AAAAAAAAA">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2de3f7482?w=600&h=450&f=png&s=200140">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2ca1ae506?w=600&h=389&f=png&s=81911">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2c873b855?w=400&h=234&f=png&s=24115">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2c6458ed1?w=1240&h=119&f=jpeg&s=12815">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2cdf87ac0?w=567&h=856&f=png&s=106962">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Vi0gnX7zKt1OLTQy0kVn3LSqKb9l9.FGJw4FSWbQ0Ks!/r/dFABAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/RqI*Xwbs9kuxe84oRASZDqBNg5C*Kbaidtixnj3WzDk!/r/dLgAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/eQjRAucOrq1*0*mWB8ryqWSH5cabFkpyH8iMfwxgh20!/r/dLYAAAAAAAAA">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c226083ee76ff?w=669&h=296&f=png&s=43514">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c225f93948b5f?w=667&h=103&f=png&s=17392">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c225f9e955b71?w=666&h=122&f=png&s=31144">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c225fa0366421?w=317&h=411&f=png&s=38218">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c225fe6b159fa?w=461&h=238&f=png&s=27875">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c22601483130f?w=252&h=369&f=png&s=27679">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c22606eb16ec2?w=668&h=176&f=png&s=14938">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c226083ee76ff?w=669&h=296&f=png&s=43514">
+<meta property="og:updated_time" content="2019-05-26T01:59:43.055Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="(推荐阅读)H264, H265硬件编解码基础及码流分析">
+<meta name="twitter:description" content="在移动端做音视频开发不同于基本的UI业务逻辑工作,音视频开发需要你懂得音视频中一些基本概念,针对编解码而言,我们必须提前懂得编解码器的一些特性,码流的结构,码流中一些重要信息如sps,pps,vps,start code以及基本的工作原理,而大多同学都只是一知半解,所以导致代码中的部分内容虽可以简单理解却不知其意,所以,在这里总结出了当前主流的H.264,H.265编码相关的原理,以供学习.">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/2/23/161c21c32474c86a?w=287&h=229&f=png&s=90732">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/05/26/20190526_ios_encoder/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>(推荐阅读)H264, H265硬件编解码基础及码流分析 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/05/26/20190526_ios_encoder/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">(推荐阅读)H264, H265硬件编解码基础及码流分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-26 09:59:43" itemprop="dateCreated datePublished" datetime="2019-05-26T09:59:43+08:00">2019-05-26</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/编解码-Encode-Decode/" itemprop="url" rel="index"><span itemprop="name">编解码(Encode/Decode)</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/26/20190526_ios_encoder/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/26/20190526_ios_encoder/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/05/26/20190526_ios_encoder/" class="leancloud_visitors" data-flag-title="(推荐阅读)H264, H265硬件编解码基础及码流分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">在移动端做音视频开发不同于基本的UI业务逻辑工作,音视频开发需要你懂得音视频中一些基本概念,针对编解码而言,我们必须提前懂得编解码器的一些特性,码流的结构,码流中一些重要信息如sps,pps,vps,start code以及基本的工作原理,而大多同学都只是一知半解,所以导致代码中的部分内容虽可以简单理解却不知其意,所以,在这里总结出了当前主流的H.264,H.265编码相关的原理,以供学习.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>在移动端做音视频开发不同于基本的UI业务逻辑工作,音视频开发需要你懂得音视频中一些基本概念,针对编解码而言,我们必须提前懂得编解码器的一些特性,码流的结构,码流中一些重要信息如sps,pps,vps,start code以及基本的工作原理,而大多同学都只是一知半解,所以导致代码中的部分内容虽可以简单理解却不知其意,所以,在这里总结出了当前主流的H.264,H.265编码相关的原理,以供学习.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>音视频基础知识</li>
+<li>iOS中VideoToolbox框架</li>
+</ul>
+<hr>
+<h3 id="1-概览"><a href="#1-概览" class="headerlink" title="1. 概览"></a>1. 概览</h3><h4 id="1-1-为什么要编码"><a href="#1-1-为什么要编码" class="headerlink" title="1.1. 为什么要编码"></a>1.1. 为什么要编码</h4><p>众所周知,视频数据原始体积是巨大的,以720P 30fps的视频为例,一个像素大约3个字节,如下所得,每秒钟产生87MB,这样计算可得一分钟就将产生5.22GB.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据量/每秒=1280*720*33*3/1024/1024=87MB</span><br></pre></td></tr></table></figure></p>
+<p>因此,像这样体积重大的视频是无法在网络中直接传输的.而视频编码技术也就因运而生.关于视频编码原理的技术可以参考本人其他文章,这里不做过多描述.</p>
+<h4 id="1-2-编码技术"><a href="#1-2-编码技术" class="headerlink" title="1.2. 编码技术"></a>1.2. 编码技术</h4><p>经过很多年的开发迭代,已经有很多大牛实现了视频编码技术,其中最主流的有H.264编码,以及新一代的H.265编码,谷歌也开发了VP8,VP9编码技术.对移动端而言,苹果内部已经实现了如H.264,H.265编码,我们需要使用苹果提供的VideoToolbox框架来实现它.</p>
+<h4 id="1-3-编码分类"><a href="#1-3-编码分类" class="headerlink" title="1.3. 编码分类"></a>1.3. 编码分类</h4><ul>
+<li>软件编码(简称软编)：使用CPU进行编码。</li>
+<li>硬件编码(简称硬编)：不使用CPU进行编码，使用显卡GPU,专用的DSP、FPGA、ASIC芯片等硬件进行编码。</li>
+</ul>
+<p>优缺点</p>
+<ul>
+<li><p>软编：实现直接、简单，参数调整方便，升级易，但CPU负载重，性能较硬编码低，低码率下质量通常比硬编码要好一点。</p>
+</li>
+<li><p>硬编：性能高，低码率下通常质量低于硬编码器，但部分产品在GPU硬件平台移植了优秀的软编码算法（如X264）的，质量基本等同于软编码。</p>
+</li>
+</ul>
+<p>iOS系统中的硬编码<br>苹果在iOS 8.0系统之前，没有开放系统的硬件编码解码功能，不过Mac OS系统一直有，被称为Video ToolBox的框架来处理硬件的编码和解码，终于在iOS 8.0后，苹果将该框架引入iOS系统。</p>
+<h4 id="1-4-编码原理"><a href="#1-4-编码原理" class="headerlink" title="1.4. 编码原理"></a>1.4. 编码原理</h4><p>对视频执行编码操作后,原始视频数据会被压缩成三种不同类型的视频帧: I帧,P帧,B帧.</p>
+<ul>
+<li>I帧:关键帧.完整编码的帧.可以理解成是一张完整画面,不依赖其他帧</li>
+<li>P帧:参考前面的I帧或P帧,即通过前面的I帧与自己记录的不同的部分可以形成完整的画面.因此,单独的P帧无法形成画面.</li>
+<li>B帧:参考前面的I帧或P帧以及后面的P帧</li>
+</ul>
+<blockquote>
+<p>补充: I帧压缩率约为70%,P帧:50%,B帧:20%. 但是iOS中一般不开启B帧,因为B帧的存在会导致时间戳同步较为复杂.</p>
+</blockquote>
+<p>两种核心算法</p>
+<ul>
+<li>帧内压缩</li>
+</ul>
+<p>当压缩一帧图像时，仅考虑本帧的数据而不考虑相邻帧之间的冗余信息，这实际上与静态图像压缩类似。帧内一般采用有损压缩算法，由于帧内压缩是编码一个完整的图像，所以可以独立的解码、显示。帧内压缩一般达不到很高的压缩，跟编码jpeg差不多。</p>
+<p>如下图:我们可以通过第 1、2、3、4、5 块的编码来推测和计算第 6 块的编码，因此就不需要对第 6 块进行编码了，从而压缩了第 6 块，节省了空间</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c32474c86a?w=287&amp;h=229&amp;f=png&amp;s=90732" alt="帧内预测.png"></p>
+<ul>
+<li>帧间压缩: P帧与B帧的压缩算法</li>
+</ul>
+<p>相邻几帧的数据有很大的相关性，或者说前后两帧信息变化很小的特点。也即连续的视频其相邻帧之间具有冗余信息,根据这一特性，压缩相邻帧之间的冗余量就可以进一步提高压缩量，减小压缩比。帧间压缩也称为时间压缩（Temporal compression），它通过比较时间轴上不同帧之间的数据进行压缩。帧间压缩一般是无损的。帧差值（Frame differencing）算法是一种典型的时间压缩法，它通过比较本帧与相邻帧之间的差异，仅记录本帧与其相邻帧的差值，这样可以大大减少数据量。</p>
+<p>如下图:可以看到前后两帧的差异其实是很小的，这时候用帧间压缩就很有意义。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c3268d7663?w=606&amp;h=324&amp;f=jpeg&amp;s=23032" alt="帧间压缩11.jpg"></p>
+<p>有损压缩与无损压缩</p>
+<ul>
+<li>有损压缩: 解压缩后的数据与压缩前的数据不一致.在压缩的过程中要丢失一些人眼和人耳所不敏感的图像或音频信息,而且丢失的信息不可恢复</li>
+<li>无损压缩: 压缩前和解压缩后的数据完全一致.优化数据的排列等.</li>
+</ul>
+<p>DTS和PTS</p>
+<ul>
+<li>DTS:主要用于视频的解码,在解码阶段使用.</li>
+<li>PTS:主要用于视频的同步和输出.在渲染的时候使用.在没有B frame的情况下.DTS和PTS的输出顺序是一样的。</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/IKXoQyFqrlZri*x5Hrf69hD*adeR66BBMgJa7LRiyQw!/r/dL4AAAAAAAAA" alt="1.dtspts"></p>
+<p>如上图：I帧的解码不依赖于任何的其它的帧.而P帧的解码则依赖于其前面的I帧或者P帧.B帧的解码则依赖于其前的最近的一个I帧或者P帧 及其后的最近的一个P帧.</p>
+<h3 id="2-编码数据码流结构"><a href="#2-编码数据码流结构" class="headerlink" title="2. 编码数据码流结构"></a>2. 编码数据码流结构</h3><p>在我们的印象中，一张图片就是一张图像，视频就是很多张图片的集合.。但是因为我们要做音视频编程,就需要更加深入理解视频的本质.</p>
+<h4 id="2-1-刷新图像概念"><a href="#2-1-刷新图像概念" class="headerlink" title="2.1 刷新图像概念."></a>2.1 刷新图像概念.</h4><p>在编码的码流中图像是个集合的概念,帧、顶场、底场都可以称为图像,一帧通常就是一幅完整的图像.</p>
+<ul>
+<li>逐行扫描:每次扫描得到的信号就是一副图像，也就是一帧. 逐行扫描适合于运动图像</li>
+<li>隔行扫描:扫描下来的一帧图像就被分为了两个部分，这每一部分就称为「场」，根据次序分为：「顶场」和「底场」.适合于非运动图像</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2de3f7482?w=600&amp;h=450&amp;f=png&amp;s=200140" alt="逐行扫描与隔行扫描.png"></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2ca1ae506?w=600&amp;h=389&amp;f=png&amp;s=81911" alt="帧与场.png"></p>
+<h4 id="2-2-重要参数"><a href="#2-2-重要参数" class="headerlink" title="2.2. 重要参数"></a>2.2. 重要参数</h4><ul>
+<li>视频参数集VPS（Video Parameter Set）</li>
+</ul>
+<p>VPS主要用于传输视频分级信息，有利于兼容标准在可分级视频编码或多视点视频的扩展。</p>
+<p>（1）用于解释编码过的视频序列的整体结构，包括时域子层依赖关系等。HEVC中加入该结构的主要目的是兼容标准在系统的多子层方面的扩展，处理比如未来的可分级或者多视点视频使用原先的解码器进行解码但是其所需的信息可能会被解码器忽略的问题。 </p>
+<p>（2）对于给定视频序列的某一个子层，无论其SPS相不相同，都共享一个VPS。其主要包含的信息有：多个子层或操作点共享的语法元素；档次和级别等会话关键信息；其他不属于SPS的操作点特定信息。 </p>
+<p>（3）编码生成的码流中，第一个NAL单元携带的就是VPS信息</p>
+<ul>
+<li>序列参数集SPS（Sequence Parameter Set）</li>
+</ul>
+<p>包含一个CVS中所有编码图像的共享编码参数。</p>
+<p>（1）一段HEVC码流可能包含一个或者多个编码视频序列，每个视频序列由一个随机接入点开始，即IDR/BLA/CRA。序列参数集SPS包含该视频序列中所有slice需要的信息。 </p>
+<p>（2）SPS的内容大致可以分为几个部分：1、自引ID；2、解码相关信息，如档次级别、分辨率、子层数等；3、某档次中的功能开关标识及该功能的参数；4、对结构和变换系数编码灵活性的限制信息；5、时域可分级信息；6、VUI。</p>
+<ul>
+<li>图像参数集PPS（Picture Parameter Set）</li>
+</ul>
+<p>包含一幅图像所用的公共参数，即一幅图像中所有片段SS（Slice Segment）引用同一个PPS。</p>
+<p>（1）PPS包含每一帧可能不同的设置信息，其内容同H.264中的大致类似，主要包括：1、自引信息；2、初始图像控制信息，如初始QP等；3、分块信息。 </p>
+<p>（2）在解码开始的时候，所有的PPS全部是非活动状态，而且在解码的任意时刻，最多只能有一个PPS处于激活状态。当某部分码流引用了某个PPS的时候，这个PPS便被激活，称为活动PPS，一直到另一个PPS被激活。</p>
+<p>参数集包含了相应的编码图像的信息。SPS包含的是针对一连续编码视频序列的参数（标识符seq_parameter_set_id、帧数及POC的约束、参考帧数目、解码图像尺寸和帧场编码模式选择标识等等）。PPS对应的是一个序列中某一幅图像或者某几幅图像 ，其参数如标识符pic_parameter_set_id、可选的seq_parameter_set_id、熵编码模式选择标识、片组数目、初始量化参数和去方块滤波系数调整标识等等。</p>
+<p>通常，SPS 和PPS 在片的头信息和数据解码前传送至解码器。每个片的头信息对应一个<br>pic_parameter_set_id，PPS被其激活后一直有效到下一个PPS被激活；类似的，每个PPS对应一个<br>seq_parameter_set_id，SPS被其激活以后将一直有效到下一个SPS被激活。<br>参数集机制将一些重要的、改变少的序列参数和图像参数与编码片分离，并在编码片之前传送<br>至解码端，或者通过其他机制传输。</p>
+<p>扩展知识点：档次（Profile）、层（Tier）和级别（Level）</p>
+<ul>
+<li><p>档次: 主要规定编码器可采用哪些编码工具或算法。</p>
+</li>
+<li><p>级别: 指根据解码端的负载和存储空间情况对关键参数（最大采样率、最大图像尺寸、分辨率、最小压缩比、最大比特率、解码缓冲区DPB大小等）加以限制。</p>
+</li>
+</ul>
+<p>考虑到应用可根据最大的码率和CPB大小来区分，因此有些级别定义了两个层Tier：主层和高层，主层用于大多数应用，而高层用于那些最严苛的应用。</p>
+<h4 id="2-3-原始码流"><a href="#2-3-原始码流" class="headerlink" title="2.3. 原始码流"></a>2.3. 原始码流</h4><ul>
+<li>IDR</li>
+</ul>
+<p>一个序列的第一个图像叫做 IDR 图像（立即刷新图像），IDR 图像都是 I 帧图像。引入 IDR 图像是为了解码的重同步，当解码器解码到 IDR 图像时，立即将参考帧队列清空，将已解码的数据全部输出或抛弃，重新查找参数集，开始一个新的序列。这样，如果前一个序列出现重大错误，在这里可以获得重新同步的机会。IDR图像之后的图像永远不会使用IDR之前的图像的数据来解码。</p>
+<ul>
+<li>结构</li>
+</ul>
+<p>由一个接一个的 NALU 组成的，而它的功能分为两层，VCL(视频编码层)和 NAL(网络提取层).</p>
+<p>下图以h264的码流结构为例,如果是h265则在sps前还有vps.</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2c873b855?w=400&amp;h=234&amp;f=png&amp;s=24115" alt="H264码流.png"></p>
+<ul>
+<li>组成</li>
+</ul>
+<p>NALU (Nal Unit) = NALU头 + RBSP 在 VCL</p>
+<p>数据传输或存储之前，这些编码的 VCL 数据，先被映射或封装进 NAL 单元(以下简称 NALU，Nal Unit) 中。每个 NALU 包括一个原始字节序列负荷(RBSP, Raw Byte Sequence Payload)、一组 对应于视频编码的 NALU 头部信息。RBSP 的基本结构是:在原始编码数据的后面填加了结尾 比特。一个 bit“1”若干比特“0”，以便字节对齐。</p>
+<h5 id="2-3-1-H-264码流"><a href="#2-3-1-H-264码流" class="headerlink" title="2.3.1. H.264码流"></a>2.3.1. H.264码流</h5><p>一个原始的H.264 NALU 单元常由 [StartCode] [NALU Header] [NALU Payload] 三部分组成</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2c6458ed1?w=1240&amp;h=119&amp;f=jpeg&amp;s=12815" alt="NALU组成.jpeg"></p>
+<ul>
+<li><p>StartCode : Start Code 用于标示这是一个NALU 单元的开始，必须是”00 00 00 01” 或”00 00 01”</p>
+</li>
+<li><p>NALU Header<br>下表为 NAL Header Type</p>
+</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c21c2cdf87ac0?w=567&amp;h=856&amp;f=png&amp;s=106962" alt="NAL Header Type.png"></p>
+<p>例如,下面幅图分别代表IDR与非IDR帧具体的码流信息:<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/Vi0gnX7zKt1OLTQy0kVn3LSqKb9l9.FGJw4FSWbQ0Ks!/r/dFABAAAAAAAA" alt="2.IDR"></p>
+<p>在一个NALU中，第一个字节（即NALU header）用以表示其包含数据的类型及其他信息。我们假定一个头信息字节为0x67作为例子：</p>
+<table>
+<thead>
+<tr>
+<th>十六进制</th>
+<th>二进制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x67</td>
+<td>0 11 00111</td>
+</tr>
+</tbody>
+</table>
+<p>如表所示，头字节可以被解析成3个部分，其中：</p>
+<p>1&gt;. forbidden_zero_bit = 0：占1个bit，禁止位，用以检查传输过程中是否发生错误，0表示正常，1表示违反语法；</p>
+<p>2&gt;. nal_ref_idc = 3：占2个bit，用来表示当前NAL单元的优先级。非0值表示参考字段/帧/图片数据，其他不那么重要的数据则为0。对于非0值，值越大表示NALU重要性越高</p>
+<p>3&gt;. nal_unit_type = 7：最后5位用以指定NALU类型，NALU类型定义如上表</p>
+<p>从表中我们可以获知,NALU类型1-5为视频帧，其余则为非视频帧。在解码过程中，我们只需要取出NALU头字节的后5位，即将NALU头字节和0x1F进行与计算即可得知NALU类型，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NALU类型 = NALU头字节 &amp; 0x1F</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意: 可以将start code理解为不同nalu的分隔符,header是某种类型的key,payload是该key的value.</p>
+</blockquote>
+<h5 id="码流格式"><a href="#码流格式" class="headerlink" title="码流格式"></a>码流格式</h5><p>H.264标准中指定了视频如何编码成独立的包，但如何存储和传输这些包却未作规范，虽然标准中包含了一个Annex附件，里面描述了一种可能的格式Annex B，但这并不是一个必须要求的格式。<br>为了针对不同的存储传输需求，出现了两种打包方法。一种即Annex B格式，另一种称为AVCC格式。</p>
+<ul>
+<li>Annex B</li>
+</ul>
+<p>从上文可知，一个NALU中的数据并未包含他的大小（长度）信息，因此我们并不能简单的将一个个NALU连接起来生成一个流，因为数据流的接收端并不知道一个NALU从哪里结束，另一个NALU从哪里开始。<br>Annex B格式用起始码（Start Code）来解决这个问题，它在每个NALU的开始处添加三字节或四字节的起始码0x000001或0x00000001。通过定位起始码，解码器就可以很容易的识别NALU的边界。<br>当然，用起始码定位NALU边界存在一个问题，即NALU中可能存在与起始码相同的数据。为了防止这个问题，在构建NALU时，需要将数据中的0x000000,0x000001,0x000002,0x000003中插入防竞争字节（Emulation Prevention Bytes)0x03，使其变为：</p>
+<p>0x000000 = 0x0000 03 00<br>0x000001 = 0x0000 03 01<br>0x000002 = 0x0000 03 02<br>0x000003 = 0x0000 03 03<br>解码器在检测到0x000003时，将0x03抛弃，恢复原始数据。</p>
+<p>由于Annex B格式每个NALU都包含起始码，所以解码器可以从视频流随机点开始进行解码，常用于实时的流格式。在这种格式中通常会周期性的重复SPS和PPS，并且经常时在每一个关键帧之前。</p>
+<ul>
+<li>AVCC</li>
+</ul>
+<p>AVCC格式不使用起始码作为NALU的分界，这种格式在每个NALU前都加上一个指定NALU长度的大端格式表示的前缀。这个前缀可以是1、2或4个字节，所以在解析AVCC格式的时候需要将指定的前缀字节数的值保存在一个头部对象中，这个都通常称为extradata或者sequence header。同时，SPS和PPS数据也需要保存在extradata中。<br>H.264 extradata语法如下：</p>
+<table>
+<thead>
+<tr>
+<th>bits</th>
+<th>line by byte</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>version</td>
+<td>always</td>
+<td>0x01</td>
+</tr>
+<tr>
+<td>8</td>
+<td>avc profile</td>
+<td>sps[0][1]</td>
+</tr>
+<tr>
+<td>8</td>
+<td>avc compatibility</td>
+<td>sps[0][2]</td>
+</tr>
+<tr>
+<td>8</td>
+<td>avc level</td>
+<td>sps[0][3]</td>
+</tr>
+<tr>
+<td>6</td>
+<td>reserved</td>
+<td>all bits on</td>
+</tr>
+<tr>
+<td>2</td>
+<td>NALULengthSizeMinusOne</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>reserved</td>
+<td>all bits on</td>
+</tr>
+<tr>
+<td>5</td>
+<td>number of SPS NALUs    usually</td>
+<td>1</td>
+</tr>
+<tr>
+<td>16</td>
+<td>SPS size</td>
+<td></td>
+</tr>
+<tr>
+<td>N</td>
+<td>variable SPS NALU data</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>number of PPS NALUs    usually</td>
+<td>1</td>
+</tr>
+<tr>
+<td>16</td>
+<td>PPS size</td>
+<td></td>
+</tr>
+<tr>
+<td>N</td>
+<td>variable PPS NALU data</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>其中第5字节的后2位表示的就是NAL size的字节数。需要注意的是，这个NALULengthSizeMinusOne是NALU前缀长度减一，即，假设前缀长度为4，那么这个值应该为3。<br>这里还需要注意的一点是，虽然AVCC格式不使用起始码，但防竞争字节还是有的。</p>
+<p>AVCC格式的一个优点在于解码器配置参数在一开始就配置好了，系统可以很容易的识别NALU的边界，不需要额外的起始码，减少了资源的浪费，同时可以在播放时调到视频的中间位置。这种格式通常被用于可以被随机访问的多媒体数据，如存储在硬盘的文件。</p>
+<h5 id="2-3-2-H-265码流"><a href="#2-3-2-H-265码流" class="headerlink" title="2.3.2. H.265码流"></a>2.3.2. H.265码流</h5><p>HEVC全称High Efficiency Video Coding(高效率视频编码，又称H.265)，是比H.264更优秀的一种视频压缩标准。HEVC在低码率视频压缩上，提升视频质量、减少容量即节省带宽方面都有突出表现。<br>H.265标准围绕H.264编码标准,保留原有的某些技术，同时对一些技术进行改进，编码结构大致上和H.264的架构类似。这里着重讲一下两者编码格式的区别。<br>同H.264一样，H.265也是以NALU的形式组织起来。而在NALU header上，H.264的HALU header是一个字节，而H.265则是两个字节。我们同样假定一个头信息为0x4001作为例子：</p>
+<table>
+<thead>
+<tr>
+<th>十六进制</th>
+<th>二进制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x4001</td>
+<td>0 100000 000000 001</td>
+</tr>
+</tbody>
+</table>
+<p>如表所示，头信息可以被解析成4个部分，其中：</p>
+<ul>
+<li>forbidden_zero_bit = 0：占1个bit，与H.264相同，禁止位，用以检查传输过程中是否发生错误，0表示正常，1表示违反语法；</li>
+<li>nal_unit_type = 32：占6个bit，用来用以指定NALU类型</li>
+<li>nuh_reserved_zero_6bits = 0：占6位，预留位，要求为0，用于未来扩展或3D视频编码</li>
+<li>nuh_temporal_id_plus1 = 1：占3个bit，表示NAL所在的时间层ID</li>
+</ul>
+<p>对比H.264的头信息，H.265移除了nal_ref_idc，此信息被合并到了nal_unit_type中，H.265NALU类型规定如下:</p>
+<table>
+<thead>
+<tr>
+<th>nal_unit_type</th>
+<th>NALU类型</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>NAL_UNIT_CODE_SLICE_TRAIL_N</td>
+<td>非关键帧</td>
+</tr>
+<tr>
+<td>1</td>
+<td>NAL_UNIT_CODED_SLICE_TRAIL_R</td>
+</tr>
+<tr>
+<td>2</td>
+<td>NAL_UNIT_CODED_SLICE_TSA_N</td>
+</tr>
+<tr>
+<td>3</td>
+<td>NAL_UINT_CODED_SLICE_TSA_R</td>
+</tr>
+<tr>
+<td>4</td>
+<td>NAL_UINT_CODED_SLICE_STSA_N</td>
+</tr>
+<tr>
+<td>5</td>
+<td>NAL_UINT_CODED_SLICE_STSA_R</td>
+</tr>
+<tr>
+<td>6</td>
+<td>NAL_UNIT_CODED_SLICE_RADL_N</td>
+</tr>
+<tr>
+<td>7</td>
+<td>NAL_UNIT_CODED_SLICE_RADL_R</td>
+</tr>
+<tr>
+<td>8</td>
+<td>NAL_UNIT_CODED_SLICE_RASL_N</td>
+</tr>
+<tr>
+<td>9</td>
+<td>NAL_UNIT_CODE_SLICE_RASL_R</td>
+</tr>
+<tr>
+<td>10 ~ 15</td>
+<td>NAL_UNIT_RESERVED_X</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>16</td>
+<td>NAL_UNIT_CODED_SLICE_BLA_W_LP</td>
+<td>关键帧</td>
+</tr>
+<tr>
+<td>17</td>
+<td>NAL_UNIT_CODE_SLICE_BLA_W_RADL</td>
+</tr>
+<tr>
+<td>18</td>
+<td>NAL_UNIT_CODE_SLICE_BLA_N_LP</td>
+</tr>
+<tr>
+<td>19</td>
+<td>NAL_UNIT_CODE_SLICE_IDR_W_RADL</td>
+</tr>
+<tr>
+<td>20</td>
+<td>NAL_UNIT_CODE_SLICE_IDR_N_LP</td>
+</tr>
+<tr>
+<td>21</td>
+<td>NAL_UNIT_CODE_SLICE_CRA</td>
+</tr>
+<tr>
+<td>22 ~ 31</td>
+<td>NAL_UNIT_RESERVED_X</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>32</td>
+<td>NAL_UNIT_VPS</td>
+<td>VPS(Video Paramater Set)</td>
+</tr>
+<tr>
+<td>33</td>
+<td>NAL_UNIT_SPS</td>
+<td>SPS</td>
+</tr>
+<tr>
+<td>34</td>
+<td>NAL_UNIT_PPS</td>
+<td>PPS</td>
+</tr>
+<tr>
+<td>35</td>
+<td>NAL_UNIT_ACCESS_UNIT_DELIMITER    </td>
+</tr>
+<tr>
+<td>36</td>
+<td>NAL_UNIT_EOS    </td>
+</tr>
+<tr>
+<td>37</td>
+<td>NAL_UNIT_EOB    </td>
+</tr>
+<tr>
+<td>38</td>
+<td>NAL_UNIT_FILLER_DATA    </td>
+</tr>
+<tr>
+<td>39</td>
+<td>NAL_UNIT_SEI</td>
+<td>Prefix SEI</td>
+</tr>
+<tr>
+<td>40</td>
+<td>NAL_UNIT_SEI_SUFFIX</td>
+<td>Suffix SEI</td>
+</tr>
+<tr>
+<td>41 ~ 47</td>
+<td>NAL_UNIT_RESERVED_X</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>48 ~ 63</td>
+<td>NAL_UNIT_UNSPECIFIED_X</td>
+<td>未规定</td>
+</tr>
+<tr>
+<td>64</td>
+<td>NAL_UNIT_INVALID</td>
+</tr>
+</tbody>
+</table>
+<p>具体type含义可以参考这篇文档<a href="https://tools.ietf.org/html/draft-ietf-payload-rtp-h265-15" target="_blank" rel="noopener">type类型</a><br>H.265的NALU类型是在信息头的第一个字节的第2到7位，所以判断H.265NALU类型的方法是将NALU第一个字节与0x7E进行与操作并右移一位，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NALU类型 = (NALU头第一字节 &amp; 0x7E) &gt;&gt; 1</span><br></pre></td></tr></table></figure></p>
+<p>与H.264类似，H.265码流也有两种封装格式，一种是用起始码作为分界的Annex B格式，另一种则是在NALU头添加NALU长度前缀的格式，称为HVCC。在HVCC中，同样需要一个extradata来保存视频流的编解码参数，其格式定义如下：</p>
+<table>
+<thead>
+<tr>
+<th>bits</th>
+<th>line by byte</th>
+<th>remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>configurationVersion</td>
+<td>always 0x01</td>
+</tr>
+<tr>
+<td>2</td>
+<td>general_profile_space    </td>
+</tr>
+<tr>
+<td>1</td>
+<td>general_tier_flag    </td>
+</tr>
+<tr>
+<td>5</td>
+<td>general_profile_idc    </td>
+</tr>
+<tr>
+<td>32</td>
+<td>general_profile_compatibility_flags    </td>
+</tr>
+<tr>
+<td>48</td>
+<td>general_constraint_indicator_flags    </td>
+</tr>
+<tr>
+<td>8</td>
+<td>general_level_idc    </td>
+</tr>
+<tr>
+<td>4</td>
+<td>reserved</td>
+<td>‘1111’b</td>
+</tr>
+<tr>
+<td>12</td>
+<td>min_spatial_segmentation_idc    </td>
+</tr>
+<tr>
+<td>6</td>
+<td>reserved</td>
+<td>‘111111’b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>parallelismType    </td>
+</tr>
+<tr>
+<td>6</td>
+<td>reserved</td>
+<td>‘111111’b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>chromaFormat    </td>
+</tr>
+<tr>
+<td>5</td>
+<td>reserved</td>
+<td>‘11111’b</td>
+</tr>
+<tr>
+<td>3</td>
+<td>bitDepthLumaMinus8    </td>
+</tr>
+<tr>
+<td>5</td>
+<td>reserved</td>
+<td>‘11111’b</td>
+</tr>
+<tr>
+<td>3</td>
+<td>bitDepthChromaMinus8    </td>
+</tr>
+<tr>
+<td>16</td>
+<td>avgFrameRate    </td>
+</tr>
+<tr>
+<td>2</td>
+<td>constantFrameRate    </td>
+</tr>
+<tr>
+<td>3</td>
+<td>numTemporalLayers    </td>
+</tr>
+<tr>
+<td>1</td>
+<td>tmporalIdNested    </td>
+</tr>
+<tr>
+<td>2</td>
+<td>lengthSizeMinusOne    </td>
+</tr>
+<tr>
+<td>8</td>
+<td>numOfArrays    </td>
+</tr>
+</tbody>
+</table>
+<p>Repeated of Array(VPS/SPS/PPS)<br>1|    array_completeness<br>1|    reserved|    ‘0’b<br>6|    NAL_unit_type<br>16|    numNalus<br>16|    nalUnitLength<br>N|    NALU data</p>
+<p>从上表可以看到，在H.265的extradata后半段是一段格式重复的数组数据，里面需要包含的除了与H.264相同的SPS、PPS外，还需多添加一个VPS。</p>
+<p>VPS（Video Parament Set,视频参数集),在H.265中类型为32。VPS用于解释编码过的视频的整体结构，包括时域子层依赖关系等，主要目的在于兼容H.265标准在系统的多子层方面的扩展。</p>
+<h3 id="3-iOS中的视频编解码"><a href="#3-iOS中的视频编解码" class="headerlink" title="3. iOS中的视频编解码"></a>3. iOS中的视频编解码</h3><p>iOS中视频处理框架分层</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/RqI*Xwbs9kuxe84oRASZDqBNg5C*Kbaidtixnj3WzDk!/r/dLgAAAAAAAAA" alt="3."></p>
+<h4 id="3-1-框架的选择"><a href="#3-1-框架的选择" class="headerlink" title="3.1. 框架的选择"></a>3.1. 框架的选择</h4><p>对于 AVKit、AVFoundation 和 VideoToolbox 来说，他们的功能和可定制性越来越强，但相应的使用难度也越大，因此你应该根据实际需求合理的选择使用哪个层级的接口。事实上，即使你使用 AVFoundation 或 AVKit 依然可以获得硬件加速的效果，你失去的只是直接访问硬编解码器的权限。对于 VideoToolbox 来说，你可以通过直接访问硬编解码器，将 H.264 文件或传输流转换为 iOS 上的 CMSampleBuffer 并解码成 CVPixelBuffer，或将为压缩的 CVPixelBuffer 编码成 CMSampleBuffer：</p>
+<h4 id="3-2-视频数据的容器"><a href="#3-2-视频数据的容器" class="headerlink" title="3.2. 视频数据的容器"></a>3.2. 视频数据的容器</h4><p>调用 AVCaptureSession 拍摄输出的每一帧图像都会被包装成 CMSampleBuffer 对象，通过这个 CMSampleBuffer 对象你就可以获取到未压缩的 CVPixelBuffer 对象；如果读取 H.264 文件你也可以获取数据生成压缩的 CMBlockBuffer 对象并创建一个 CMSampleBuffer 对象给 VideoToolbox 来解码。</p>
+<p>也就是说，CMSampleBuffer 既可以作为 CVPixelBuffer 对象的容器，也可以作为 CMBlockBuffer 对象的容器，CVPixelBuffer 可以说是未压缩的图像数据容器，而 CMBlockBuffer 则是压缩图像数据容器。</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/eQjRAucOrq1*0*mWB8ryqWSH5cabFkpyH8iMfwxgh20!/r/dLYAAAAAAAAA" alt="4.data"></p>
+<h4 id="3-3-编码数据裸流"><a href="#3-3-编码数据裸流" class="headerlink" title="3.3. 编码数据裸流"></a>3.3. 编码数据裸流</h4><p>NALU. 对于一个 H.264 裸流或者文件来说，它是由一个一个的 NALU(Network Abstraction Layer Unit) 单元组成，每个 NALU 既可以表示图像数据，也可以表示处理图像所需要的参数数据。它主要有两种格式：Annex B 和 AVCC。也被称为 Elementary Stream 和 MPEG-4 格式，Annex B 格式以 0x000001 或 0x00000001 开头，AVCC 格式以所在的 NALU 的长度开头。</p>
+<h4 id="3-4-VideoToolBox中常用数据结构"><a href="#3-4-VideoToolBox中常用数据结构" class="headerlink" title="3.4. VideoToolBox中常用数据结构"></a>3.4. VideoToolBox中常用数据结构</h4><ul>
+<li>CMSampleBuffer: 存放编解码前后的视频图像的容器数据结构</li>
+<li>CVPixelBuffer:  编码前和解码后的图像数据结构</li>
+<li>CMBlockBuffer: 编码后图像的数据结构</li>
+<li>CMVideoFormatDescription: 图像存储方式，编解码器等格式描述</li>
+<li>pixelBufferAttributes: : CFDictionary对象，可能包含了视频的宽高，像素格式类型（32RGBA, YCbCr420），是否可以用于OpenGL ES等相关信息</li>
+<li>CMTime: 时间戳相关。时间以 64-big/32-bit形式出现。 分子是64-bit的时间值，分母是32-bit的时标(time scale)</li>
+</ul>
+<h4 id="3-5-为编码的数据添加start-code"><a href="#3-5-为编码的数据添加start-code" class="headerlink" title="3.5. 为编码的数据添加start code."></a>3.5. 为编码的数据添加start code.</h4><p>在iOS中使用vtCompressionSession编码后的数据不包含start code.需要我们自行添加,为什么要添加start code? 如上文所说,为了区分每个NALU及以后提取vps,sps,pps等关键信息.</p>
+<p>如下图,我们在编码回调中可以拿到编码后的<code>CMSampleBuffer</code>数据.如果是h265,<code>CMVideoFormatDesc</code>中还有vps.而这段数据在推流前必须寻找到关键数据vps,sps,pps以及添加start code.因为在<code>CMBlockBufferRef</code>中可能还含有一个或多个NALU,所以我们需要通过遍历它的内存地址找到在每个NALU的分割点将数据替换为start code.具体代码操作参考实战篇.</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c226083ee76ff?w=669&amp;h=296&amp;f=png&amp;s=43514" alt="CMSampleBufferCreate"></p>
+<p>接下来，我们就需要处理这一帧视频的图像数据了。通过 CMSampleBufferGetDataBuffer 和 CMBlockBufferGetDataPointer 我们可以获取视频数据的内存地址。VTCompressionSession 编码出来的视频帧为 AVCC 格式，因此我们可以读取头部 4 个字节数据来获取当前 NALU 的长度。这里有一个需要注意的是，AVCC 格式使用大端字节序，它可能跟当前使用的系统字节序不一样，事实上，iOS 系统使用小端字节序，因此我们需要先将这个长度数据转换为 iOS 系统使用的小端字节序：</p>
+<p>NALUnitLength = CFSwapInt32BigToHost(NALUnitLength)</p>
+<blockquote>
+<p>硬编码基本上是硬解码的一个逆过程。解析出参数集SPS和PPS，加上开始码后组装成NALU。提取出视频数据，将长度码转换成开始码，组长成NALU。将NALU发送出去。</p>
+</blockquote>
+<h4 id="3-6-将H-264裸流解码为CMSampleBuffer"><a href="#3-6-将H-264裸流解码为CMSampleBuffer" class="headerlink" title="3.6. 将H.264裸流解码为CMSampleBuffer"></a>3.6. 将H.264裸流解码为CMSampleBuffer</h4><p>如上图,我们知道，CMSampleBuffer = CMTime + FormatDesc + CMBlockBuffer . 需要从H264的码流里面提取出以上的三个信息。最后组合成CMSampleBuffer，提供给硬解码接口来进行解码工作。</p>
+<p>在H.264, H.265的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。编码数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c225f93948b5f?w=667&amp;h=103&amp;f=png&amp;s=17392" alt="NALU"></p>
+<p>编码码流由NALU单元组成,一个NALU可能包含有：</p>
+<ul>
+<li>视频帧,视频帧也就是视频片段，具体有 P帧, I帧，B帧</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c225f9e955b71?w=666&amp;h=122&amp;f=png&amp;s=31144" alt="H264的码流"></p>
+<ul>
+<li>编码属性合集-FormatDesc(包含VPS,SPS和PPS)</li>
+</ul>
+<p>流数据中，属性集合可能是这样的：(如果是H.265码流,SPS前面还有VPS)</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c225fa0366421?w=317&amp;h=411&amp;f=png&amp;s=38218" alt="属性集合"></p>
+<p>经过处理之后，在Format Description中则是:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c225fe6b159fa?w=461&amp;h=238&amp;f=png&amp;s=27875" alt="Format Description"></p>
+<p>要从基础的流数据将SPS和PPS转化为Format Desc中的话，需要调用<code>CMVideoFormatDescriptionCreateFromH264ParameterSets,CMVideoFormatDescriptionGetHEVCParameterSetAtIndex</code>方法</p>
+<ul>
+<li>NALU header</li>
+</ul>
+<p>对于流数据来说，一个NAUL的Header中，可能是0x00 00 01或者是0x00 00 00 01作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c22601483130f?w=252&amp;h=369&amp;f=png&amp;s=27679" alt="NALU header"></p>
+<p>总结以上知识，我们知道编码码流由NALU单元组成，NALU单元包含视频图像数据和编码器的参数信息。其中视频图像数据就是CMBlockBuffer，而编码器参数信息则可以组合成FormatDesc。具体来说参数信息包含VPS,SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c22606eb16ec2?w=668&amp;h=176&amp;f=png&amp;s=14938" alt="H.264码流"></p>
+<ul>
+<li><p>提取sps和pps生成FormatDesc</p>
+<ul>
+<li>每个NALU的开始码是0x00 00 01，按照开始码定位NALU</li>
+<li>通过类型信息找到sps和pps并提取，开始码后第一个byte的后5位，7代表sps，8代表pps</li>
+<li>使用CMVideoFormatDescriptionCreateFromH264ParameterSets函数来构建CMVideoFormatDescriptionRef</li>
+</ul>
+</li>
+<li><p>提取视频图像数据生成CMBlockBuffer</p>
+<ul>
+<li>通过开始码，定位到NALU</li>
+<li>确定类型为数据后，将开始码替换成NALU的长度信息（4 Bytes）</li>
+<li>使用CMBlockBufferCreateWithMemoryBlock接口构造CMBlockBufferRef</li>
+</ul>
+</li>
+<li><p>根据需要，生成CMTime信息。（实际测试时，加入time信息后，有不稳定的图像，不加入time信息反而没有，需要进一步研究，这里建议不加入time信息）</p>
+</li>
+</ul>
+<p>根据上述得到CMVideoFormatDescriptionRef、CMBlockBufferRef和可选的时间信息，使用CMSampleBufferCreate接口得到CMSampleBuffer数据这个待解码的原始的数据。如下图所示的H264数据转换示意图。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/2/23/161c226083ee76ff?w=669&amp;h=296&amp;f=png&amp;s=43514" alt="CMSampleBufferCreate"></p>
+<h5 id="3-7-将-CMSampleBuffer渲染到界面"><a href="#3-7-将-CMSampleBuffer渲染到界面" class="headerlink" title="3.7. 将 CMSampleBuffer渲染到界面"></a>3.7. 将 CMSampleBuffer渲染到界面</h5><p>显示的方式有两种：</p>
+<ul>
+<li>将CMSampleBuffers提供给系统的AVSampleBufferDisplayLayer 直接显示<ul>
+<li>使用方式和其它CALayer类似。该层内置了硬件解码功能，将原始的CMSampleBuffer解码后的图像直接显示在屏幕上面，非常的简单方便。 </li>
+</ul>
+</li>
+<li>利用OPenGL自己渲染<br>通过VTDecompression接口来，将CMSampleBuffer解码成图像，将图像通过UIImageView或者OpenGL上显示。</li>
+</ul>
+<hr>
+<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><p><a href="https://gosuncnstudio.github.io/2017/12/15/%E8%A7%86%E9%A2%91%E7%A0%81%E6%B5%81%E6%A0%BC%E5%BC%8F%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">视频码流格式解析</a></p>
+<p><a href="https://lazybing.github.io/blog/2015/09/04/the-hierarchical-of-coding-structure/" target="_blank" rel="noopener">HM源码分析</a></p>
+<p><a href="https://blog.csdn.net/u012868357/article/details/48974967" target="_blank" rel="noopener">VPS SPS PPS</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/编解码-Encode-Decode/" rel="tag"># 编解码(Encode/Decode)</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/19/20190519_AudioDecoder/" rel="next" title="音频解码 Audio Converter">
+                <i class="fa fa-chevron-left"></i> 音频解码 Audio Converter
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">2.</span> <span class="nav-text">阅读前提:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概览"><span class="nav-number">3.</span> <span class="nav-text">1. 概览</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-为什么要编码"><span class="nav-number">3.1.</span> <span class="nav-text">1.1. 为什么要编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-编码技术"><span class="nav-number">3.2.</span> <span class="nav-text">1.2. 编码技术</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-编码分类"><span class="nav-number">3.3.</span> <span class="nav-text">1.3. 编码分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-编码原理"><span class="nav-number">3.4.</span> <span class="nav-text">1.4. 编码原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-编码数据码流结构"><span class="nav-number">4.</span> <span class="nav-text">2. 编码数据码流结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-刷新图像概念"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 刷新图像概念.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-重要参数"><span class="nav-number">4.2.</span> <span class="nav-text">2.2. 重要参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-原始码流"><span class="nav-number">4.3.</span> <span class="nav-text">2.3. 原始码流</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-1-H-264码流"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.3.1. H.264码流</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#码流格式"><span class="nav-number">4.3.2.</span> <span class="nav-text">码流格式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-2-H-265码流"><span class="nav-number">4.3.3.</span> <span class="nav-text">2.3.2. H.265码流</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-iOS中的视频编解码"><span class="nav-number">5.</span> <span class="nav-text">3. iOS中的视频编解码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-框架的选择"><span class="nav-number">5.1.</span> <span class="nav-text">3.1. 框架的选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-视频数据的容器"><span class="nav-number">5.2.</span> <span class="nav-text">3.2. 视频数据的容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-编码数据裸流"><span class="nav-number">5.3.</span> <span class="nav-text">3.3. 编码数据裸流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-VideoToolBox中常用数据结构"><span class="nav-number">5.4.</span> <span class="nav-text">3.4. VideoToolBox中常用数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-为编码的数据添加start-code"><span class="nav-number">5.5.</span> <span class="nav-text">3.5. 为编码的数据添加start code.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-将H-264裸流解码为CMSampleBuffer"><span class="nav-number">5.6.</span> <span class="nav-text">3.6. 将H.264裸流解码为CMSampleBuffer</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-7-将-CMSampleBuffer渲染到界面"><span class="nav-number">5.6.1.</span> <span class="nav-text">3.7. 将 CMSampleBuffer渲染到界面</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考文章"><span class="nav-number">5.7.</span> <span class="nav-text">参考文章</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
