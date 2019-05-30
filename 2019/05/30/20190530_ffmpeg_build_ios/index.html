@@ -110,25 +110,35 @@
 
 
 
-  <meta name="description" content="最近重新整理了有关控制器之间传值的方式,主要是解决部分同学只懂得storyboard跳转或者只懂得代码跳转,案例一讲详解两种不同方式,案例二三就不再重复叙述.">
-<meta name="keywords" content="iOS,传值">
+  <meta name="description" content="手动编译打开x264功能的FFmpeg并放入新建的项目中,可以编译成功.以便后续使用.">
+<meta name="keywords" content="iOS,FFmpeg">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS控制器之间传值">
-<meta property="og:url" content="https://XiaoDongXie1024.github.io/2018/10/25/sendValue/index.html">
+<meta property="og:title" content="iOS手动编译并搭建FFmpeg">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/30/20190530_ffmpeg_build_ios/index.html">
 <meta property="og:site_name" content="小东邪 Show Time">
-<meta property="og:description" content="最近重新整理了有关控制器之间传值的方式,主要是解决部分同学只懂得storyboard跳转或者只懂得代码跳转,案例一讲详解两种不同方式,案例二三就不再重复叙述.">
+<meta property="og:description" content="手动编译打开x264功能的FFmpeg并放入新建的项目中,可以编译成功.以便后续使用.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-25T09:35:34.000Z">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/hYJJtC1.824RGFg5DVj2NKP6BIZlRRFXJ9P5mJO4dfU!/r/dLYAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/MXpotxnmS4kqhvIa6Yo8rL2YhOcrfuy3aBM0rF17N.w!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/rLGHDXe5AEdqRW.am2VP6YUycuJIfSDlHF5jt6b4pxc!/r/dFQBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/ajSon4aV4kCZplSMqUq8krli3Lv5u9wt94sn0yaDNfo!/r/dIQAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/rz3EcBTI84SBbI5nEop*rQ5p6xBD7SNFKNJ0PD30wCU!/r/dLgAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4GzwWwlUkz68.sJjuD3rcj7*33cciR5K**hBHiItxYg!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/eEBKOSv8LKzxtLEwYBWnHwgPQN4KD95gE.wytLpdoas!/r/dMUAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/MD70QeHrkmcz95DTWN2RIIlQxH7D6XVDt1YqKPE.iMQ!/r/dFQBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4dSdwyHsP6roQ4w.JHcZAglTAFlzgY3reDZUlp6UWek!/r/dL8AAAAAAAAA">
+<meta property="og:updated_time" content="2019-05-30T15:33:19.110Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS控制器之间传值">
-<meta name="twitter:description" content="最近重新整理了有关控制器之间传值的方式,主要是解决部分同学只懂得storyboard跳转或者只懂得代码跳转,案例一讲详解两种不同方式,案例二三就不再重复叙述.">
+<meta name="twitter:title" content="iOS手动编译并搭建FFmpeg">
+<meta name="twitter:description" content="手动编译打开x264功能的FFmpeg并放入新建的项目中,可以编译成功.以便后续使用.">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/hYJJtC1.824RGFg5DVj2NKP6BIZlRRFXJ9P5mJO4dfU!/r/dLYAAAAAAAAA">
 
 
 
 
 
 
-  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2018/10/25/sendValue/">
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/05/30/20190530_ffmpeg_build_ios/">
 
 
 
@@ -138,7 +148,7 @@
   };
 </script>
 
-  <title>iOS控制器之间传值 | 小东邪 Show Time</title>
+  <title>iOS手动编译并搭建FFmpeg | 小东邪 Show Time</title>
   
 
 
@@ -307,7 +317,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2018/10/25/sendValue/">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/05/30/20190530_ffmpeg_build_ios/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="小东邪 - Demon">
@@ -324,7 +334,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS控制器之间传值
+          <h1 class="post-title" itemprop="name headline">iOS手动编译并搭建FFmpeg
               
             
           </h1>
@@ -349,7 +359,7 @@
                 
               
 
-              <time title="Created: 2018-10-25 17:35:34" itemprop="dateCreated datePublished" datetime="2018-10-25T17:35:34+08:00">2018-10-25</time>
+              <time title="Created: 2019-05-30 23:33:19" itemprop="dateCreated datePublished" datetime="2019-05-30T23:33:19+08:00">2019-05-30</time>
             
 
             
@@ -374,7 +384,7 @@
                   , 
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/UI/" itemprop="url" rel="index"><span itemprop="name">UI</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/FFmpeg/" itemprop="url" rel="index"><span itemprop="name">FFmpeg</span></a></span>
 
                 
                 
@@ -389,8 +399,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/10/25/sendValue/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/10/25/sendValue/" itemprop="commentsCount"></span>
+                <a href="/2019/05/30/20190530_ffmpeg_build_ios/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/30/20190530_ffmpeg_build_ios/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -398,7 +408,7 @@
 
           
           
-             <span id="/2018/10/25/sendValue/" class="leancloud_visitors" data-flag-title="iOS控制器之间传值">
+             <span id="/2019/05/30/20190530_ffmpeg_build_ios/" class="leancloud_visitors" data-flag-title="iOS手动编译并搭建FFmpeg">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -422,7 +432,7 @@
           
 
           
-              <div class="post-description">最近重新整理了有关控制器之间传值的方式,主要是解决部分同学只懂得storyboard跳转或者只懂得代码跳转,案例一讲详解两种不同方式,案例二三就不再重复叙述.</div>
+              <div class="post-description">手动编译打开x264功能的FFmpeg并放入新建的项目中,可以编译成功.以便后续使用.</div>
           
 
         </div>
@@ -441,57 +451,80 @@
         <p class="description"></p>
 
 <a id="more"></a>
-<p>   最近重新整理了有关控制器之间传值的方式,主要是解决部分同学只懂得storyboard跳转或者只懂得代码跳转,案例一讲详解两种不同方式,案例二三就不再重复叙述.<br>       原则:<br>       1.接收方一定要有属性去接收<br>    2.传递方需要拿到接收方,进行赋值</p>
-<h2 id="ONE-正向传值-顺传"><a href="#ONE-正向传值-顺传" class="headerlink" title="ONE:正向传值(顺传)"></a>ONE:正向传值(顺传)</h2><h3 id="A-上一级控制器-ex-CYContact"><a href="#A-上一级控制器-ex-CYContact" class="headerlink" title="A  上一级控制器  (ex:CYContact)"></a>A  上一级控制器  (ex:CYContact)</h3><h3 id="B-下一级控制器-ex-CYEditViewController"><a href="#B-下一级控制器-ex-CYEditViewController" class="headerlink" title="B  下一级控制器  (ex: CYEditViewController)"></a>B  下一级控制器  (ex: CYEditViewController)</h3><p>策略:  1.上一级控制器传递给下一级控制器<br>      2.传递方需要拿到接收方,进行直接赋值</p>
-<h3 id="1-1-storyboard"><a href="#1-1-storyboard" class="headerlink" title="1.1  storyboard"></a>1.1  storyboard</h3><p>// 准备好segue线之后,跳转之前会调用<br>A:上一级控制器<br>// 做一些数据之间的传值</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender&#123;</span><br><span class="line">    //获取目标控制器</span><br><span class="line">    CYEditViewController *editVc = segue.destinationViewController;</span><br><span class="line">    // 获取当前选中的角标</span><br><span class="line">    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];</span><br><span class="line">    // 获取选中的cell对应的模型</span><br><span class="line">    CYContactModel *model = self.contactArr[indexPath.row];</span><br><span class="line">    // 传递选中的cell对应的模型</span><br><span class="line">    editVc.contactModel = model;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>B:下一级控制器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#import &lt;UIKit/UIKit.h&gt;</span></span><br><span class="line">@class CYContact;</span><br><span class="line">@interface CYEditViewController : UIViewController</span><br><span class="line">/** 用于存储联系人页传来的模型 */</span><br><span class="line">@property (strong, nonatomic) CYContact * contactModel;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></p>
-<h3 id="1-2-纯代码"><a href="#1-2-纯代码" class="headerlink" title="1.2 纯代码"></a>1.2 纯代码</h3><p>例如present到下一个控制器<br>A:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CYEditViewController *editVc = [CYEditViewController new];</span><br><span class="line">editVc.contactModel = self.contactArr[indexPath.row];</span><br><span class="line">UINavigationController *vc = [[UINavigationController alloc] initWithRootViewController:editVC];</span><br><span class="line">        [self presentViewController:vc animated:YES completion:nil];</span><br></pre></td></tr></table></figure></p>
-<p>B:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#import &lt;UIKit/UIKit.h&gt;</span></span><br><span class="line">@class CYContact;</span><br><span class="line">@interface CYEditViewController : UIViewController</span><br><span class="line">/** 用于存储联系人页传来的模型 */</span><br><span class="line">@property (strong, nonatomic) CYContact * contactModel;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></p>
-<h2 id="逆传-下一级控制器传递给上一级控制器"><a href="#逆传-下一级控制器传递给上一级控制器" class="headerlink" title="逆传:下一级控制器传递给上一级控制器"></a>逆传:下一级控制器传递给上一级控制器</h2><h3 id="策略-使用代理-上一级控制器作为下一级控制器的代理-监听下一级控制器做的事情"><a href="#策略-使用代理-上一级控制器作为下一级控制器的代理-监听下一级控制器做的事情" class="headerlink" title="策略:使用代理,上一级控制器作为下一级控制器的代理,监听下一级控制器做的事情"></a>策略:使用代理,上一级控制器作为下一级控制器的代理,监听下一级控制器做的事情</h3><p>A:<br><strong>//1.遵守协议</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">@interface CYContactViewController ()&lt;CYAddViewControllerDelegate&gt;</span><br><span class="line"></span><br><span class="line">**//2.设置代理为self控制器**</span><br><span class="line">- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender&#123;</span><br><span class="line">    CYXAddViewController *addVc = segue.destinationViewController;</span><br><span class="line">    addVc.delegate = self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">**//3.实现代理方法**</span><br><span class="line">- (void)addViewController:(CYAddViewController *)addVc didAddContact:(CYContact *)contact&#123;</span><br><span class="line">    [self.contactArr addObject:contact];</span><br><span class="line">    [self.tableView reloadData];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">B:</span><br><span class="line">下一级控制器（传递方）</span><br><span class="line"></span><br><span class="line">.h 文件：</span><br><span class="line"><span class="comment">#import &lt;UIKit/UIKit.h&gt;</span></span><br><span class="line">@class CYContact,CYAddViewController;</span><br><span class="line"></span><br><span class="line">@protocol  CYAddViewControllerDelegate&lt;NSObject&gt;</span><br><span class="line">@optional</span><br><span class="line"></span><br><span class="line">**//1.定义代理方法**<span class="comment">#</span></span><br><span class="line">- (void)addViewController:(CYXAddViewController *)addVc didAddContact:(CYContact *)contact;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface CYAddViewController : UIViewController</span><br><span class="line"></span><br><span class="line">**//2.声明代理属性**</span><br><span class="line">@property (nonatomic,weak) id&lt;CYXAddViewControllerDelegate&gt;  delegate;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">.m 文件：</span><br><span class="line">@implementation CYXAddViewController</span><br></pre></td></tr></table></figure></p>
-<h2 id="逆传其他方式"><a href="#逆传其他方式" class="headerlink" title="逆传其他方式"></a>逆传其他方式</h2><p>// (1)在跳转之前,在传递方把接收方先保存起来<br>// (2)等需要真的给接收方传值的时候,直接拿到它传值<br>// 点击添加按钮的时候调用</p>
-<h3 id="1-代理"><a href="#1-代理" class="headerlink" title="1.代理"></a>1.代理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (IBAction)addContact:(id)sender &#123;</span><br><span class="line">    // 把姓名和电话文本框的内容包装成模型</span><br><span class="line">    CYContact *contact = [CYContact contactWithName:_nameField.text phone:_phoneField.text];</span><br><span class="line"></span><br><span class="line">**// 3.调用代理方法，通知代理接收联系人模型**</span><br><span class="line">    <span class="keyword">if</span> ([_delegate respondsToSelector:@selector(addViewController:didAddContact:)]) &#123;</span><br><span class="line">        [_delegate addViewController:self didAddContact:contact];</span><br><span class="line">    &#125;</span><br><span class="line">    // 回到上一个控制器</span><br><span class="line">    [self.navigationController popViewControllerAnimated:YES];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-block"><a href="#2-block" class="headerlink" title="2.block"></a>2.block</h3><pre><code class="bash">B:
-typedef void (^ablock)(NSString *str);
-
-@property (nonatomic, copy) ablock block;
-在B试图控制器中，当输入名字，点击对应的确定按钮后:
-- (IBAction)blockMethod:(id)sender {
-
-<span class="keyword">if</span> ([self notEmpty]) {
-
-<span class="keyword">if</span> (self.block) {
-
-self.block(self.nameTextField.text);
-
-[self dismissViewControllerAnimated:YES completion:nil];
-
-}
-
-}<span class="keyword">else</span>{
-
-[self showAlert];
-
-}
-
-}
-
-A:在A试图显示，回调block
-- (IBAction)showSecondWithBlock:(id)sender {
-
-SecondViewController *second = [[SecondViewController alloc] initWithNibName:@<span class="string">'SecondViewController'</span>bundle:nil];
-
-[self presentViewController:second animated:YES completion:nil];
-
-second.block = ^(NSString *str){
-
-self.nameLabel.text = str;
-
-};
-
-}
-
-</code></pre>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>手动编译打开x264功能的FFmpeg并放入新建的项目中,可以编译成功.以便后续使用.</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>移动端学习音视频开发,FFmpeg可以说是必学的框架,FFmpeg在linux平台下开发，但它同样也可以在其他操作系统环境中编译运行，包括Windows、Mac OS X等。FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序，它包括了目前领先的音/视频编码库libavcodec。</p>
+<p>FFmpeg有非常强大的功能，包括视频采集功能、视频格式转换、视频抓图、给视频加水印等。同时还支持以RTP方式将视频流传送给支持RTSP的流媒体服务器，支持直播应用。</p>
+<h2 id="安装方式"><a href="#安装方式" class="headerlink" title="安装方式"></a>安装方式</h2><p>可以通过如下两种方式安装ffmpeg</p>
+<ul>
+<li>1.下载iOS版本<a href="https://sourceforge.net/projects/ffmpeg-ios/files/ffmpeg-ios-master.tar.bz2/download?use_mirror=versaweb" target="_blank" rel="noopener">ffmpeg静态库</a>: 即不用手动编译,我们只需要下载得到头文件及.a库文件.</li>
+<li>2.手动编译: 下载源码, 可以在更改一些flag或源码后再编译脚本,较为灵活.</li>
+</ul>
+<p>如何选择</p>
+<ul>
+<li>如果仅仅是想简单直接使用ffmeg可以下载一个稳定版本的静态库, 建议用第一种方式.</li>
+<li>如果需要在iOS项目中自定义使用ffmpeg, 以及修改一些ffmpeg中的源码以适应项目,使用第二种方式.</li>
+</ul>
+<h2 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h2><ul>
+<li>音视频基础</li>
+<li>基本终端命令行</li>
+<li>FFmpeg基础</li>
+</ul>
+<h4 id="注意-文本仅仅编译真机使用的arm64环境-所以模拟器下无法运行项目-如需添加其他架构自行更改两个脚本文件"><a href="#注意-文本仅仅编译真机使用的arm64环境-所以模拟器下无法运行项目-如需添加其他架构自行更改两个脚本文件" class="headerlink" title="注意: 文本仅仅编译真机使用的arm64环境,所以模拟器下无法运行项目,如需添加其他架构自行更改两个脚本文件."></a>注意: 文本仅仅编译真机使用的arm64环境,所以模拟器下无法运行项目,如需添加其他架构自行更改两个脚本文件.</h4><p>本文需要的所有安装包均在以下链接中,因为下文中官网地址是外网,没有VPN的同学可能下载会很慢.故本人整理好最新所有版本放在下面的百度云盘中.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">链接: https://pan.baidu.com/s/1nYBQUi8drEpkjmwlIpbetQ 提取码: ercw</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="1-下载gas-preprocessor"><a href="#1-下载gas-preprocessor" class="headerlink" title="1.下载gas-preprocessor"></a>1.下载<a href="https://github.com/libav/gas-preprocessor" target="_blank" rel="noopener">gas-preprocessor</a></h4><p>此文件是编译FFmpeg必备的脚本文件,使用如下命令将其拷贝进bin下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -f /Users/tomxiang/h264/gas-preprocessor-master/gas-preprocessor.pl /usr/local/bin/</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-安装yasm"><a href="#2-安装yasm" class="headerlink" title="2.安装yasm"></a>2.安装<a href="https://github.com/yasm/yasm" target="_blank" rel="noopener">yasm</a></h4><p><code>Yasm</code>是一个完全重写的<code>NASM</code>汇编并且支持x86和AMD64指令集.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install yasm</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-下载x264-iOS编译脚本及源码"><a href="#3-下载x264-iOS编译脚本及源码" class="headerlink" title="3. 下载x264-iOS编译脚本及源码"></a>3. 下载<a href="https://github.com/kewlbear/x264-ios" target="_blank" rel="noopener">x264-iOS编译脚本</a>及<a href="http://download.videolan.org/pub/videolan/x264/snapshots/" target="_blank" rel="noopener">源码</a></h4><ul>
+<li><p>下载x264编译脚本解压后如下<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/hYJJtC1.824RGFg5DVj2NKP6BIZlRRFXJ9P5mJO4dfU!/r/dLYAAAAAAAAA" alt="1"></p>
+</li>
+<li><p>然后下载最新版源码解压后如下<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/MXpotxnmS4kqhvIa6Yo8rL2YhOcrfuy3aBM0rF17N.w!/r/dL8AAAAAAAAA" alt="2"></p>
+</li>
+<li><p>将源码文件夹改名为<code>x264</code>并放至编译脚本文件夹(<code>x264-ios-master</code>)下<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/rLGHDXe5AEdqRW.am2VP6YUycuJIfSDlHF5jt6b4pxc!/r/dFQBAAAAAAAA" alt="3"></p>
+</li>
+</ul>
+<blockquote>
+<p>因为编译脚本中指定文件目录为<code>x264</code>,所以需要改名,也可以改编译脚本<br>最好手动强制设置下GCC位置,否则可能会报错,然后执行命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/</span><br><span class="line">./build-x264.sh</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<ul>
+<li>注意</li>
+</ul>
+<p><code>No working C compiler found</code> : 新版mac直接编译会报错,原因是gcc一些必要工具找不到.可能是xcode位置换了的原因,因为我们主要使用真机调试,所以我们在编译脚本中只保留arm64即可,如下修改后,可以直接编译通过. 不过像模拟器这样的设置是无法使用x264的,因为我们相当于仅编译了真机所需的库.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ARCHS=&quot;arm64 x86_64 i386 armv7 armv7s&quot;</span><br><span class="line">改为如下</span><br><span class="line">ARCHS=&quot;arm64&quot;</span><br></pre></td></tr></table></figure>
+<p>执行完成之后可以看到生成了x264-iOS文件夹</p>
+<h4 id="4-下载FFmpeg-iOS编译脚本及源码"><a href="#4-下载FFmpeg-iOS编译脚本及源码" class="headerlink" title="4. 下载FFmpeg-iOS编译脚本及源码"></a>4. 下载<a href="https://github.com/kewlbear/FFmpeg-iOS-build-script" target="_blank" rel="noopener">FFmpeg-iOS编译脚本</a>及<a href="https://sourceforge.net/projects/ffmpeg-ios/files/ffmpeg-ios-master.tar.bz2/download?use_mirror=versaweb" target="_blank" rel="noopener">源码</a></h4><blockquote>
+<p>注意: 在这里可以仅下载FFmpeg-iOS编译脚本,不用下载源码,执行脚本会自动下载源码,如果不想每次自动下载,可以手动下载源码,稍微修改下FFmpeg编译脚本即可.这里不做过多说明.</p>
+</blockquote>
+<p>修改脚本(<code>build-ffmpeg.sh</code>文件)内容<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/ajSon4aV4kCZplSMqUq8krli3Lv5u9wt94sn0yaDNfo!/r/dIQAAAAAAAAA" alt="4"></p>
+<p>x264编译好的文件夹必须在当前目录并且命名为fat-x264,所以我们第3步编译后生成的x264-iOS文件夹改名成fat-264，放在FFmpeg-iOS-build-script这个文件夹中。目录结构如下:<br><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/rz3EcBTI84SBbI5nEop*rQ5p6xBD7SNFKNJ0PD30wCU!/r/dLgAAAAAAAAA" alt="5."></p>
+<p>并修改如下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CFLAGS=&quot;$CFLAGS -mios-version-min=$DEPLOYMENT_TARGET -fembed-bitcode&quot;</span><br><span class="line">修改为</span><br><span class="line">CFLAGS=&quot;$CFLAGS -mios-version-min=$DEPLOYMENT_TARGET&quot;</span><br></pre></td></tr></table></figure></p>
+<p>因为我们在上一步中仅仅编译arm64的x264,所以这里我们也仅仅编译arm64的FFmpeg.稍微修改脚本文件即可.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ARCHS=&quot;arm64 armv7 x86_64 i386&quot;</span><br><span class="line">修改为</span><br><span class="line">ARCHS=&quot;arm64&quot;</span><br></pre></td></tr></table></figure></p>
+<p>编译脚本文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build-ffmpeg.sh</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-Xcode编译"><a href="#5-Xcode编译" class="headerlink" title="5. Xcode编译"></a>5. Xcode编译</h4><ul>
+<li>Xcode新建iOS项目</li>
+</ul>
+<p>新建一个iOS工程,然后将<code>ViewController.m</code>重命名为<code>ViewController.mm</code>,因为FFmpeg中涉及C,C++混编,所以需要做此操作.</p>
+<ul>
+<li>将FFmpeg编译好的头文件与库拉进项目中,并在主控制器测试代码,此时会有一大堆错误抛出,下面逐个解决</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4GzwWwlUkz68.sJjuD3rcj7*33cciR5K**hBHiItxYg!/r/dL8AAAAAAAAA" alt="3"></p>
+<ul>
+<li>添加依赖库</li>
+</ul>
+<blockquote>
+<p>注意: FFmpeg源码中调用了一些iOS系统的库,所以,我们必须将依赖的库导入项目中.</p>
+</blockquote>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/eEBKOSv8LKzxtLEwYBWnHwgPQN4KD95gE.wytLpdoas!/r/dMUAAAAAAAAA" alt="4"></p>
+<ul>
+<li>在Build Setting中禁止Bitcode</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/MD70QeHrkmcz95DTWN2RIIlQxH7D6XVDt1YqKPE.iMQ!/r/dFQBAAAAAAAA" alt="2"></p>
+<ul>
+<li>在Build Setting中设置头文件与库的位置</li>
+</ul>
+<p>这里特别要注意,因为在大多数项目中以及FFmpeg自身源代码中,都是以以下格式来导入的头文件</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4dSdwyHsP6roQ4w.JHcZAglTAFlzgY3reDZUlp6UWek!/r/dL8AAAAAAAAA" alt="1."></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>
+<li><a href="http://www.iosxxx.com/blog/2017-07-17-iOS%E7%BC%96%E8%A7%A3%E7%A0%81%E5%85%A5%E9%97%A8%E7%AF%87-FFMPEG%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" target="_blank" rel="noopener">FFmpeg编译</a></li>
+</ul>
 
       
     </div>
@@ -543,7 +576,7 @@ self.nameLabel.text = str;
           
             <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-            <a href="/tags/UI/" rel="tag"># UI</a>
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
           
         </div>
       
@@ -556,8 +589,8 @@ self.nameLabel.text = str;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/25/masonry/" rel="next" title="iOS之Masonry快速上手">
-                <i class="fa fa-chevron-left"></i> iOS之Masonry快速上手
+              <a href="/2019/05/26/20190526_VideoEncoder/" rel="next" title="iOS视频编码VideoToolbox">
+                <i class="fa fa-chevron-left"></i> iOS视频编码VideoToolbox
               </a>
             
           </div>
@@ -566,8 +599,8 @@ self.nameLabel.text = str;
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/25/yuv/" rel="prev" title="What is YUV ?">
-                What is YUV ? <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/30/20190530_ffmpeg_build_mac/" rel="prev" title="Mac终端FFmpeg手动,自动编译">
+                Mac终端FFmpeg手动,自动编译 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -823,7 +856,7 @@ self.nameLabel.text = str;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ONE-正向传值-顺传"><span class="nav-number">1.</span> <span class="nav-text">ONE:正向传值(顺传)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-上一级控制器-ex-CYContact"><span class="nav-number">1.1.</span> <span class="nav-text">A  上一级控制器  (ex:CYContact)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-下一级控制器-ex-CYEditViewController"><span class="nav-number">1.2.</span> <span class="nav-text">B  下一级控制器  (ex: CYEditViewController)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-storyboard"><span class="nav-number">1.3.</span> <span class="nav-text">1.1  storyboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-纯代码"><span class="nav-number">1.4.</span> <span class="nav-text">1.2 纯代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆传-下一级控制器传递给上一级控制器"><span class="nav-number">2.</span> <span class="nav-text">逆传:下一级控制器传递给上一级控制器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#策略-使用代理-上一级控制器作为下一级控制器的代理-监听下一级控制器做的事情"><span class="nav-number">2.1.</span> <span class="nav-text">策略:使用代理,上一级控制器作为下一级控制器的代理,监听下一级控制器做的事情</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆传其他方式"><span class="nav-number">3.</span> <span class="nav-text">逆传其他方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-代理"><span class="nav-number">3.1.</span> <span class="nav-text">1.代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-block"><span class="nav-number">3.2.</span> <span class="nav-text">2.block</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number"></span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装方式"><span class="nav-number"></span> <span class="nav-text">安装方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阅读前提"><span class="nav-number"></span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意-文本仅仅编译真机使用的arm64环境-所以模拟器下无法运行项目-如需添加其他架构自行更改两个脚本文件"><span class="nav-number">0.1.</span> <span class="nav-text">注意: 文本仅仅编译真机使用的arm64环境,所以模拟器下无法运行项目,如需添加其他架构自行更改两个脚本文件.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-下载gas-preprocessor"><span class="nav-number">0.2.</span> <span class="nav-text">1.下载gas-preprocessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-安装yasm"><span class="nav-number">0.3.</span> <span class="nav-text">2.安装yasm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-下载x264-iOS编译脚本及源码"><span class="nav-number">0.4.</span> <span class="nav-text">3. 下载x264-iOS编译脚本及源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-下载FFmpeg-iOS编译脚本及源码"><span class="nav-number">0.5.</span> <span class="nav-text">4. 下载FFmpeg-iOS编译脚本及源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Xcode编译"><span class="nav-number">0.6.</span> <span class="nav-text">5. Xcode编译</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number"></span> <span class="nav-text">参考文章</span></a></li></div>
             
 
           </div>

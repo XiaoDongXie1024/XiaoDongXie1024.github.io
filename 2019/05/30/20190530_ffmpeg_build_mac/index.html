@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="FFmpeg有非常强大的功能，包括视频采集功能、视频格式转换、视频抓图、给视频加水印等。同时还支持以RTP方式将视频流传送给支持RTSP的流媒体服务器，支持直播应用。">
+<meta name="keywords" content="iOS,FFmpeg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac终端FFmpeg手动,自动编译">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/05/30/20190530_ffmpeg_build_mac/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="FFmpeg有非常强大的功能，包括视频采集功能、视频格式转换、视频抓图、给视频加水印等。同时还支持以RTP方式将视频流传送给支持RTSP的流媒体服务器，支持直播应用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-30T15:33:49.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mac终端FFmpeg手动,自动编译">
+<meta name="twitter:description" content="FFmpeg有非常强大的功能，包括视频采集功能、视频格式转换、视频抓图、给视频加水印等。同时还支持以RTP方式将视频流传送给支持RTSP的流媒体服务器，支持直播应用。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/05/30/20190530_ffmpeg_build_mac/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Mac终端FFmpeg手动,自动编译 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/05/30/20190530_ffmpeg_build_mac/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mac终端FFmpeg手动,自动编译
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-30 23:33:49" itemprop="dateCreated datePublished" datetime="2019-05-30T23:33:49+08:00">2019-05-30</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/FFmpeg/" itemprop="url" rel="index"><span itemprop="name">FFmpeg</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/30/20190530_ffmpeg_build_mac/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/30/20190530_ffmpeg_build_mac/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/05/30/20190530_ffmpeg_build_mac/" class="leancloud_visitors" data-flag-title="Mac终端FFmpeg手动,自动编译">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">FFmpeg有非常强大的功能，包括视频采集功能、视频格式转换、视频抓图、给视频加水印等。同时还支持以RTP方式将视频流传送给支持RTSP的流媒体服务器，支持直播应用。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>移动端学习音视频开发,FFmpeg可以说是必学的框架,FFmpeg在linux平台下开发，但它同样也可以在其他操作系统环境中编译运行，包括Windows、Mac OS X等。FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序，它包括了目前领先的音/视频编码库libavcodec。</p>
+<p>FFmpeg有非常强大的功能，包括视频采集功能、视频格式转换、视频抓图、给视频加水印等。同时还支持以RTP方式将视频流传送给支持RTSP的流媒体服务器，支持直播应用。</p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><p>本文讲述Mac终端自动,手动编译FFmpeg库,对于Mac终端而言,最终生成二进制文件(ex: ffmpeg,ffplay…)</p>
+<h2 id="安装方式"><a href="#安装方式" class="headerlink" title="安装方式"></a>安装方式</h2><p>可以通过如下三种方式安装ffmpeg</p>
+<ul>
+<li>终端安装 (借助<a href="https://brew.sh/" target="_blank" rel="noopener">homebrew</a>): 此方式ffmpeg会保持自动更新.</li>
+<li>下载ffmpeg<a href="https://ffmpeg.org/download.html" target="_blank" rel="noopener">静态库</a>: 即不用手动编译,我们只需要直接运行下载得到的二进制文件即可.静态生成的一个缺点是必须手动执行更新。此外, 它们可能不包含所需的所有编码器或筛选器。</li>
+<li>手动编译: 下载源码, 然后使用所需的标志(可以指定开启需要的功能)运行<code>./configure</code>, 最后使用<code>make</code>或<code>make install</code>。但是, 必须手动设置配置选项, 并且您需要自己安装第三方库。</li>
+</ul>
+<p>如何选择</p>
+<ul>
+<li>如果仅仅是想使用命令行的ffmepg, 建议用第一种方式或第二种方式.</li>
+<li>如果需要在Mac OS项目中使用ffmpeg, 以及修改一些ffmpeg中的源码以适应项目,使用第三种方式.</li>
+</ul>
+<h2 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h2><h3 id="1-使用终端安装FFmpeg"><a href="#1-使用终端安装FFmpeg" class="headerlink" title="1. 使用终端安装FFmpeg"></a>1. 使用终端安装FFmpeg</h3><h4 id="1-1-借助Homebrew安装FFmpeg"><a href="#1-1-借助Homebrew安装FFmpeg" class="headerlink" title="1.1. 借助Homebrew安装FFmpeg"></a>1.1. 借助<code>Homebrew</code>安装<code>FFmpeg</code></h4><ul>
+<li>安装<code>Homebrew</code></li>
+</ul>
+<p><code>Homebrew</code>是命令行中的软件包安装器.绝大多数知名软件包或插件都可以用它来安装. 如果你还没有安装,直接用下面的命令可以安装</p>
+<p><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></p>
+<ul>
+<li><p>安装<code>FFmpeg</code></p>
+<ul>
+<li><p>通用版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install ffmpeg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最新版本, 并提供最少的配置 (和库依赖关系) 选项。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install ffmpeg --HEAD</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>扩展安装</p>
+</li>
+</ul>
+<p>还可以自定义安装公式,如下,可根据自己需求自行扩展,可能会失败,因为需要一些依赖第三方库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install ffmpeg --with-fdk-aac --with-tools --with-ffplay --with-freetype --with-libass --with-libvorbis --with-opus --with-libvpx --with-x265</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-2-安装第三方库中的ffmpeg"><a href="#1-2-安装第三方库中的ffmpeg" class="headerlink" title="1.2. 安装第三方库中的ffmpeg"></a>1.2. 安装第三方库中的ffmpeg</h4><p>v 2.0版本之后,<code>Homebrew</code>不再为其核心公式提供选项。想要使用其他库 (包括非免费库) 构建 ffmpeg 的用户需要使用来自第三方存储库的ffmpeg。这些库不是由<code>Homebrew</code>维护的。</p>
+<p>例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew tap varenc/ffmpeg</span><br><span class="line">brew install varenc/ffmpeg/ffmpeg</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-3-更新"><a href="#1-3-更新" class="headerlink" title="1.3. 更新"></a>1.3. 更新</h4><p>更新需要根据上面安装步骤中是使用通用版本还是最新版本</p>
+<ul>
+<li><p>通用版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew update &amp;&amp; brew upgrade ffmpeg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最新版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew upgrade --fetch-HEAD ffmpeg</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>注意: 如果你已经使用<code>brew install ffmpeg</code>安装了ffmpeg,可以使用 <code>brew uninstall ffmpeg</code> 卸载</p>
+</blockquote>
+<h3 id="2-手动编译"><a href="#2-手动编译" class="headerlink" title="2. 手动编译"></a>2. 手动编译</h3><h4 id="2-2-编译环境-Xcode"><a href="#2-2-编译环境-Xcode" class="headerlink" title="2.2. 编译环境 - Xcode"></a>2.2. 编译环境 - Xcode</h4><p>手动编译Mac上必须安装Xcode,然后安装命令行工具</p>
+<ul>
+<li>界面安装: <code>Preferences &gt; Downloads &gt; Components</code></li>
+<li>命令行安装: <code>xcode-select --install</code></li>
+</ul>
+<h4 id="2-1-安装依赖库"><a href="#2-1-安装依赖库" class="headerlink" title="2.1. 安装依赖库"></a>2.1. 安装依赖库</h4><h5 id="2-1-1-自动安装依赖库"><a href="#2-1-1-自动安装依赖库" class="headerlink" title="2.1.1. 自动安装依赖库"></a>2.1.1. 自动安装依赖库</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew install automake fdk-aac git lame libass libtool libvorbis libvpx \</span><br><span class="line">opus sdl shtool texi2html theora wget x264 x265 xvid nasm</span><br></pre></td></tr></table></figure>
+<h5 id="2-1-2-手动安装依赖库"><a href="#2-1-2-手动安装依赖库" class="headerlink" title="2.1.2. 手动安装依赖库"></a>2.1.2. 手动安装依赖库</h5><p>FFmpeg的编译依赖于<code>Pkg-config</code>，而它又依赖于<code>GLib</code>,而<code>GLib</code>又依赖于<code>gettext</code>,所以必须先安装并编译相关依赖。</p>
+<ul>
+<li><p>Pkg-config &amp; GLib &amp; gettext</p>
+<ul>
+<li><p><a href="ftp://ftp.gnu.org/gnu/gettext/" target="_blank" rel="noopener">gettext</a>: 在库中编辑文件<code>stpncpy.c</code>,并且在<code>#ifndef weak_alias</code>之前添加<code>#undef stpncpy</code>.    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LIBFFI_CFLAGS=-I/usr/include/ffi LIBFFI_LIBS=-lffi ./configure;make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a href="https://ftp.gnome.org/pub/gnome/sources/glib/2.0/" target="_blank" rel="noopener">glib</a>: Linux平台下最常用的C语言函数库，它具有很好的可移植性和实用性。</p>
+</li>
+<li><a href="http://pkgconfig.freedesktop.org/releases/" target="_blank" rel="noopener">Pkg-config</a> : 维护了一个保存各个代码库的路径的数据库。当然这个”数据库” 非常的简单，其实就是一个特殊的目录，这个目录中有一系列的以 “.pc” 为后缀的文件。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GLIB_CFLAGS=&quot;-I/usr/local/include/glib-2.0 -I/usr/local/lib/glib-2.0/include&quot; GLIB_LIBS=&quot;-lglib-2.0 -lgio-2.0&quot; ./configure --with-pc-path=&quot;/usr/X11/lib/pkgconfig:/usr/X11/share/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Mac OS X Lion拥有自己的<code>stpncpy</code>函数它跟<code>gettext</code>重复产生冲突。</p>
+</blockquote>
+<ul>
+<li>Nasm</li>
+</ul>
+<p>Nasm是x264所需的汇编程序。最新版本可在<a href="http://nasm.us/" target="_blank" rel="noopener">nasm.us</a>上获得。</p>
+<ul>
+<li>附加的库<ul>
+<li>x264: –enable-gpl –enable-libx264</li>
+<li>fdk-aac: –enable-libfdk-aac</li>
+<li>libvpx: –enable-libvpx</li>
+<li>libvorbis: –enable-libvorbis</li>
+<li>libopus: </li>
+<li>LAME:–enable-libmp3lame</li>
+<li>libass:–enable-libass</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-3-Freetype"><a href="#2-3-Freetype" class="headerlink" title="2.3. Freetype"></a>2.3. Freetype</h4><p>macOS已经安装了freetype(较老的版本可能需要在安装期间选择X11)，但不是在典型的位置</p>
+<p>在freetype的<code>./configure</code>文件中加入如下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CFLAGS=`freetype-config --cflags`</span><br><span class="line">LDFLAGS=`freetype-config --libs` PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:/opt/X11/lib/pkgconfig</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-编译"><a href="#2-4-编译" class="headerlink" title="2.4. 编译"></a>2.4. 编译</h4><p>做完以上所有依赖操作后,就可以链接下载FFmpeg源代码。可以通过<a href="https://trac.ffmpeg.org/wiki/CompilationGuide/Generic" target="_blank" rel="noopener">Generic compilation guide</a>查阅详细的编译步骤.</p>
+<p>运行<code>./configure --help</code>，可以了解可用的选项。</p>
+<ul>
+<li><p>下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg</span><br><span class="line">$ cd ffmpeg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译</p>
+<ul>
+<li><p>完整编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree --enable-libass \</span><br><span class="line">--enable-libfdk-aac --enable-libfreetype --enable-libmp3lame \</span><br><span class="line">--enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus --enable-libxvid \</span><br><span class="line">--samples=fate-suite/</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最简编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ ./configure  &amp;&amp; make</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>安装</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<p>至此,FFmpeg安装成功.</p>
+<blockquote>
+<p>注意: 以上过程如果报错,需要另行解决,因为ffmpeg版本及其依赖库的版本在不断升级,所以可能会产生一些无法预料的问题,可根据提示另行解决.</p>
+</blockquote>
+<h3 id="3-手动编译详解"><a href="#3-手动编译详解" class="headerlink" title="3. 手动编译详解"></a>3. 手动编译详解</h3><h4 id="3-1-原因"><a href="#3-1-原因" class="headerlink" title="3.1. 原因"></a>3.1. 原因</h4><p>ffmpeg库的可以有很多种来源,如官方自动编译好的库或是网上个人或第三方软件中自带的编译好的库.但这些库有以下一些缺点</p>
+<ul>
+<li>老版本的二进制包已过时,其中包含严重错误或缺少必需的功能，这些功能在新版本中才修复。</li>
+<li>不能自定义编译,例如获取特定于平台的优化或链接二进制包中不支持的特定库。</li>
+<li>不能更改源码,例如需要通过更改源码以让ffmpeg实现定制化的需求.</li>
+</ul>
+<h4 id="3-2-步骤"><a href="#3-2-步骤" class="headerlink" title="3.2. 步骤"></a>3.2. 步骤</h4><ul>
+<li>配置脚本 (编辑脚本文件./configure)</li>
+<li>编译 (make)</li>
+<li>安装 (make install)</li>
+</ul>
+<p>1&gt;. 配置: 允许创建编译步骤所需的必要文件，并通过源包通常提供的配置脚本完成。在配置期间，可以定义安装前缀和已启用的组件。</p>
+<p>2&gt;. 编译: 编译通常包括在配置步骤完成后运行make。在此阶段，将生成所需的库和二进制文件。</p>
+<p>3&gt; 安装: 安装将在配置步骤中指定的路径中安装二进制文件和库。请注意，由于您可以使用编译路径中编译的二进制文件，因此不需要执行此步骤。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 编译源目录中的文件，并将库安装在/ usr / local中。第三步可能需要超级用户权限（因此可能需要由sudo make install替换），因为普通用户无法修改/ usr / local。</p>
+</blockquote>
+<h4 id="3-3-安装路径"><a href="#3-3-安装路径" class="headerlink" title="3.3. 安装路径"></a>3.3. 安装路径</h4><p>配置步骤通常允许用户指定所谓的安装前缀，并且通常通过配置选项configure –prefix = PREFIX指定，其中PREFIX通常默认为/ usr / local。前缀指定安装所有组件的公共目录。</p>
+<p>安装中通常涉及以下目录：</p>
+<ul>
+<li>PREFIX/bin: 包含生成的二进制文件 (e.g. ffmpeg, ffplay, ffprobe etc. in the case of FFmpeg)</li>
+<li>PREFIX/include: 包含生成库的头文件 (e.g. libavutil/avstring.h, libavcodec/avcodec.h, libavformat/avformat.h etc. in case of FFmpeg) </li>
+<li>PREFIX/lib:包含生成的库 (e.g. libavutil, libavcodec, libavformat etc. in the case of FFmpeg)</li>
+<li>PREFIX/share: 包含各种与系统无关的组件;特别是文档文件和示例</li>
+</ul>
+<p>一般建议使用默认路径,但如果数量使用像/ opt / PROJECT /这样的前缀，项目将安装在专用目录中，要从系统中删除，只需删除/ opt / PREFIX路径即可。但是此类安装将需要编辑所有环境变量以指向自定义路径。</p>
+<h4 id="3-4-环境变量"><a href="#3-4-环境变量" class="headerlink" title="3.4. 环境变量"></a>3.4. 环境变量</h4><p>环境中定义的几个变量会影响您的软件包安装。特别是，根据您的安装前缀，您可能需要更新其中一些变量，以确保系统工具可以找到已安装的组件。可以通过命令<code>env</code>显示环境变量列表。</p>
+<p>以下是受影响变量的列表：</p>
+<ul>
+<li>PATH: 定义变量简化路径,系统查找二进制文件的路径。例如，如果在/ usr / local /中安装软件包，则应更新PATH，使其包含/ usr / local / bin。这可以通过命令export PATH = / usr / local / bin：$ PATH来完成。</li>
+<li>LD_LIBRARY_PATH: 系统查找库的路径。例如，如果在/ usr / local /中安装软件包，则应更新LD_LIBRARY_PATH，使其包含/ usr / local / lib。这可以通过命令export LD_LIBRARY_PATH = / usr / local / lib：$ LD_LIBRARY_PATH来完成。有时不推荐使用此变量，而是使用ldconfig。</li>
+<li>CFLAGS: 包含C编译器使用的标志，通常包括预处理指令，如-IPREFIX / include或编译标志。自定义CFLAGS通常由源包构建系统作为源包编译器标志的前缀。或者，许多构建系统允许指定配置选项-extra-cflags。</li>
+<li>LDFLAGS: 这些是链接器使用的指令，通常包括链接指令，如查找自定义路径中安装的库所需的-LPREFIX / lib。自定义LDFLAGS通常由源包构建系统作为源包链接器标志的前缀。或者，许多构建系统允许指定configure选项-extra-ldflags。</li>
+<li>PKG_CONFIG_PATH: pkg-config使用的路径，用于检测许多编译系统使用的pkg-config文件，以检测特定库使用的自定义CFLAGS / LDFLAGS。</li>
+</ul>
+<p>如果您在非标准路径中安装了软件包，则需要更新这些环境库，以便系统工具能够检测软件包组件。在为依赖于其他已安装的库/标头/工具的包运行配置脚本时,一定要这样做。</p>
+<h2 id="简要使用说明"><a href="#简要使用说明" class="headerlink" title="简要使用说明"></a>简要使用说明</h2><ul>
+<li>常用库</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>库名</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ffmpeg</td>
+<td>一个命令行工具，用来对视频文件转换格式，也支持对电视卡即时编码</td>
+</tr>
+<tr>
+<td>ffserver</td>
+<td>一个HTTP多媒体即时广播流服务器，支持时光平移</td>
+</tr>
+<tr>
+<td>ffplay</td>
+<td>一个简单的播放器，基于SDL与FFmpeg库</td>
+</tr>
+<tr>
+<td>libavcodec</td>
+<td>包含全部FFmpeg音频/视频编解码库</td>
+</tr>
+<tr>
+<td>libavformat</td>
+<td>包含demuxers和muxer库</td>
+</tr>
+<tr>
+<td>libavutil</td>
+<td>包含一些工具库</td>
+</tr>
+<tr>
+<td>libpostproc</td>
+<td>对于视频做前处理的库</td>
+</tr>
+<tr>
+<td>libavutil</td>
+<td>包含一些工具库</td>
+</tr>
+<tr>
+<td>libswscale</td>
+<td>libswscale</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>主要参数</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-i</td>
+<td>设置输入档名。</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>设置输出格式。</td>
+</tr>
+<tr>
+<td>-y</td>
+<td>若输出文件已存在时则覆盖文件。</td>
+</tr>
+<tr>
+<td>-fs</td>
+<td>超过指定的文件大小时则结束转换。</td>
+</tr>
+<tr>
+<td>-ss</td>
+<td>从指定时间开始转换。</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>从-ss时间开始转换（如-ss 00:00:01.00 -t 00:00:10.00即从00:00:01.00开始到00:00:11.00）。</td>
+</tr>
+<tr>
+<td>-title</td>
+<td>设置标题。</td>
+</tr>
+<tr>
+<td>-timestamp</td>
+<td>设置时间戳。</td>
+</tr>
+<tr>
+<td>-vsync</td>
+<td>增减Frame使影音同步。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>视频参数名</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>b:v</td>
+<td>设置视频流量，默认为200Kbit/秒。（单位请引用下方注意事项）</td>
+</tr>
+<tr>
+<td>r</td>
+<td>设置帧率值，默认为25。</td>
+</tr>
+<tr>
+<td>s</td>
+<td>设置画面的宽与高。</td>
+</tr>
+<tr>
+<td>aspect</td>
+<td>设置画面的比例。</td>
+</tr>
+<tr>
+<td>vn</td>
+<td>不处理视频，于仅针对声音做处理时使用。</td>
+</tr>
+<tr>
+<td>vcodec( -c:v )</td>
+<td>设置视频视频编解码器，未设置时则使用与输入文件相同之编解码器。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>声音参数名</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>b:a</td>
+<td>设置每Channel（最近的SVN版为所有Channel的总合）的流量。（单位请引用下方注意事项）</td>
+</tr>
+<tr>
+<td>ar</td>
+<td>设置采样率。</td>
+</tr>
+<tr>
+<td>ac</td>
+<td>设置声音的Channel数。</td>
+</tr>
+<tr>
+<td>acodec ( -c:a )</td>
+<td>设置声音编解码器，未设置时与视频相同，使用与输入文件相同之编解码器。</td>
+</tr>
+<tr>
+<td>an</td>
+<td>不处理声音，于仅针对视频做处理时使用。</td>
+</tr>
+<tr>
+<td>vol</td>
+<td>设置音量大小，256为标准音量。（要设置成两倍音量时则输入512，依此类推。）</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>ffprobe</li>
+</ul>
+<p>一个编码后的文件是否正确就用以下命令，如果格式错误的话会输出一堆Error。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ffprobe -show_frames /xx.h265</span><br><span class="line"></span><br><span class="line">$ ffprobe -print_format json -show_format -show_streams -i /xx.h265</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>ffmpeg</li>
+</ul>
+<p>查看文件基本信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ffmpeg -i /xx.h265</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>ffplay</li>
+</ul>
+<p>ffplay逐帧播放视频与显示视频帧序号</p>
+<p>目前使用这个功能检查部分画面不正确视频的原因。macOS下使用ffplay，按下s键可单帧播放视频，配合一个显示文字的视频滤镜即可显示当前画面的帧序号，命令示例如下所示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ffplay -vf &quot;drawtext=fontfile=/Library/Fonts/Arial.ttf:text=%&#123;n&#125;:box=1:x=(w-tw)/2:y=h-(2*lh)&quot; xx.mp4</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="https://trac.ffmpeg.org/wiki/CompilationGuide/macOS" target="_blank" rel="noopener">官方安装教程</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/30/20190530_ffmpeg_build_ios/" rel="next" title="iOS手动编译并搭建FFmpeg">
+                <i class="fa fa-chevron-left"></i> iOS手动编译并搭建FFmpeg
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#适用场景"><span class="nav-number">2.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装方式"><span class="nav-number">3.</span> <span class="nav-text">安装方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体步骤"><span class="nav-number">4.</span> <span class="nav-text">具体步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用终端安装FFmpeg"><span class="nav-number">4.1.</span> <span class="nav-text">1. 使用终端安装FFmpeg</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-借助Homebrew安装FFmpeg"><span class="nav-number">4.1.1.</span> <span class="nav-text">1.1. 借助Homebrew安装FFmpeg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-安装第三方库中的ffmpeg"><span class="nav-number">4.1.2.</span> <span class="nav-text">1.2. 安装第三方库中的ffmpeg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-更新"><span class="nav-number">4.1.3.</span> <span class="nav-text">1.3. 更新</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-手动编译"><span class="nav-number">4.2.</span> <span class="nav-text">2. 手动编译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-编译环境-Xcode"><span class="nav-number">4.2.1.</span> <span class="nav-text">2.2. 编译环境 - Xcode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-安装依赖库"><span class="nav-number">4.2.2.</span> <span class="nav-text">2.1. 安装依赖库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-1-自动安装依赖库"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">2.1.1. 自动安装依赖库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-2-手动安装依赖库"><span class="nav-number">4.2.2.2.</span> <span class="nav-text">2.1.2. 手动安装依赖库</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-Freetype"><span class="nav-number">4.2.3.</span> <span class="nav-text">2.3. Freetype</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-编译"><span class="nav-number">4.2.4.</span> <span class="nav-text">2.4. 编译</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-手动编译详解"><span class="nav-number">4.3.</span> <span class="nav-text">3. 手动编译详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-原因"><span class="nav-number">4.3.1.</span> <span class="nav-text">3.1. 原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-步骤"><span class="nav-number">4.3.2.</span> <span class="nav-text">3.2. 步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-安装路径"><span class="nav-number">4.3.3.</span> <span class="nav-text">3.3. 安装路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-环境变量"><span class="nav-number">4.3.4.</span> <span class="nav-text">3.4. 环境变量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简要使用说明"><span class="nav-number">5.</span> <span class="nav-text">简要使用说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">6.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
