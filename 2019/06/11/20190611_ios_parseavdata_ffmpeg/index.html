@@ -118,7 +118,7 @@
 <meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="利用FFmpeg解析音视频流,音视频流可以来自一个标准的RTMP的URL或者是一个文件. 通过解析得到音视频流,进一步就可以解码, 然后视频渲染在屏幕上,音频通过扬声器输出.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-11T13:26:26.942Z">
+<meta property="og:updated_time" content="2019-06-11T13:30:55.748Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS利用FFmpeg parse音视频数据流">
 <meta name="twitter:description" content="利用FFmpeg解析音视频流,音视频流可以来自一个标准的RTMP的URL或者是一个文件. 通过解析得到音视频流,进一步就可以解码, 然后视频渲染在屏幕上,音频通过扬声器输出.">
@@ -349,7 +349,7 @@
                 
               
 
-              <time title="Created: 2019-06-11 21:26:26" itemprop="dateCreated datePublished" datetime="2019-06-11T21:26:26+08:00">2019-06-11</time>
+              <time title="Created: 2019-06-11 21:30:55" itemprop="dateCreated datePublished" datetime="2019-06-11T21:30:55+08:00">2019-06-11</time>
             
 
             
@@ -441,6 +441,110 @@
         <p class="description"></p>
 
 <a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>利用FFmpeg解析音视频流,音视频流可以来自一个标准的RTMP的URL或者是一个文件. 通过解析得到音视频流,进一步就可以解码, 然后视频渲染在屏幕上,音频通过扬声器输出.</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>利用FFmpeg框架中libavformat模块可以通过函数<code>av_read_frame</code>解析出音视频流的音视频数据,如果直接使用FFmpeg硬解,仅需要解析到AVPacket即可传给解码模块使用,如果使用VideoToolbox中的硬解, 对于视频数据,还需要获取其NALU Header中的(vps)sps, pps以便后续使用.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提:"></a>阅读前提:</h3><ul>
+<li>iOS中FFmpeg环境搭建</li>
+<li>FFmpeg基本知识</li>
+<li>音视频基础</li>
+</ul>
+<hr>
+<h4 id="GitHub地址-附代码-iOS-Parse"><a href="#GitHub地址-附代码-iOS-Parse" class="headerlink" title="GitHub地址(附代码) : iOS Parse"></a>GitHub地址(附代码) : <a href="https://github.com/XiaoDongXie1024/XDXAudioVideoParseByFFmpeg" target="_blank" rel="noopener">iOS Parse</a></h4><h4 id="掘金地址-iOS-Parse"><a href="#掘金地址-iOS-Parse" class="headerlink" title="掘金地址     : iOS Parse"></a>掘金地址     : <a href="https://juejin.im/post/5cffac756fb9a07f08708d20" target="_blank" rel="noopener">iOS Parse</a></h4><h4 id="简书地址-iOS-Parse"><a href="#简书地址-iOS-Parse" class="headerlink" title="简书地址     : iOS Parse"></a>简书地址     : <a href="https://www.jianshu.com/p/31d113a57b15" target="_blank" rel="noopener">iOS Parse</a></h4><h4 id="博客地址-iOS-Parse"><a href="#博客地址-iOS-Parse" class="headerlink" title="博客地址     : iOS Parse"></a>博客地址     : <a href="https://xiaodongxie1024.github.io/2019/06/11/20190611_ios_parseavdata_ffmpeg/">iOS Parse</a></h4><hr>
+<h3 id="简易流程"><a href="#简易流程" class="headerlink" title="简易流程"></a>简易流程</h3><p>使用流程</p>
+<ul>
+<li>初始化解析类: <code>- (instancetype)initWithPath:(NSString *)path;</code></li>
+<li>开始解析: <code>startParseWithCompletionHandler</code></li>
+<li>获取解析后的数据: 从上一步中<code>startParseWithCompletionHandler</code>方法中的Block获取解析后的音视频数据.</li>
+</ul>
+<p>FFmpeg parse流程</p>
+<ul>
+<li>创建format context: <code>avformat_alloc_context</code></li>
+<li>打开文件流: <code>avformat_open_input</code></li>
+<li>寻找流信息: <code>avformat_find_stream_info</code></li>
+<li>获取音视频流的索引值: <code>formatContext-&gt;streams[i]-&gt;codecpar-&gt;codec_type == (isVideoStream ? AVMEDIA_TYPE_VIDEO : AVMEDIA_TYPE_AUDIO)</code></li>
+<li>获取音视频流: <code>m_formatContext-&gt;streams[m_audioStreamIndex]</code></li>
+<li>解析音视频数据帧: <code>av_read_frame</code></li>
+<li>获取extra data: <code>av_bitstream_filter_filter</code></li>
+</ul>
+<h3 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h3><h4 id="1-将FFmpeg框架导入项目中"><a href="#1-将FFmpeg框架导入项目中" class="headerlink" title="1. 将FFmpeg框架导入项目中"></a>1. 将FFmpeg框架导入项目中</h4><p>下面的链接中包含搭建iOS需要的FFmpeg环境的详细步骤,需要的可以提前阅读.</p>
+<p><a href="https://juejin.im/editor/posts/5ceff73df265da1bb13f16f4" target="_blank" rel="noopener">iOS编译FFmpeg</a></p>
+<p>导入FFmpeg框架后,首先需要将用到FFmpeg的文件改名为<code>.mm</code>, 因为涉及C,C++混编,所以需要更改文件名</p>
+<p>然后在头文件中导入FFmpeg头文件.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// FFmpeg Header File</span><br><span class="line">#ifdef __cplusplus</span><br><span class="line">extern &quot;C&quot; &#123;</span><br><span class="line">#endif</span><br><span class="line">    </span><br><span class="line">#include &quot;libavformat/avformat.h&quot;</span><br><span class="line">#include &quot;libavcodec/avcodec.h&quot;</span><br><span class="line">#include &quot;libavutil/avutil.h&quot;</span><br><span class="line">#include &quot;libswscale/swscale.h&quot;</span><br><span class="line">#include &quot;libswresample/swresample.h&quot;</span><br><span class="line">#include &quot;libavutil/opt.h&quot;</span><br><span class="line">    </span><br><span class="line">#ifdef __cplusplus</span><br><span class="line">&#125;;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意: FFmpeg是一个广为流传的框架,其结构复杂,一般导入都按照如上格式,以文件夹名为根目录进行导入,具体设置,请参考上文链接.</p>
+</blockquote>
+<h4 id="2-初始化"><a href="#2-初始化" class="headerlink" title="2. 初始化"></a>2. 初始化</h4><h5 id="2-1-注册FFmpeg"><a href="#2-1-注册FFmpeg" class="headerlink" title="2.1. 注册FFmpeg"></a>2.1. 注册FFmpeg</h5><ul>
+<li><code>void av_register_all(void);</code> 初始化libavformat并注册所有muxers，demuxers与协议。如果不调用此功能，则可以选择一个特定想要支持的格式。</li>
+</ul>
+<p>一般在程序中的main函数或是主程序启动的代理方法<code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</code>中初始化FFmpeg,执行一次即可.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">av_register_all();</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-2-利用视频文件生成格式上下文对象"><a href="#2-2-利用视频文件生成格式上下文对象" class="headerlink" title="2.2. 利用视频文件生成格式上下文对象"></a>2.2. 利用视频文件生成格式上下文对象</h5><ul>
+<li><code>avformat_alloc_context()</code>: 初始化avformat上下文对象.</li>
+<li><code>int avformat_open_input(AVFormatContext **ps, const char *url, AVInputFormat *fmt, AVDictionary **options)</code>函数<ul>
+<li><code>fmt</code>: 如果非空表示强制指定一个输入流的格式, 设置为空会自动选择.</li>
+</ul>
+</li>
+<li><code>int avformat_find_stream_info(AVFormatContext *ic, AVDictionary **options);</code> :读取媒体文件的数据包以获取流信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (AVFormatContext *)createFormatContextbyFilePath:(NSString *)filePath &#123;</span><br><span class="line">    if (filePath == nil) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: file path is NULL&quot;,__func__);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    AVFormatContext  *formatContext = NULL;</span><br><span class="line">    AVDictionary     *opts          = NULL;</span><br><span class="line">    </span><br><span class="line">    av_dict_set(&amp;opts, &quot;timeout&quot;, &quot;1000000&quot;, 0);//设置超时1秒</span><br><span class="line">    </span><br><span class="line">    formatContext = avformat_alloc_context();</span><br><span class="line">    BOOL isSuccess = avformat_open_input(&amp;formatContext, [filePath cStringUsingEncoding:NSUTF8StringEncoding], NULL, &amp;opts) &lt; 0 ? NO : YES;</span><br><span class="line">    av_dict_free(&amp;opts);</span><br><span class="line">    if (!isSuccess) &#123;</span><br><span class="line">        if (formatContext) &#123;</span><br><span class="line">            avformat_free_context(formatContext);</span><br><span class="line">        &#125;</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (avformat_find_stream_info(formatContext, NULL) &lt; 0) &#123;</span><br><span class="line">        avformat_close_input(&amp;formatContext);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return formatContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-3-获取Audio-Video流的索引值"><a href="#2-3-获取Audio-Video流的索引值" class="headerlink" title="2.3. 获取Audio / Video流的索引值."></a>2.3. 获取Audio / Video流的索引值.</h5><p>通过遍历format context对象可以从<code>nb_streams</code>数组中找到音频或视频流索引,以便后续使用. </p>
+<blockquote>
+<p>注意: 后面代码中仅需要知道音频,视频的索引就可以快速读取到format context对象中对应流的信息.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (int)getAVStreamIndexWithFormatContext:(AVFormatContext *)formatContext isVideoStream:(BOOL)isVideoStream &#123;</span><br><span class="line">    int avStreamIndex = -1;</span><br><span class="line">    for (int i = 0; i &lt; formatContext-&gt;nb_streams; i++) &#123;</span><br><span class="line">        if ((isVideoStream ? AVMEDIA_TYPE_VIDEO : AVMEDIA_TYPE_AUDIO) == formatContext-&gt;streams[i]-&gt;codecpar-&gt;codec_type) &#123;</span><br><span class="line">            avStreamIndex = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (avStreamIndex == -1) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: Not find video stream&quot;,__func__);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        return avStreamIndex;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-4-是否支持音视频流"><a href="#2-4-是否支持音视频流" class="headerlink" title="2.4. 是否支持音视频流"></a>2.4. 是否支持音视频流</h5><p>目前视频仅支持H264, H265编码的格式.实际过程中,解码得到视频的旋转角度可能是不同的,以及不同机型可以支持的解码文件格式也是不同的,所以可以用这个方法手动过滤一些不支持的情况.具体请下载代码观看,这里仅列出实战中测试出支持的列表.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> 各机型支持的最高分辨率和FPS组合:</span><br><span class="line"> </span><br><span class="line"> iPhone 6S: 60fps -&gt; 720P</span><br><span class="line"> 30fps -&gt; 4K</span><br><span class="line"> </span><br><span class="line"> iPhone 7P: 60fps -&gt; 1080p</span><br><span class="line"> 30fps -&gt; 4K</span><br><span class="line"> </span><br><span class="line"> iPhone 8: 60fps -&gt; 1080p</span><br><span class="line"> 30fps -&gt; 4K</span><br><span class="line"> </span><br><span class="line"> iPhone 8P: 60fps -&gt; 1080p</span><br><span class="line"> 30fps -&gt; 4K</span><br><span class="line"> </span><br><span class="line"> iPhone X: 60fps -&gt; 1080p</span><br><span class="line"> 30fps -&gt; 4K</span><br><span class="line"> </span><br><span class="line"> iPhone XS: 60fps -&gt; 1080p</span><br><span class="line"> 30fps -&gt; 4K</span><br><span class="line"> */</span><br></pre></td></tr></table></figure></p>
+<p>音频本例中仅支持AAC格式.其他格式可根据需求自行更改.</p>
+<h4 id="3-开始解析"><a href="#3-开始解析" class="headerlink" title="3. 开始解析"></a>3. 开始解析</h4><ul>
+<li>初始化AVPacket以存放解析后的数据</li>
+</ul>
+<p>使用AVPacket这个结构体来存储压缩数据.对于视频而言, 它通常包含一个压缩帧,对音频而言,可能包含多个压缩帧,该结构体类型通过<code>av_malloc()</code>函数分配内存,通过<code>av_packet_ref()</code>函数拷贝,通过<code>av_packet_unref().</code>函数释放内存.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AVPacket    packet;</span><br><span class="line">av_init_packet(&amp;packet);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>解析数据</p>
+<p>  <code>int av_read_frame(AVFormatContext *s, AVPacket *pkt);</code> : 此函数返回存储在文件中的内容，并且不验证解码器的有效帧是什么。它会将存储在文件中的内容分成帧，并为每次调用返回一个。它不会在有效帧之间省略无效数据，以便为解码器提供解码时可能的最大信息。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int size = av_read_frame(formatContext, &amp;packet);</span><br><span class="line">if (size &lt; 0 || packet.size &lt; 0) &#123;</span><br><span class="line">    handler(YES, YES, NULL, NULL);</span><br><span class="line">    log4cplus_error(kModuleName, &quot;%s: Parse finish&quot;,__func__);</span><br><span class="line">    break;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>获取sps, pps等NALU Header信息</p>
+<p>  通过调用<code>av_bitstream_filter_filter</code>可以从码流中过滤得到sps, pps等NALU Header信息.</p>
+<p>  av_bitstream_filter_init: 通过给定的比特流过滤器名词创建并初始化一个比特流过滤器上下文. </p>
+<p>  av_bitstream_filter_filter: 此函数通过过滤<code>buf</code>参数中的数据,将过滤后的数据放在<code>poutbuf</code>参数中.输出的buffer必须被调用者释放.</p>
+<p>  此函数使用buf_size大小过滤缓冲区buf，并将过滤后的缓冲区放在poutbuf指向的缓冲区中。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">attribute_deprecated int av_bitstream_filter_filter	(	AVBitStreamFilterContext * 	bsfc,   </span><br><span class="line">AVCodecContext * 	avctx,</span><br><span class="line">const char * 	args,   // filter 配置参数</span><br><span class="line">uint8_t ** 	poutbuf,    // 过滤后的数据</span><br><span class="line">int * 	poutbuf_size,   // 过滤后的数据大小</span><br><span class="line">const uint8_t * 	buf,// 提供给过滤器的原始数据</span><br><span class="line">int 	buf_size,       // 提供给过滤器的原始数据大小</span><br><span class="line">int 	keyframe        // 如果要过滤的buffer对应于关键帧分组数据，则设置为非零</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 下面使用<code>new_packet</code>是为了解决<code>av_bitstream_filter_filter</code>会产生内存泄漏的问题.每次使用完后将用<code>new_packet</code>释放即可.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">if (packet.stream_index == videoStreamIndex) &#123;</span><br><span class="line">    static char filter_name[32];</span><br><span class="line">    if (formatContext-&gt;streams[videoStreamIndex]-&gt;codecpar-&gt;codec_id == AV_CODEC_ID_H264) &#123;</span><br><span class="line">        strncpy(filter_name, &quot;h264_mp4toannexb&quot;, 32);</span><br><span class="line">        videoInfo.videoFormat = XDXH264EncodeFormat;</span><br><span class="line">    &#125; else if (formatContext-&gt;streams[videoStreamIndex]-&gt;codecpar-&gt;codec_id == AV_CODEC_ID_HEVC) &#123;</span><br><span class="line">        strncpy(filter_name, &quot;hevc_mp4toannexb&quot;, 32);</span><br><span class="line">        videoInfo.videoFormat = XDXH265EncodeFormat;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    AVPacket new_packet = packet;</span><br><span class="line">    if (self-&gt;m_bitFilterContext == NULL) &#123;</span><br><span class="line">        self-&gt;m_bitFilterContext = av_bitstream_filter_init(filter_name);</span><br><span class="line">    &#125;</span><br><span class="line">    av_bitstream_filter_filter(self-&gt;m_bitFilterContext, formatContext-&gt;streams[videoStreamIndex]-&gt;codec, NULL, &amp;new_packet.data, &amp;new_packet.size, packet.data, packet.size, 0);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>根据特定规则生成时间戳</li>
+</ul>
+<p>可以根据自己的需求自定义时间戳生成规则.这里使用当前系统时间戳加上数据包中的自带的pts/dts生成了时间戳.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CMSampleTimingInfo timingInfo;</span><br><span class="line">CMTime presentationTimeStamp     = kCMTimeInvalid;</span><br><span class="line">presentationTimeStamp            = CMTimeMakeWithSeconds(current_timestamp + packet.pts * av_q2d(formatContext-&gt;streams[videoStreamIndex]-&gt;time_base), fps);</span><br><span class="line">timingInfo.presentationTimeStamp = presentationTimeStamp;</span><br><span class="line">timingInfo.decodeTimeStamp       = CMTimeMakeWithSeconds(current_timestamp + av_rescale_q(packet.dts, formatContext-&gt;streams[videoStreamIndex]-&gt;time_base, input_base), fps);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取parse到的数据</li>
+</ul>
+<p>本例将获取到的数据放在自定义的结构体中,然后通过block回调传给方法的调用者,调用者可以在回调函数中处理parse到的视频数据.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">struct XDXParseVideoDataInfo &#123;</span><br><span class="line">    uint8_t                 *data;</span><br><span class="line">    int                     dataSize;</span><br><span class="line">    uint8_t                 *extraData;</span><br><span class="line">    int                     extraDataSize;</span><br><span class="line">    Float64                 pts;</span><br><span class="line">    Float64                 time_base;</span><br><span class="line">    int                     videoRotate;</span><br><span class="line">    int                     fps;</span><br><span class="line">    CMSampleTimingInfo      timingInfo;</span><br><span class="line">    XDXVideoEncodeFormat    videoFormat;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">    videoInfo.data          = video_data;</span><br><span class="line">    videoInfo.dataSize      = video_size;</span><br><span class="line">    videoInfo.extraDataSize = formatContext-&gt;streams[videoStreamIndex]-&gt;codec-&gt;extradata_size;</span><br><span class="line">    videoInfo.extraData     = (uint8_t *)malloc(videoInfo.extraDataSize);</span><br><span class="line">    videoInfo.timingInfo    = timingInfo;</span><br><span class="line">    videoInfo.pts           = packet.pts * av_q2d(formatContext-&gt;streams[videoStreamIndex]-&gt;time_base);</span><br><span class="line">    videoInfo.fps           = fps;</span><br><span class="line">    </span><br><span class="line">    memcpy(videoInfo.extraData, formatContext-&gt;streams[videoStreamIndex]-&gt;codec-&gt;extradata, videoInfo.extraDataSize);</span><br><span class="line">    av_free(new_packet.data);</span><br><span class="line">    </span><br><span class="line">    // send videoInfo</span><br><span class="line">    if (handler) &#123;</span><br><span class="line">        handler(YES, NO, &amp;videoInfo, NULL);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    free(videoInfo.extraData);</span><br><span class="line">    free(videoInfo.data);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取parse到的音频数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">struct XDXParseAudioDataInfo &#123;</span><br><span class="line">    uint8_t     *data;</span><br><span class="line">    int         dataSize;</span><br><span class="line">    int         channel;</span><br><span class="line">    int         sampleRate;</span><br><span class="line">    Float64     pts;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">    if (packet.stream_index == audioStreamIndex) &#123;</span><br><span class="line">        XDXParseAudioDataInfo audioInfo = &#123;0&#125;;</span><br><span class="line">        audioInfo.data = (uint8_t *)malloc(packet.size);</span><br><span class="line">        memcpy(audioInfo.data, packet.data, packet.size);</span><br><span class="line">        audioInfo.dataSize = packet.size;</span><br><span class="line">        audioInfo.channel = formatContext-&gt;streams[audioStreamIndex]-&gt;codecpar-&gt;channels;</span><br><span class="line">        audioInfo.sampleRate = formatContext-&gt;streams[audioStreamIndex]-&gt;codecpar-&gt;sample_rate;</span><br><span class="line">        audioInfo.pts = packet.pts * av_q2d(formatContext-&gt;streams[audioStreamIndex]-&gt;time_base);</span><br><span class="line">        </span><br><span class="line">        // send audio info</span><br><span class="line">        if (handler) &#123;</span><br><span class="line">            handler(NO, NO, NULL, &amp;audioInfo);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        free(audioInfo.data);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>释放packet</li>
+</ul>
+<p>因为我们已经将packet中的关键数据拷贝到自定义的结构体中,所以使用完后需要释放packet.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">av_packet_unref(&amp;packet);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>parse完成后释放相关资源</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (void)freeAllResources &#123;</span><br><span class="line">    if (m_formatContext) &#123;</span><br><span class="line">        avformat_close_input(&amp;m_formatContext);</span><br><span class="line">        m_formatContext = NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (m_bitFilterContext) &#123;</span><br><span class="line">        av_bitstream_filter_close(m_bitFilterContext);</span><br><span class="line">        m_bitFilterContext = NULL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 如果使用FFmpeg硬解,则仅仅需要获取到AVPacket数据结构即可.不需要再将数据封装到自定义的结构体中</p>
+</blockquote>
+<h4 id="4-外部调用"><a href="#4-外部调用" class="headerlink" title="4. 外部调用"></a>4. 外部调用</h4><p>上面操作执行完后,即可通过如下block获取解析后的数据,一般需要继续对音视频进行解码操作.后面文章会讲到,请持续关注.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];</span><br><span class="line">[parseHandler startParseGetAVPackeWithCompletionHandler:^(BOOL isVideoFrame, BOOL isFinish, AVPacket packet) &#123;</span><br><span class="line">    if (isFinish) &#123;</span><br><span class="line">        // parse finish</span><br><span class="line">        ...</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (isVideoFrame) &#123;</span><br><span class="line">        // decode video</span><br><span class="line">        ...</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        // decode audio</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -592,8 +696,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -749,6 +862,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GitHub地址-附代码-iOS-Parse"><span class="nav-number">3.1.</span> <span class="nav-text">GitHub地址(附代码) : iOS Parse</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS-Parse"><span class="nav-number">3.2.</span> <span class="nav-text">掘金地址     : iOS Parse</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS-Parse"><span class="nav-number">3.3.</span> <span class="nav-text">简书地址     : iOS Parse</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS-Parse"><span class="nav-number">3.4.</span> <span class="nav-text">博客地址     : iOS Parse</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简易流程"><span class="nav-number">4.</span> <span class="nav-text">简易流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体步骤"><span class="nav-number">5.</span> <span class="nav-text">具体步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-将FFmpeg框架导入项目中"><span class="nav-number">5.1.</span> <span class="nav-text">1. 将FFmpeg框架导入项目中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-初始化"><span class="nav-number">5.2.</span> <span class="nav-text">2. 初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-注册FFmpeg"><span class="nav-number">5.2.1.</span> <span class="nav-text">2.1. 注册FFmpeg</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-利用视频文件生成格式上下文对象"><span class="nav-number">5.2.2.</span> <span class="nav-text">2.2. 利用视频文件生成格式上下文对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-获取Audio-Video流的索引值"><span class="nav-number">5.2.3.</span> <span class="nav-text">2.3. 获取Audio / Video流的索引值.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-是否支持音视频流"><span class="nav-number">5.2.4.</span> <span class="nav-text">2.4. 是否支持音视频流</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-开始解析"><span class="nav-number">5.3.</span> <span class="nav-text">3. 开始解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-外部调用"><span class="nav-number">5.4.</span> <span class="nav-text">4. 外部调用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
