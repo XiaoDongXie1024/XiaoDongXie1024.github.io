@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文主要将含有编码的H.264,H.265视频流文件解码为原始视频数据,解码后即可渲染到屏幕或用作其他用途.">
+<meta name="keywords" content="iOS,video decoder, videotoolbox">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS利用VideoToolbox实现视频硬解码">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/06/26/20190625_video_decoder_videotoobox/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="本文主要将含有编码的H.264,H.265视频流文件解码为原始视频数据,解码后即可渲染到屏幕或用作其他用途.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-cec9976c4c5443ea?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/zzJ9xSCPkr3nLcN0r2CaRffGSJVt8TZIfq9QYt7j95M!/r/dMUAAAAAAAAA">
+<meta property="og:updated_time" content="2019-06-25T16:01:39.772Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS利用VideoToolbox实现视频硬解码">
+<meta name="twitter:description" content="本文主要将含有编码的H.264,H.265视频流文件解码为原始视频数据,解码后即可渲染到屏幕或用作其他用途.">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5086522-cec9976c4c5443ea?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/06/26/20190625_video_decoder_videotoobox/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS利用VideoToolbox实现视频硬解码 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/06/26/20190625_video_decoder_videotoobox/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS利用VideoToolbox实现视频硬解码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-06-26 00:01:39" itemprop="dateCreated datePublished" datetime="2019-06-26T00:01:39+08:00">2019-06-26</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/编解码-Encode-Decode/" itemprop="url" rel="index"><span itemprop="name">编解码(Encode/Decode)</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/06/26/20190625_video_decoder_videotoobox/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/06/26/20190625_video_decoder_videotoobox/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/06/26/20190625_video_decoder_videotoobox/" class="leancloud_visitors" data-flag-title="iOS利用VideoToolbox实现视频硬解码">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">本文主要将含有编码的H.264,H.265视频流文件解码为原始视频数据,解码后即可渲染到屏幕或用作其他用途.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>本文主要将含有编码的H.264,H.265视频流文件解码为原始视频数据,解码后即可渲染到屏幕或用作其他用途.</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>正如我们所知,编码数据仅用于传输,无法直接渲染到屏幕上,所以这里利用苹果原生框架VideoToolbox解析文件中的编码的视频流,并将压缩视频数据(h264/h265)解码为指定格式(yuv,RGB)的视频原始数据,以渲染到屏幕上.</p>
+<p>注意: 本例主要为解码,需要借助FFmpeg搭建模块,视频解析模块,渲染模块,这些模块在下面阅读前提皆有链接可直接访问.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h3><ul>
+<li>音视频基础</li>
+<li><a href="https://juejin.im/post/5ceff73df265da1bb13f16f4" target="_blank" rel="noopener">iOS FFmpeg环境搭建</a></li>
+<li><a href="https://juejin.im/post/5cffac756fb9a07f08708d20" target="_blank" rel="noopener">FFmpeg解析视频数据</a></li>
+<li><a href="https://juejin.im/post/5d08f861518825699040ecac" target="_blank" rel="noopener">OpenGL渲染视频数据</a></li>
+<li><a href="https://juejin.im/post/5ce9f36bf265da1bbd4b5084" target="_blank" rel="noopener">H.264,H.265码流结构</a></li>
+</ul>
+<hr>
+<h4 id="代码地址-Video-Decoder"><a href="#代码地址-Video-Decoder" class="headerlink" title="代码地址 : Video Decoder"></a>代码地址 : <a href="https://github.com/XiaoDongXie1024/XDXVideoDecoder" target="_blank" rel="noopener">Video Decoder</a></h4><h4 id="掘金地址-Video-Decoder"><a href="#掘金地址-Video-Decoder" class="headerlink" title="掘金地址 : Video Decoder"></a>掘金地址 : <a href="https://juejin.im/post/5d1243b75188257b791527d5" target="_blank" rel="noopener">Video Decoder</a></h4><h4 id="简书地址-Video-Decoder"><a href="#简书地址-Video-Decoder" class="headerlink" title="简书地址 : Video Decoder"></a>简书地址 : <a href="https://www.jianshu.com/p/18ace93bb2ff" target="_blank" rel="noopener">Video Decoder</a></h4><h4 id="博客地址-Video-Decoder"><a href="#博客地址-Video-Decoder" class="headerlink" title="博客地址 : Video Decoder"></a>博客地址 : <a href="https://xiaodongxie1024.github.io/2019/06/25/20190625_video_decoder_videotoobox/">Video Decoder</a></h4><hr>
+<h3 id="总体架构"><a href="#总体架构" class="headerlink" title="总体架构"></a>总体架构</h3><p>总体思想即将FFmpeg parse到的数据装到<code>CMBlockBuffer</code>中,将extra data分离出的vps,sps,pps装到<code>CMVideoFormatDesc</code>中,将计算好的时间戳装到<code>CMTime</code>中,最后即可拼成完成的<code>CMSampleBuffer</code>以用来提供给解码器.</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-cec9976c4c5443ea?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="CMSampleBufferCreate"></p>
+<h4 id="简易流程"><a href="#简易流程" class="headerlink" title="简易流程"></a>简易流程</h4><p>FFmpeg parse流程</p>
+<ul>
+<li>创建format context: <code>avformat_alloc_context</code></li>
+<li>打开文件流: <code>avformat_open_input</code></li>
+<li>寻找流信息: <code>avformat_find_stream_info</code></li>
+<li>获取音视频流的索引值: <code>formatContext-&gt;streams[i]-&gt;codecpar-&gt;codec_type == (isVideoStream ? AVMEDIA_TYPE_VIDEO : AVMEDIA_TYPE_AUDIO)</code></li>
+<li>获取音视频流: <code>m_formatContext-&gt;streams[m_audioStreamIndex]</code></li>
+<li>解析音视频数据帧: <code>av_read_frame</code></li>
+<li>获取extra data: <code>av_bitstream_filter_filter</code></li>
+</ul>
+<p>VideoToolbox decode流程</p>
+<ul>
+<li>比较上一次的extra data,如果数据更新需要重新创建解码器</li>
+<li>分离并保存FFmpeg parse到的extra data中分离vps, sps, pps等关键信息 (比较NALU头)</li>
+<li>通过<code>CMVideoFormatDescriptionCreateFromH264ParameterSets</code>,<code>CMVideoFormatDescriptionCreateFromHEVCParameterSets</code>装载vps,sps,pps等NALU header信息.</li>
+<li>指定解码器回调函数与解码后视频数据类型(yuv,RGB…)</li>
+<li>创建解码器<code>VTDecompressionSessionCreate</code></li>
+<li>生成<code>CMBlockBufferRef</code>装载解码前数据,再将其转为<code>CMSampleBufferRef</code>以提供给解码器.</li>
+<li>开始解码<code>VTDecompressionSessionDecodeFrame</code></li>
+<li>在回调函数中<code>CVImageBufferRef</code>即为解码后的数据,可转为<code>CMSampleBufferRef</code>传出.</li>
+</ul>
+<h4 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/zzJ9xSCPkr3nLcN0r2CaRffGSJVt8TZIfq9QYt7j95M!/r/dMUAAAAAAAAA" alt></p>
+<h4 id="快速使用"><a href="#快速使用" class="headerlink" title="快速使用"></a>快速使用</h4><ul>
+<li><p>初始化preview</p>
+<p>  解码后的视频数据将渲染到该预览层</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    [self setupUI];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setupUI &#123;</span><br><span class="line">    self.previewView = [[XDXPreviewView alloc] initWithFrame:self.view.frame];</span><br><span class="line">    [self.view addSubview:self.previewView];</span><br><span class="line">    [self.view bringSubviewToFront:self.startBtn];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>解析并解码文件中视频数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (void)startDecodeByVTSessionWithIsH265Data:(BOOL)isH265 &#123;</span><br><span class="line">    NSString *path = [[NSBundle mainBundle] pathForResource:isH265 ? @&quot;testh265&quot; : @&quot;testh264&quot;  ofType:@&quot;MOV&quot;];</span><br><span class="line">    XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];</span><br><span class="line">    XDXVideoDecoder *decoder = [[XDXVideoDecoder alloc] init];</span><br><span class="line">    decoder.delegate = self;</span><br><span class="line">    [parseHandler startParseWithCompletionHandler:^(BOOL isVideoFrame, BOOL isFinish, struct XDXParseVideoDataInfo *videoInfo, struct XDXParseAudioDataInfo *audioInfo) &#123;</span><br><span class="line">        if (isFinish) &#123;</span><br><span class="line">            [decoder stopDecoder];</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (isVideoFrame) &#123;</span><br><span class="line">            [decoder startDecodeVideoData:videoInfo];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将解码后数据渲染到屏幕上 ()</p>
+</li>
+</ul>
+<blockquote>
+<p>注意: 如果数据中含有B帧则需要做一个重排序才能渲染,本例提供两个文件,一个不含B帧的h264类型文件,一个含B帧的h265类型文件.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer &#123;</span><br><span class="line">    if (self.isH265File) &#123;</span><br><span class="line">        // Note : the first frame not need to sort.</span><br><span class="line">        if (self.isDecodeFirstFrame) &#123;</span><br><span class="line">            self.isDecodeFirstFrame = NO;</span><br><span class="line">            CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">            [self.previewView displayPixelBuffer:pix];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        XDXSortFrameHandler *sortHandler = [[XDXSortFrameHandler alloc] init];</span><br><span class="line">        sortHandler.delegate = self;</span><br><span class="line">        [sortHandler addDataToLinkList:sampleBuffer];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">        [self.previewView displayPixelBuffer:pix];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getSortedVideoNode:(CMSampleBufferRef)sampleBuffer &#123;</span><br><span class="line">    int64_t pts = (int64_t)(CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000);</span><br><span class="line">    static int64_t lastpts = 0;</span><br><span class="line">    NSLog(@&quot;Test marigin - %lld&quot;,pts - lastpts);</span><br><span class="line">    lastpts = pts;</span><br><span class="line">    </span><br><span class="line">    [self.previewView displayPixelBuffer:CMSampleBufferGetImageBuffer(sampleBuffer)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="1-从Parse到的数据中检测是否需要更新extra-data"><a href="#1-从Parse到的数据中检测是否需要更新extra-data" class="headerlink" title="1. 从Parse到的数据中检测是否需要更新extra data."></a>1. 从Parse到的数据中检测是否需要更新extra data.</h4><p>使用FFmpeg parse的数据装在<code>XDXParseVideoDataInfo</code>结构体中,结构体定义如下,parse模块可在上文链接中学习,本节只将解码模块.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">struct XDXParseVideoDataInfo &#123;</span><br><span class="line">    uint8_t                 *data;</span><br><span class="line">    int                     dataSize;</span><br><span class="line">    uint8_t                 *extraData;</span><br><span class="line">    int                     extraDataSize;</span><br><span class="line">    Float64                 pts;</span><br><span class="line">    Float64                 time_base;</span><br><span class="line">    int                     videoRotate;</span><br><span class="line">    int                     fps;</span><br><span class="line">    CMSampleTimingInfo      timingInfo;</span><br><span class="line">    XDXVideoEncodeFormat    videoFormat;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>通过缓存当前extra data可以将当前获取的extra data与上一次的进行对比,如果改变需要重新创建解码器,如果没有改变则解码器可复用.(此代码尤其适用于网络流中的视频流,因为视频流可能会改变)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">        uint8_t *extraData = videoInfo-&gt;extraData;</span><br><span class="line">        int     size       = videoInfo-&gt;extraDataSize;</span><br><span class="line">        </span><br><span class="line">        BOOL isNeedUpdate = [self isNeedUpdateExtraDataWithNewExtraData:extraData</span><br><span class="line">                                                                newSize:size</span><br><span class="line">                                                               lastData:&amp;_lastExtraData</span><br><span class="line">                                                               lastSize:&amp;_lastExtraDataSize];</span><br><span class="line">                                                               </span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">- (BOOL)isNeedUpdateExtraDataWithNewExtraData:(uint8_t *)newData newSize:(int)newSize lastData:(uint8_t **)lastData lastSize:(int *)lastSize &#123;</span><br><span class="line">    BOOL isNeedUpdate = NO;</span><br><span class="line">    if (*lastSize == 0) &#123;</span><br><span class="line">        isNeedUpdate = YES;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        if (*lastSize != newSize) &#123;</span><br><span class="line">            isNeedUpdate = YES;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            if (memcmp(newData, *lastData, newSize) != 0) &#123;</span><br><span class="line">                isNeedUpdate = YES;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (isNeedUpdate) &#123;</span><br><span class="line">        [self destoryDecoder];</span><br><span class="line">        </span><br><span class="line">        *lastData = (uint8_t *)malloc(newSize);</span><br><span class="line">        memcpy(*lastData, newData, newSize);</span><br><span class="line">        *lastSize = newSize;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return isNeedUpdate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-从extra-data中分离关键信息-h265-vps-sps-pps"><a href="#2-从extra-data中分离关键信息-h265-vps-sps-pps" class="headerlink" title="2. 从extra data中分离关键信息(h265:vps),sps,pps."></a>2. 从extra data中分离关键信息(h265:vps),sps,pps.</h4><p>创建解码器必须要有NALU Header中的一些关键信息,如vps,sps,pps,以用来组成一个<code>CMVideoFormatDesc</code>描述视频信息的数据结构,如上图</p>
+<blockquote>
+<p>注意: h264码流需要sps,pps, h265码流则需要vps,sps,pps</p>
+</blockquote>
+<ul>
+<li>分离NALU Header</li>
+</ul>
+<p>首先确定start code的位置,通过比较前四个字节是否为<code>00 00 00 01</code>即可. 对于h264的数据,start code之后紧接着的是sps,pps, 对于h265的数据则是vps,sps,pps</p>
+<ul>
+<li>确定NALU Header长度</li>
+</ul>
+<p>通过sps索引与pps索引值可以确定sps长度,其他类似,注意,码流结构中均以4个字节的start code作为分界符,所以需要减去对应长度.</p>
+<ul>
+<li>分离NALU Header数据</li>
+</ul>
+<p>对于h264类型数据将数据<code>&amp;</code>上<code>0x1F</code>可以确定NALU header的类型,对于h265类型数据,将数据<code>&amp;</code>上<code>0x4F</code>可以确定NALU header的类型,这源于h264,h265的码流结构,如果不懂请参考文章最上方阅读前提中码流结构相关文章.</p>
+<p>得到对应类型的数据与大小后,将其赋给全局变量,即可供后面使用.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line">        if (isNeedUpdate) &#123;</span><br><span class="line">            log4cplus_error(kModuleName, &quot;%s: update extra data&quot;,__func__);</span><br><span class="line">            </span><br><span class="line">            [self getNALUInfoWithVideoFormat:videoInfo-&gt;videoFormat</span><br><span class="line">                                   extraData:extraData</span><br><span class="line">                               extraDataSize:size</span><br><span class="line">                                 decoderInfo:&amp;_decoderInfo];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">- (void)getNALUInfoWithVideoFormat:(XDXVideoEncodeFormat)videoFormat extraData:(uint8_t *)extraData extraDataSize:(int)extraDataSize decoderInfo:(XDXDecoderInfo *)decoderInfo &#123;</span><br><span class="line"></span><br><span class="line">    uint8_t *data = extraData;</span><br><span class="line">    int      size = extraDataSize;</span><br><span class="line">    </span><br><span class="line">    int startCodeVPSIndex  = 0;</span><br><span class="line">    int startCodeSPSIndex  = 0;</span><br><span class="line">    int startCodeFPPSIndex = 0;</span><br><span class="line">    int startCodeRPPSIndex = 0;</span><br><span class="line">    int nalu_type = 0;</span><br><span class="line">    </span><br><span class="line">    for (int i = 0; i &lt; size; i ++) &#123;</span><br><span class="line">        if (i &gt;= 3) &#123;</span><br><span class="line">            if (data[i] == 0x01 &amp;&amp; data[i - 1] == 0x00 &amp;&amp; data[i - 2] == 0x00 &amp;&amp; data[i - 3] == 0x00) &#123;</span><br><span class="line">                if (videoFormat == XDXH264EncodeFormat) &#123;</span><br><span class="line">                    if (startCodeSPSIndex == 0) &#123;</span><br><span class="line">                        startCodeSPSIndex = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (i &gt; startCodeSPSIndex) &#123;</span><br><span class="line">                        startCodeFPPSIndex = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;else if (videoFormat == XDXH265EncodeFormat) &#123;</span><br><span class="line">                    if (startCodeVPSIndex == 0) &#123;</span><br><span class="line">                        startCodeVPSIndex = i;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (i &gt; startCodeVPSIndex &amp;&amp; startCodeSPSIndex == 0) &#123;</span><br><span class="line">                        startCodeSPSIndex = i;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (i &gt; startCodeSPSIndex &amp;&amp; startCodeFPPSIndex == 0) &#123;</span><br><span class="line">                        startCodeFPPSIndex = i;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (i &gt; startCodeFPPSIndex &amp;&amp; startCodeRPPSIndex == 0) &#123;</span><br><span class="line">                        startCodeRPPSIndex = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    int spsSize = startCodeFPPSIndex - startCodeSPSIndex - 4;</span><br><span class="line">    decoderInfo-&gt;sps_size = spsSize;</span><br><span class="line">    </span><br><span class="line">    if (videoFormat == XDXH264EncodeFormat) &#123;</span><br><span class="line">        int f_ppsSize = size - (startCodeFPPSIndex + 1);</span><br><span class="line">        decoderInfo-&gt;f_pps_size = f_ppsSize;</span><br><span class="line">        </span><br><span class="line">        nalu_type = ((uint8_t)data[startCodeSPSIndex + 1] &amp; 0x1F);</span><br><span class="line">        if (nalu_type == 0x07) &#123;</span><br><span class="line">            uint8_t *sps = &amp;data[startCodeSPSIndex + 1];</span><br><span class="line">            [self copyDataWithOriginDataRef:&amp;decoderInfo-&gt;sps newData:sps size:spsSize];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        nalu_type = ((uint8_t)data[startCodeFPPSIndex + 1] &amp; 0x1F);</span><br><span class="line">        if (nalu_type == 0x08) &#123;</span><br><span class="line">            uint8_t *pps = &amp;data[startCodeFPPSIndex + 1];</span><br><span class="line">            [self copyDataWithOriginDataRef:&amp;decoderInfo-&gt;f_pps newData:pps size:f_ppsSize];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        int vpsSize = startCodeSPSIndex - startCodeVPSIndex - 4;</span><br><span class="line">        decoderInfo-&gt;vps_size = vpsSize;</span><br><span class="line">        </span><br><span class="line">        int f_ppsSize = startCodeRPPSIndex - startCodeFPPSIndex - 4;</span><br><span class="line">        decoderInfo-&gt;f_pps_size = f_ppsSize;</span><br><span class="line">        </span><br><span class="line">        nalu_type = ((uint8_t) data[startCodeVPSIndex + 1] &amp; 0x4F);</span><br><span class="line">        if (nalu_type == 0x40) &#123;</span><br><span class="line">            uint8_t *vps = &amp;data[startCodeVPSIndex + 1];</span><br><span class="line">            [self copyDataWithOriginDataRef:&amp;decoderInfo-&gt;vps newData:vps size:vpsSize];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        nalu_type = ((uint8_t) data[startCodeSPSIndex + 1] &amp; 0x4F);</span><br><span class="line">        if (nalu_type == 0x42) &#123;</span><br><span class="line">            uint8_t *sps = &amp;data[startCodeSPSIndex + 1];</span><br><span class="line">            [self copyDataWithOriginDataRef:&amp;decoderInfo-&gt;sps newData:sps size:spsSize];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        nalu_type = ((uint8_t) data[startCodeFPPSIndex + 1] &amp; 0x4F);</span><br><span class="line">        if (nalu_type == 0x44) &#123;</span><br><span class="line">            uint8_t *pps = &amp;data[startCodeFPPSIndex + 1];</span><br><span class="line">            [self copyDataWithOriginDataRef:&amp;decoderInfo-&gt;f_pps newData:pps size:f_ppsSize];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (startCodeRPPSIndex == 0) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        int r_ppsSize = size - (startCodeRPPSIndex + 1);</span><br><span class="line">        decoderInfo-&gt;r_pps_size = r_ppsSize;</span><br><span class="line">        </span><br><span class="line">        nalu_type = ((uint8_t) data[startCodeRPPSIndex + 1] &amp; 0x4F);</span><br><span class="line">        if (nalu_type == 0x44) &#123;</span><br><span class="line">            uint8_t *pps = &amp;data[startCodeRPPSIndex + 1];</span><br><span class="line">            [self copyDataWithOriginDataRef:&amp;decoderInfo-&gt;r_pps newData:pps size:r_ppsSize];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)copyDataWithOriginDataRef:(uint8_t **)originDataRef newData:(uint8_t *)newData size:(int)size &#123;</span><br><span class="line">    if (*originDataRef) &#123;</span><br><span class="line">        free(*originDataRef);</span><br><span class="line">        *originDataRef = NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    *originDataRef = (uint8_t *)malloc(size);</span><br><span class="line">    memcpy(*originDataRef, newData, size);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-创建解码器"><a href="#3-创建解码器" class="headerlink" title="3. 创建解码器"></a>3. 创建解码器</h4><p>根据编码数据类型确定使用h264解码器还是h265解码器,如上图我们可得知,我们需要将数据拼成一个CMSampleBuffer类型以传给解码器解码.</p>
+<ul>
+<li>生成 <code>CMVideoFormatDescriptionRef</code></li>
+</ul>
+<p>通过(vps)sps,pps信息组成<code>CMVideoFormatDescriptionRef</code>. 这里需要注意的是, h265编码数据有的码流数据中含有两个pps, 所以在拼装时需要判断以确定参数数量.</p>
+<ul>
+<li>确定视频数据类型</li>
+</ul>
+<p>通过指定<code>kCVPixelFormatType_420YpCbCr8BiPlanarFullRange</code>将视频数据类型设置为yuv 420sp, 如需其他格式可自行更改适配.</p>
+<ul>
+<li>指定回调函数</li>
+<li>创建编码器</li>
+</ul>
+<p>通过上面提供的所有信息,即可调用<code>VTDecompressionSessionCreate</code>生成解码器上下文对象.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line">    // create decoder</span><br><span class="line">    if (!_decoderSession) &#123;</span><br><span class="line">        _decoderSession = [self createDecoderWithVideoInfo:videoInfo</span><br><span class="line">                                              videoDescRef:&amp;_decoderFormatDescription</span><br><span class="line">                                               videoFormat:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange</span><br><span class="line">                                                      lock:_decoder_lock</span><br><span class="line">                                                  callback:VideoDecoderCallback</span><br><span class="line">                                               decoderInfo:_decoderInfo];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">- (VTDecompressionSessionRef)createDecoderWithVideoInfo:(XDXParseVideoDataInfo *)videoInfo videoDescRef:(CMVideoFormatDescriptionRef *)videoDescRef videoFormat:(OSType)videoFormat lock:(pthread_mutex_t)lock callback:(VTDecompressionOutputCallback)callback decoderInfo:(XDXDecoderInfo)decoderInfo &#123;</span><br><span class="line">    pthread_mutex_lock(&amp;lock);</span><br><span class="line">    </span><br><span class="line">    OSStatus status;</span><br><span class="line">    if (videoInfo-&gt;videoFormat == XDXH264EncodeFormat) &#123;</span><br><span class="line">        const uint8_t *const parameterSetPointers[2] = &#123;decoderInfo.sps, decoderInfo.f_pps&#125;;</span><br><span class="line">        const size_t parameterSetSizes[2] = &#123;static_cast&lt;size_t&gt;(decoderInfo.sps_size), static_cast&lt;size_t&gt;(decoderInfo.f_pps_size)&#125;;</span><br><span class="line">        status = CMVideoFormatDescriptionCreateFromH264ParameterSets(kCFAllocatorDefault,</span><br><span class="line">                                                                     2,</span><br><span class="line">                                                                     parameterSetPointers,</span><br><span class="line">                                                                     parameterSetSizes,</span><br><span class="line">                                                                     4,</span><br><span class="line">                                                                     videoDescRef);</span><br><span class="line">    &#125;else if (videoInfo-&gt;videoFormat == XDXH265EncodeFormat) &#123;</span><br><span class="line">        if (decoderInfo.r_pps_size == 0) &#123;</span><br><span class="line">            const uint8_t *const parameterSetPointers[3] = &#123;decoderInfo.vps, decoderInfo.sps, decoderInfo.f_pps&#125;;</span><br><span class="line">            const size_t parameterSetSizes[3] = &#123;static_cast&lt;size_t&gt;(decoderInfo.vps_size), static_cast&lt;size_t&gt;(decoderInfo.sps_size), static_cast&lt;size_t&gt;(decoderInfo.f_pps_size)&#125;;</span><br><span class="line">            if (@available(iOS 11.0, *)) &#123;</span><br><span class="line">                status = CMVideoFormatDescriptionCreateFromHEVCParameterSets(kCFAllocatorDefault,</span><br><span class="line">                                                                             3,</span><br><span class="line">                                                                             parameterSetPointers,</span><br><span class="line">                                                                             parameterSetSizes,</span><br><span class="line">                                                                             4,</span><br><span class="line">                                                                             NULL,</span><br><span class="line">                                                                             videoDescRef);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                status = -1;</span><br><span class="line">                log4cplus_error(kModuleName, &quot;%s: System version is too low!&quot;,__func__);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            const uint8_t *const parameterSetPointers[4] = &#123;decoderInfo.vps, decoderInfo.sps, decoderInfo.f_pps, decoderInfo.r_pps&#125;;</span><br><span class="line">            const size_t parameterSetSizes[4] = &#123;static_cast&lt;size_t&gt;(decoderInfo.vps_size), static_cast&lt;size_t&gt;(decoderInfo.sps_size), static_cast&lt;size_t&gt;(decoderInfo.f_pps_size), static_cast&lt;size_t&gt;(decoderInfo.r_pps_size)&#125;;</span><br><span class="line">            if (@available(iOS 11.0, *)) &#123;</span><br><span class="line">                status = CMVideoFormatDescriptionCreateFromHEVCParameterSets(kCFAllocatorDefault,</span><br><span class="line">                                                                             4,</span><br><span class="line">                                                                             parameterSetPointers,</span><br><span class="line">                                                                             parameterSetSizes,</span><br><span class="line">                                                                             4,</span><br><span class="line">                                                                             NULL,</span><br><span class="line">                                                                             videoDescRef);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                status = -1;</span><br><span class="line">                log4cplus_error(kModuleName, &quot;%s: System version is too low!&quot;,__func__);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        status = -1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (status != noErr) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: NALU header error !&quot;,__func__);</span><br><span class="line">        pthread_mutex_unlock(&amp;lock);</span><br><span class="line">        [self destoryDecoder];</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    uint32_t pixelFormatType = videoFormat;</span><br><span class="line">    const void *keys[]       = &#123;kCVPixelBufferPixelFormatTypeKey&#125;;</span><br><span class="line">    const void *values[]     = &#123;CFNumberCreate(NULL, kCFNumberSInt32Type, &amp;pixelFormatType)&#125;;</span><br><span class="line">    CFDictionaryRef attrs    = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);</span><br><span class="line">    </span><br><span class="line">    VTDecompressionOutputCallbackRecord callBackRecord;</span><br><span class="line">    callBackRecord.decompressionOutputCallback = callback;</span><br><span class="line">    callBackRecord.decompressionOutputRefCon   = (__bridge void *)self;</span><br><span class="line">    </span><br><span class="line">    VTDecompressionSessionRef session;</span><br><span class="line">    status = VTDecompressionSessionCreate(kCFAllocatorDefault,</span><br><span class="line">                                          *videoDescRef,</span><br><span class="line">                                          NULL,</span><br><span class="line">                                          attrs,</span><br><span class="line">                                          &amp;callBackRecord,</span><br><span class="line">                                          &amp;session);</span><br><span class="line">    </span><br><span class="line">    CFRelease(attrs);</span><br><span class="line">    pthread_mutex_unlock(&amp;lock);</span><br><span class="line">    if (status != noErr) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: Create decoder failed&quot;,__func__);</span><br><span class="line">        [self destoryDecoder];</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return session;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-开始解码"><a href="#4-开始解码" class="headerlink" title="4. 开始解码"></a>4. 开始解码</h4><ul>
+<li>将parse出来的原始数据装在<code>XDXDecodeVideoInfo</code>结构体中,以便后续扩展使用.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    CVPixelBufferRef outputPixelbuffer;</span><br><span class="line">    int              rotate;</span><br><span class="line">    Float64          pts;</span><br><span class="line">    int              fps;</span><br><span class="line">    int              source_index;</span><br><span class="line">&#125; XDXDecodeVideoInfo;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将编码数据装在<code>CMBlockBufferRef</code>中.</li>
+<li>通过<code>CMBlockBufferRef</code>生成<code>CMSampleBufferRef</code></li>
+<li>解码数据</li>
+</ul>
+<p>通过<code>VTDecompressionSessionDecodeFrame</code>函数即可完成解码一帧视频数据.第三个参数可以指定解码采用同步或异步方式.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    // start decode</span><br><span class="line">    [self startDecode:videoInfo</span><br><span class="line">              session:_decoderSession</span><br><span class="line">                 lock:_decoder_lock];</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">- (void)startDecode:(XDXParseVideoDataInfo *)videoInfo session:(VTDecompressionSessionRef)session lock:(pthread_mutex_t)lock &#123;</span><br><span class="line">    pthread_mutex_lock(&amp;lock);</span><br><span class="line">    uint8_t *data  = videoInfo-&gt;data;</span><br><span class="line">    int     size   = videoInfo-&gt;dataSize;</span><br><span class="line">    int     rotate = videoInfo-&gt;videoRotate;</span><br><span class="line">    CMSampleTimingInfo timingInfo = videoInfo-&gt;timingInfo;</span><br><span class="line">    </span><br><span class="line">    uint8_t *tempData = (uint8_t *)malloc(size);</span><br><span class="line">    memcpy(tempData, data, size);</span><br><span class="line">    </span><br><span class="line">    XDXDecodeVideoInfo *sourceRef = (XDXDecodeVideoInfo *)malloc(sizeof(XDXParseVideoDataInfo));</span><br><span class="line">    sourceRef-&gt;outputPixelbuffer  = NULL;</span><br><span class="line">    sourceRef-&gt;rotate             = rotate;</span><br><span class="line">    sourceRef-&gt;pts                = videoInfo-&gt;pts;</span><br><span class="line">    sourceRef-&gt;fps                = videoInfo-&gt;fps;</span><br><span class="line">    </span><br><span class="line">    CMBlockBufferRef blockBuffer;</span><br><span class="line">    OSStatus status = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,</span><br><span class="line">                                                         (void *)tempData,</span><br><span class="line">                                                         size,</span><br><span class="line">                                                         kCFAllocatorNull,</span><br><span class="line">                                                         NULL,</span><br><span class="line">                                                         0,</span><br><span class="line">                                                         size,</span><br><span class="line">                                                         0,</span><br><span class="line">                                                         &amp;blockBuffer);</span><br><span class="line">    </span><br><span class="line">    if (status == kCMBlockBufferNoErr) &#123;</span><br><span class="line">        CMSampleBufferRef sampleBuffer = NULL;</span><br><span class="line">        const size_t sampleSizeArray[] = &#123; static_cast&lt;size_t&gt;(size) &#125;;</span><br><span class="line">        </span><br><span class="line">        status = CMSampleBufferCreateReady(kCFAllocatorDefault,</span><br><span class="line">                                           blockBuffer,</span><br><span class="line">                                           _decoderFormatDescription,</span><br><span class="line">                                           1,</span><br><span class="line">                                           1,</span><br><span class="line">                                           &amp;timingInfo,</span><br><span class="line">                                           1,</span><br><span class="line">                                           sampleSizeArray,</span><br><span class="line">                                           &amp;sampleBuffer);</span><br><span class="line">        </span><br><span class="line">        if (status == kCMBlockBufferNoErr &amp;&amp; sampleBuffer) &#123;</span><br><span class="line">            VTDecodeFrameFlags flags   = kVTDecodeFrame_EnableAsynchronousDecompression;</span><br><span class="line">            VTDecodeInfoFlags  flagOut = 0;</span><br><span class="line">            OSStatus decodeStatus      = VTDecompressionSessionDecodeFrame(session,</span><br><span class="line">                                                                           sampleBuffer,</span><br><span class="line">                                                                           flags,</span><br><span class="line">                                                                           sourceRef,</span><br><span class="line">                                                                           &amp;flagOut);</span><br><span class="line">            if(decodeStatus == kVTInvalidSessionErr) &#123;</span><br><span class="line">                pthread_mutex_unlock(&amp;lock);</span><br><span class="line">                [self destoryDecoder];</span><br><span class="line">                if (blockBuffer)</span><br><span class="line">                    CFRelease(blockBuffer);</span><br><span class="line">                free(tempData);</span><br><span class="line">                tempData = NULL;</span><br><span class="line">                CFRelease(sampleBuffer);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            CFRelease(sampleBuffer);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (blockBuffer) &#123;</span><br><span class="line">        CFRelease(blockBuffer);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    free(tempData);</span><br><span class="line">    tempData = NULL;</span><br><span class="line">    pthread_mutex_unlock(&amp;lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-解码后的数据"><a href="#5-解码后的数据" class="headerlink" title="5. 解码后的数据"></a>5. 解码后的数据</h4><p>解码后的数据可在回调函数中获取.这里需要将解码后的数据<code>CVImageBufferRef</code>转为<code>CMSampleBufferRef</code>.然后通过代理传出.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - Callback</span><br><span class="line">static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFrameRefCon, OSStatus status, VTDecodeInfoFlags infoFlags, CVImageBufferRef pixelBuffer, CMTime presentationTimeStamp, CMTime presentationDuration) &#123;</span><br><span class="line">    XDXDecodeVideoInfo *sourceRef = (XDXDecodeVideoInfo *)sourceFrameRefCon;</span><br><span class="line">    </span><br><span class="line">    if (pixelBuffer == NULL) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: pixelbuffer is NULL status = %d&quot;,__func__,status);</span><br><span class="line">        if (sourceRef) &#123;</span><br><span class="line">            free(sourceRef);</span><br><span class="line">        &#125;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    XDXVideoDecoder *decoder = (__bridge XDXVideoDecoder *)decompressionOutputRefCon;</span><br><span class="line">    </span><br><span class="line">    CMSampleTimingInfo sampleTime = &#123;</span><br><span class="line">        .presentationTimeStamp  = presentationTimeStamp,</span><br><span class="line">        .decodeTimeStamp        = presentationTimeStamp</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    CMSampleBufferRef samplebuffer = [decoder createSampleBufferFromPixelbuffer:pixelBuffer</span><br><span class="line">                                                                    videoRotate:sourceRef-&gt;rotate</span><br><span class="line">                                                                     timingInfo:sampleTime];</span><br><span class="line">    </span><br><span class="line">    if (samplebuffer) &#123;</span><br><span class="line">        if ([decoder.delegate respondsToSelector:@selector(getVideoDecodeDataCallback:)]) &#123;</span><br><span class="line">            [decoder.delegate getVideoDecodeDataCallback:samplebuffer];</span><br><span class="line">        &#125;</span><br><span class="line">        CFRelease(samplebuffer);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (sourceRef) &#123;</span><br><span class="line">        free(sourceRef);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (CMSampleBufferRef)createSampleBufferFromPixelbuffer:(CVImageBufferRef)pixelBuffer videoRotate:(int)videoRotate timingInfo:(CMSampleTimingInfo)timingInfo &#123;</span><br><span class="line">    if (!pixelBuffer) &#123;</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    CVPixelBufferRef final_pixelbuffer = pixelBuffer;</span><br><span class="line">    CMSampleBufferRef samplebuffer = NULL;</span><br><span class="line">    CMVideoFormatDescriptionRef videoInfo = NULL;</span><br><span class="line">    OSStatus status = CMVideoFormatDescriptionCreateForImageBuffer(kCFAllocatorDefault, final_pixelbuffer, &amp;videoInfo);</span><br><span class="line">    status = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, final_pixelbuffer, true, NULL, NULL, videoInfo, &amp;timingInfo, &amp;samplebuffer);</span><br><span class="line">    </span><br><span class="line">    if (videoInfo != NULL) &#123;</span><br><span class="line">        CFRelease(videoInfo);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (samplebuffer == NULL || status != noErr) &#123;</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return samplebuffer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="6-销毁解码器"><a href="#6-销毁解码器" class="headerlink" title="6.销毁解码器"></a>6.销毁解码器</h4><p>用完后记得销毁,以便下次使用.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">if (_decoderSession) &#123;</span><br><span class="line">    VTDecompressionSessionWaitForAsynchronousFrames(_decoderSession);</span><br><span class="line">    VTDecompressionSessionInvalidate(_decoderSession);</span><br><span class="line">    CFRelease(_decoderSession);</span><br><span class="line">    _decoderSession = NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (_decoderFormatDescription) &#123;</span><br><span class="line">    CFRelease(_decoderFormatDescription);</span><br><span class="line">    _decoderFormatDescription = NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="7-补充-关于带B帧数据重排序问题"><a href="#7-补充-关于带B帧数据重排序问题" class="headerlink" title="7. 补充:关于带B帧数据重排序问题"></a>7. 补充:关于带B帧数据重排序问题</h4><p>注意,如果视频文件或视频流中含有B帧,则渲染时需要对视频帧做一个重排序,本文重点讲解码,排序将在后面文章中更新,代码中以实现,如需了解请下载Demo.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/视频-Video/" rel="tag"># 视频(Video)</a>
+          
+            <a href="/tags/编解码-Encode-Decode/" rel="tag"># 编解码(Encode/Decode)</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/26/20190619_video_decoder_ffmpeg/" rel="next" title="iOS利用FFmpeg实现视频硬解码">
+                <i class="fa fa-chevron-left"></i> iOS利用FFmpeg实现视频硬解码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/26/20190626_ios_Bframe_sort/" rel="prev" title="iOS解码关于视频中带B帧排序问题">
+                iOS解码关于视频中带B帧排序问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">49</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#代码地址-Video-Decoder"><span class="nav-number">3.1.</span> <span class="nav-text">代码地址 : Video Decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-Video-Decoder"><span class="nav-number">3.2.</span> <span class="nav-text">掘金地址 : Video Decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-Video-Decoder"><span class="nav-number">3.3.</span> <span class="nav-text">简书地址 : Video Decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-Video-Decoder"><span class="nav-number">3.4.</span> <span class="nav-text">博客地址 : Video Decoder</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体架构"><span class="nav-number">4.</span> <span class="nav-text">总体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简易流程"><span class="nav-number">4.1.</span> <span class="nav-text">简易流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件结构"><span class="nav-number">4.2.</span> <span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#快速使用"><span class="nav-number">4.3.</span> <span class="nav-text">快速使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">5.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-从Parse到的数据中检测是否需要更新extra-data"><span class="nav-number">5.1.</span> <span class="nav-text">1. 从Parse到的数据中检测是否需要更新extra data.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-从extra-data中分离关键信息-h265-vps-sps-pps"><span class="nav-number">5.2.</span> <span class="nav-text">2. 从extra data中分离关键信息(h265:vps),sps,pps.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-创建解码器"><span class="nav-number">5.3.</span> <span class="nav-text">3. 创建解码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-开始解码"><span class="nav-number">5.4.</span> <span class="nav-text">4. 开始解码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-解码后的数据"><span class="nav-number">5.5.</span> <span class="nav-text">5. 解码后的数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-销毁解码器"><span class="nav-number">5.6.</span> <span class="nav-text">6.销毁解码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-补充-关于带B帧数据重排序问题"><span class="nav-number">5.7.</span> <span class="nav-text">7. 补充:关于带B帧数据重排序问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
