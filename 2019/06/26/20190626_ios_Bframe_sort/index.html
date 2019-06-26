@@ -118,7 +118,7 @@
 <meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="在解码带B帧的视频编码码流中,由于B帧的存在,导致parse出来的数据时间戳本身不是连续的,因为B帧需要可能需要参考后面的帧.因此,解码完成后需要对码流解码做一个重排序">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-26T14:47:44.566Z">
+<meta property="og:updated_time" content="2019-06-26T14:50:41.099Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS解码关于视频中带B帧排序问题">
 <meta name="twitter:description" content="在解码带B帧的视频编码码流中,由于B帧的存在,导致parse出来的数据时间戳本身不是连续的,因为B帧需要可能需要参考后面的帧.因此,解码完成后需要对码流解码做一个重排序">
@@ -349,7 +349,7 @@
                 
               
 
-              <time title="Created: 2019-06-26 22:47:44" itemprop="dateCreated datePublished" datetime="2019-06-26T22:47:44+08:00">2019-06-26</time>
+              <time title="Created: 2019-06-26 22:50:41" itemprop="dateCreated datePublished" datetime="2019-06-26T22:50:41+08:00">2019-06-26</time>
             
 
             
@@ -434,6 +434,42 @@
         <p class="description"></p>
 
 <a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>在解码带B帧的视频编码码流中,由于B帧的存在,导致parse出来的数据时间戳本身不是连续的,因为B帧需要可能需要参考后面的帧.因此,解码完成后需要对码流解码做一个重排序</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>首先分析parse出来的数据的时间戳,后面得出的结论是除了第一帧时间戳为0,总体时间戳是增长的,后面每4帧为一组,每组中的顺序需要重新排序,排序后即可实现时间戳连续递增.</p>
+<p>考虑内存开销,我们每次缓存4帧视频数据,将其放入线性表中,然后使用排序算法对这4帧数据根据pts做一个排序,排好序后即可传给渲染模块将其渲染到屏幕上.</p>
+<p>注意: 使用FFmpeg硬解无需关心排序问题,因为FFmpeg内部有缓存排序机制,即从FFmepg拿到解码后的数据可直接渲染.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h3><ul>
+<li>音视频基础</li>
+<li><a href="https://juejin.im/post/5ceff73df265da1bb13f16f4" target="_blank" rel="noopener">iOS FFmpeg环境搭建</a></li>
+<li><a href="https://juejin.im/post/5cffac756fb9a07f08708d20" target="_blank" rel="noopener">FFmpeg解析视频数据</a></li>
+<li><a href="https://juejin.im/post/5d1243b75188257b791527d5" target="_blank" rel="noopener">VideoToolbox实现视频硬解码</a></li>
+<li><a href="https://juejin.im/post/5d08f861518825699040ecac" target="_blank" rel="noopener">OpenGL渲染视频数据</a></li>
+<li><a href="https://juejin.im/post/5ce9f36bf265da1bbd4b5084" target="_blank" rel="noopener">H.264,H.265码流结构</a></li>
+</ul>
+<hr>
+<h4 id="代码地址-iOS解码关于视频中带B帧排序问题"><a href="#代码地址-iOS解码关于视频中带B帧排序问题" class="headerlink" title="代码地址 : iOS解码关于视频中带B帧排序问题"></a>代码地址 : <a href="https://github.com/XiaoDongXie1024/XDXVideoDecoder" target="_blank" rel="noopener">iOS解码关于视频中带B帧排序问题</a></h4><h4 id="掘金地址-iOS解码关于视频中带B帧排序问题"><a href="#掘金地址-iOS解码关于视频中带B帧排序问题" class="headerlink" title="掘金地址 : iOS解码关于视频中带B帧排序问题"></a>掘金地址 : <a href="https://juejin.im/post/5d1385c751882532531bca11" target="_blank" rel="noopener">iOS解码关于视频中带B帧排序问题</a></h4><h4 id="简书地址-iOS解码关于视频中带B帧排序问题"><a href="#简书地址-iOS解码关于视频中带B帧排序问题" class="headerlink" title="简书地址 : iOS解码关于视频中带B帧排序问题"></a>简书地址 : <a href="https://www.jianshu.com/p/1dc4838328b3" target="_blank" rel="noopener">iOS解码关于视频中带B帧排序问题</a></h4><h4 id="博客地址-iOS解码关于视频中带B帧排序问题"><a href="#博客地址-iOS解码关于视频中带B帧排序问题" class="headerlink" title="博客地址 : iOS解码关于视频中带B帧排序问题"></a>博客地址 : <a href="https://xiaodongxie1024.github.io/2019/06/26/20190626_ios_Bframe_sort/">iOS解码关于视频中带B帧排序问题</a></h4><hr>
+<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><p>因为我们无法判断码流中的B帧是否依赖后面的视频帧,而是 经过分析可得视频帧的时间戳是总体增长,每组4帧,需要对4帧数据进行排序,目前暂时未知是否有非4帧一组的视频帧,如果有则此Demo会有问题,因此如果有了解此方面大神望评论告知更好的解决方案.</p>
+<h3 id="总体架构"><a href="#总体架构" class="headerlink" title="总体架构"></a>总体架构</h3><p>本文基于已实现解码一个包含带B帧的H.265码流文件.因此,这里不对parse,解码,渲染做过多说明,如需了解参考阅读前提中的链接.</p>
+<p>下面是从FFmpeg parse H.265文件得到的时间戳,我们可以看到,parse出来的时间戳总体是递增的,除了第一帧时间戳为0的数据外,剩下的时间戳均以4个一组,每组内时间戳不是递增的,因为解码时我们仍需按照Parse出来的数据送去解码,所以,我们只能对解码后的数据做一个排序,即将每组数据装入一个线性表,然后使用任一一种排序算法对其排序.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">+0800 XDXVideoDecoder[1489:223381] Test - 0.000000</span><br><span class="line"></span><br><span class="line">2019-06-25 12:38:09.656282+0800 XDXVideoDecoder[1489:223381] Test - 0.133333</span><br><span class="line">2019-06-25 12:38:09.659350+0800 XDXVideoDecoder[1489:223381] Test - 0.066667</span><br><span class="line">2019-06-25 12:38:09.660900+0800 XDXVideoDecoder[1489:223381] Test - 0.033333</span><br><span class="line">2019-06-25 12:38:09.662889+0800 XDXVideoDecoder[1489:223381] Test - 0.100000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2019-06-25 12:38:09.664786+0800 XDXVideoDecoder[1489:223381] Test - 0.266667</span><br><span class="line">2019-06-25 12:38:09.666900+0800 XDXVideoDecoder[1489:223381] Test - 0.200000</span><br><span class="line">2019-06-25 12:38:09.668196+0800 XDXVideoDecoder[1489:223381] Test - 0.166667</span><br><span class="line">2019-06-25 12:38:09.669825+0800 XDXVideoDecoder[1489:223381] Test - 0.233333</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2019-06-25 12:38:09.670368+0800 XDXVideoDecoder[1489:223381] Test - 0.400000</span><br><span class="line">2019-06-25 12:38:09.670948+0800 XDXVideoDecoder[1489:223381] Test - 0.333333</span><br><span class="line">2019-06-25 12:38:09.671806+0800 XDXVideoDecoder[1489:223381] Test - 0.300000</span><br><span class="line">2019-06-25 12:38:09.673082+0800 XDXVideoDecoder[1489:223381] Test - 0.366667</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2019-06-25 12:38:09.673899+0800 XDXVideoDecoder[1489:223381] Test - 0.533333</span><br><span class="line">2019-06-25 12:38:09.674961+0800 XDXVideoDecoder[1489:223381] Test - 0.466667</span><br><span class="line">2019-06-25 12:38:09.675637+0800 XDXVideoDecoder[1489:223381] Test - 0.433333</span><br><span class="line">2019-06-25 12:38:09.676451+0800 XDXVideoDecoder[1489:223381] Test - 0.500000</span><br></pre></td></tr></table></figure></p>
+<h4 id="快速使用"><a href="#快速使用" class="headerlink" title="快速使用"></a>快速使用</h4><ul>
+<li><p>初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    self.sortHandler = [[XDXSortFrameHandler alloc] init];</span><br><span class="line">    self.sortHandler.delegate = self;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在解码回调中将解码出来数据送给排序模块</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer isFirstFrame:(BOOL)isFirstFrame &#123;</span><br><span class="line">    if (self.isH265File) &#123;</span><br><span class="line">        // Note : the first frame not need to sort.</span><br><span class="line">        if (isFirstFrame) &#123;</span><br><span class="line">            CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">            [self.previewView displayPixelBuffer:pix];</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [self.sortHandler addDataToLinkList:sampleBuffer];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">        [self.previewView displayPixelBuffer:pix];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>排序后通过代理方法拿到排过序的每帧数据将其渲染到屏幕<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)getSortedVideoNode:(CMSampleBufferRef)sampleBuffer &#123;</span><br><span class="line">    int64_t pts = (int64_t)(CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000);</span><br><span class="line">    static int64_t lastpts = 0;</span><br><span class="line">    NSLog(@&quot;Test marigin - %lld&quot;,pts - lastpts);</span><br><span class="line">    lastpts = pts;</span><br><span class="line">    </span><br><span class="line">    [self.previewView displayPixelBuffer:CMSampleBufferGetImageBuffer(sampleBuffer)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="1-定义一个线性表用来缓存视频帧"><a href="#1-定义一个线性表用来缓存视频帧" class="headerlink" title="1. 定义一个线性表用来缓存视频帧"></a>1. 定义一个线性表用来缓存视频帧</h4><p>使用一个装有<code>CMSampleBufferRef</code>指针的数据来缓存视频帧.因为每4帧排一次序,所以长度为4,使用索引Index记录每个视频帧的位置.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const static int g_maxSize = 4;</span><br><span class="line"></span><br><span class="line">struct XDXSortLinkList &#123;</span><br><span class="line">    CMSampleBufferRef dataArray[g_maxSize];</span><br><span class="line">    int index;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="2-初始化"><a href="#2-初始化" class="headerlink" title="2. 初始化"></a>2. 初始化</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@interface XDXSortFrameHandler ()</span><br><span class="line">&#123;</span><br><span class="line">    XDXSortLinkList _sortLinkList;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">- (instancetype)init &#123;</span><br><span class="line">    if (self = [super init]) &#123;</span><br><span class="line">        XDXSortLinkList linkList = &#123;</span><br><span class="line">            .index = 0,</span><br><span class="line">            .dataArray = &#123;0&#125;,</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        _sortLinkList = linkList;</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-将视频帧存入线性表"><a href="#3-将视频帧存入线性表" class="headerlink" title="3.将视频帧存入线性表"></a>3.将视频帧存入线性表</h4><p><code>CMSampleBufferRef</code>实际即为一个指针,首先使用<code>CFRetain</code>函数使其引用计数+1以维持我们使用期间视频帧不会被销毁,当线性表没有装满前一直为其添加视频帧,当线性表装满后使用插入排序对其进行排序,排好后将数据依次以代理方法的形式传出以供渲染模块使用.使用完成后使用<code>CFRelease</code>减少原始数据的引用计数.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (void)addDataToLinkList:(CMSampleBufferRef)sampleBufferRef &#123;</span><br><span class="line">    CFRetain(sampleBufferRef);</span><br><span class="line">    _sortLinkList.dataArray[_sortLinkList.index] = sampleBufferRef;</span><br><span class="line">    _sortLinkList.index++;</span><br><span class="line">    </span><br><span class="line">    if (_sortLinkList.index == g_maxSize) &#123;</span><br><span class="line">        _sortLinkList.index = 0;</span><br><span class="line">        </span><br><span class="line">        // sort</span><br><span class="line">        [self selectSortWithLinkList:&amp;_sortLinkList];</span><br><span class="line">        </span><br><span class="line">        for (int i = 0; i &lt; g_maxSize; i++) &#123;</span><br><span class="line">            if ([self.delegate respondsToSelector:@selector(getSortedVideoNode:)]) &#123;</span><br><span class="line">                [self.delegate getSortedVideoNode:_sortLinkList.dataArray[i]];</span><br><span class="line">                CFRelease(_sortLinkList.dataArray[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)selectSortWithLinkList:(XDXSortLinkList *)sortLinkList &#123;</span><br><span class="line">    for (int i = 0; i &lt; g_maxSize; i++) &#123;</span><br><span class="line">        int64_t minPTS = i;</span><br><span class="line">        for (int j = i + 1; j &lt; g_maxSize; j++) &#123;</span><br><span class="line">            if ([self getPTS:sortLinkList-&gt;dataArray[j]] &lt; [self getPTS:sortLinkList-&gt;dataArray[minPTS]]) &#123;</span><br><span class="line">                minPTS = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (i != minPTS) &#123;</span><br><span class="line">            void *tmp = sortLinkList-&gt;dataArray[i];</span><br><span class="line">            sortLinkList-&gt;dataArray[i] = sortLinkList-&gt;dataArray[minPTS];</span><br><span class="line">            sortLinkList-&gt;dataArray[minPTS] = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">- (int64_t)getPTS:(CMSampleBufferRef)sampleBufferRef &#123;</span><br><span class="line">    int64_t pts = (int64_t)(CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBufferRef)) * 1000);</span><br><span class="line">    return pts;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -585,8 +621,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -742,6 +787,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#代码地址-iOS解码关于视频中带B帧排序问题"><span class="nav-number">3.1.</span> <span class="nav-text">代码地址 : iOS解码关于视频中带B帧排序问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS解码关于视频中带B帧排序问题"><span class="nav-number">3.2.</span> <span class="nav-text">掘金地址 : iOS解码关于视频中带B帧排序问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS解码关于视频中带B帧排序问题"><span class="nav-number">3.3.</span> <span class="nav-text">简书地址 : iOS解码关于视频中带B帧排序问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS解码关于视频中带B帧排序问题"><span class="nav-number">3.4.</span> <span class="nav-text">博客地址 : iOS解码关于视频中带B帧排序问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TODO"><span class="nav-number">4.</span> <span class="nav-text">TODO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体架构"><span class="nav-number">5.</span> <span class="nav-text">总体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#快速使用"><span class="nav-number">5.1.</span> <span class="nav-text">快速使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">6.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-定义一个线性表用来缓存视频帧"><span class="nav-number">6.1.</span> <span class="nav-text">1. 定义一个线性表用来缓存视频帧</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-初始化"><span class="nav-number">6.2.</span> <span class="nav-text">2. 初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-将视频帧存入线性表"><span class="nav-number">6.3.</span> <span class="nav-text">3.将视频帧存入线性表</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
