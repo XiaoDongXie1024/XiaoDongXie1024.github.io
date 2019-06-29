@@ -118,7 +118,7 @@
 <meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="在开发中我们经常要通过Log(日志)来调试问题, 而上线后不需要打印Log,而且平常开发每做一个模块如果可以将log按照级别打印出来,对分析问题帮助很大.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-29T11:14:16.110Z">
+<meta property="og:updated_time" content="2019-06-29T11:16:20.730Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS关于日志模式及日志级别">
 <meta name="twitter:description" content="在开发中我们经常要通过Log(日志)来调试问题, 而上线后不需要打印Log,而且平常开发每做一个模块如果可以将log按照级别打印出来,对分析问题帮助很大.">
@@ -349,7 +349,7 @@
                 
               
 
-              <time title="Created: 2019-06-29 19:14:16" itemprop="dateCreated datePublished" datetime="2019-06-29T19:14:16+08:00">2019-06-29</time>
+              <time title="Created: 2019-06-29 19:16:20" itemprop="dateCreated datePublished" datetime="2019-06-29T19:16:20+08:00">2019-06-29</time>
             
 
             
@@ -441,6 +441,49 @@
         <p class="description"></p>
 
 <a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>在开发中我们经常要通过Log(日志)来调试问题, 而上线后不需要打印Log,而且平常开发每做一个模块如果可以将log按照级别打印出来,对分析问题帮助很大.</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>通过导入一个头文件以实现开启或关闭Log模式,实现选择Log级别.通过导入<code>#include &lt;syslog.h&gt;</code>以实现打印不同级别的Log.</p>
+<p>为什么使用<code>syslog</code> ? 因为它不仅可以在Xcode控制台打印信息,还可能在Mac终端中打印出日志信息,这样的好处是比如我们有一个app store的app出了问题,我们可以在app中调节log level到debug模式,然后使用数据线连接设备, 这样再复现问题可以将相关的Log即时打印出来.对分析问题帮助很大.</p>
+<hr>
+<h3 id="简要分析"><a href="#简要分析" class="headerlink" title="简要分析"></a>简要分析</h3><h4 id="1-Log模式"><a href="#1-Log模式" class="headerlink" title="1. Log模式"></a>1. Log模式</h4><p>为什么设置log模式,很简单,因为上线后的app不必打印log, 而且如果开发中想取消所有相关打印也可以直接通过该宏定义决定.</p>
+<p>本例中如果在代码中定义了<code>kXDXDebugMode</code>则启用打印log模式,否则关闭.</p>
+<h4 id="2-Log级别"><a href="#2-Log级别" class="headerlink" title="2. Log级别"></a>2. Log级别</h4><p>本例中通过五个函数来打印不同级别log,如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#define kModuleName &quot;Hello&quot;</span><br><span class="line">...</span><br><span class="line">    int i = 1; int j = 2;</span><br><span class="line">    log4cplus_fatal(kModuleName, &quot;world1 , %d,%d&quot;,i,j);</span><br><span class="line">    log4cplus_error(kModuleName, &quot;world2&quot;);</span><br><span class="line">    log4cplus_warn(kModuleName, &quot;world3&quot;);</span><br><span class="line">    log4cplus_info(kModuleName, &quot;world4&quot;);</span><br><span class="line">    log4cplus_debug(kModuleName, &quot;world5&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>比如我们在开发中可能独立承担一个模块,而此模块单单做完如果出现问题就需要调试,但是如果我们的Log足够清晰是可以迅速帮助我们找到问题所在,这里将Log分为5个级别</p>
+<p>以下是个人对于打印Log的一些建议,并不是说一定要按照如下.</p>
+<ul>
+<li><code>XDX_IOS_FLAG_FATAL</code> : 严重级别</li>
+</ul>
+<p>此类错误出现时,表明程序因为某某问题已经彻底无法运行下去,我们在使用此log时可以附加说明当前碰到的重大问题及产生原因,以便调试.</p>
+<ul>
+<li><code>XDX_IOS_FLAG_ERROR</code> : 出错级别</li>
+</ul>
+<p>此类打印可用于出现一般错误,比如某个方法调用返回失败, 因为一般而言代码预期是正确的, 所以此类Log不会打印的太频繁, 打开此级别后我们可以清晰看到程序哪些地方出现问题.</p>
+<ul>
+<li><code>XDX_IOS_FLAG_WARN</code> : 警告级别</li>
+</ul>
+<p>此类错误一般较低于error级别,即在一些可能出错的地方, 但实际并没有出错, 比如当视频帧数量小于0表示出错情况,我们为了预防,可以在视频帧数量小于5时使用此类添加一条预防的Log.</p>
+<ul>
+<li><code>XDX_IOS_FLAG_INFO</code> : 重要信息级别</li>
+</ul>
+<p>此类级别一般用于打印模块中一些重要的点, 比如我们可以在某个类初始化完成时打印此类中初始化好的一些重要信息,或者在使用某个功能前做一个打印,这样对于追踪代码十分有效.</p>
+<ul>
+<li><code>XDX_IOS_FLAG_DEBUG</code> : 调试级别</li>
+</ul>
+<p>此类级别表明我们当前正在临时打印一些log为了去调试程序, 或者说我们为了观察某个现象但是需要频繁打印, 比如相机回调中打印时间戳,因为相机每秒钟出来几十帧数据,所以打印十分频繁,我们可以使用此级别在开发中作为调试信息,一般不建议在正常使用中开启此级别.</p>
+<p>综上所述,即log级别越高,log数量应该是越少,这样我们可以在开发中根据如上所述的情况合理选择使用哪个级别的log. Log级别是有包含关系的, 即低的log级别可以包含比自身高的log级别.</p>
+<h4 id="3-模块名"><a href="#3-模块名" class="headerlink" title="3. 模块名"></a>3. 模块名</h4><p>这里封装的格式如下,即一条log分为两部分,前面是模块名,后面是具体log内容,使用这种格式可以帮助我们通过过滤某个模块中的Log, 十分直观清晰<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define log4cplus_fatal(category, logFmt, ...) \</span><br><span class="line">if(XDX_IOS_LOG_LEVEL &amp; XDX_IOS_FLAG_FATAL) \</span><br><span class="line">syslog(LOG_CRIT, &quot;%s:&quot; logFmt, category,##__VA_ARGS__); \</span><br></pre></td></tr></table></figure></p>
+<p>举例如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#define kModuleName &quot;Hello&quot;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (void)test &#123;</span><br><span class="line">    int i = 0;</span><br><span class="line">    log4cplus_debug(kModuleName, &quot;Hello World - %d&quot;,i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="4-注意"><a href="#4-注意" class="headerlink" title="4. 注意"></a>4. 注意</h4><p>因为我们使用的<code>syslog</code>,所以OC中的格式符<code>%@</code>是不可用的.但是任何OC中的字符串都可通过<code>UTF8String</code>转为C语言字符串,所以并不影响我们的使用.</p>
+<h4 id="5-使用方式"><a href="#5-使用方式" class="headerlink" title="5. 使用方式"></a>5. 使用方式</h4><ul>
+<li>每次编译前设置log级别</li>
+</ul>
+<p>如果不需要在项目中通过UI动态更改log级别,则可以直接使用如下方式将头文件拖入项目,然后在需要使用log的地方将其导入.这种方式简单方便,仅仅通过每次运行前更改宏定义即可转变log级别.</p>
+<ul>
+<li>在运行后通过UI更改</li>
+</ul>
+<p>那么需要将头文件的<code>XDX_IOS_LOG_LEVEL</code>全局静态变量换为外部变量,然后取消下面这段代码,最后在控制UI的类中定义并通过交互更改此值即可.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#ifdef XDXLogLevelFatal</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = XDX_IOS_FLAG_FATAL;</span><br><span class="line">#elif defined(XDXLogLevelError)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR);</span><br><span class="line">#elif defined(XDXLogLevelWarn)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR | XDX_IOS_FLAG_WARN);</span><br><span class="line">#elif defined(XDXLogLevelInfo)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR | XDX_IOS_FLAG_WARN | XDX_IOS_FLAG_INFO);</span><br><span class="line">#elif defined(XDXLogLevelDebug)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR | XDX_IOS_FLAG_WARN | XDX_IOS_FLAG_INFO | XDX_IOS_FLAG_DEBUG);</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#include &lt;syslog.h&gt;</span><br><span class="line">#ifndef XDX_IOS</span><br><span class="line">#define XDX_IOS</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#pragma - Please select your log mode and log level</span><br><span class="line"></span><br><span class="line">// Note: Only debug mode will print log. You could also set mode for log level.</span><br><span class="line">#define kXDXDebugMode</span><br><span class="line">// XDXLogLevelFatal , XDXLogLevelError , XDXLogLevelWarn , XDXLogLevelInfo , XDXLogLevelDebug</span><br><span class="line">#define XDXLogLevelDebug</span><br><span class="line"></span><br><span class="line">#pragma ----------------------------------</span><br><span class="line"></span><br><span class="line">#ifdef kXDXDebugMode</span><br><span class="line"></span><br><span class="line">static const int XDX_IOS_FLAG_FATAL = 0x10;</span><br><span class="line">static const int XDX_IOS_FLAG_ERROR = 0x08;</span><br><span class="line">static const int XDX_IOS_FLAG_WARN  = 0x04;</span><br><span class="line">static const int XDX_IOS_FLAG_INFO  = 0x02;</span><br><span class="line">static const int XDX_IOS_FLAG_DEBUG = 0x01;</span><br><span class="line"></span><br><span class="line">#ifdef XDXLogLevelFatal</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = XDX_IOS_FLAG_FATAL;</span><br><span class="line">#elif defined(XDXLogLevelError)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR);</span><br><span class="line">#elif defined(XDXLogLevelWarn)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR | XDX_IOS_FLAG_WARN);</span><br><span class="line">#elif defined(XDXLogLevelInfo)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR | XDX_IOS_FLAG_WARN | XDX_IOS_FLAG_INFO);</span><br><span class="line">#elif defined(XDXLogLevelDebug)</span><br><span class="line">static const int XDX_IOS_LOG_LEVEL = (XDX_IOS_FLAG_FATAL | XDX_IOS_FLAG_ERROR | XDX_IOS_FLAG_WARN | XDX_IOS_FLAG_INFO | XDX_IOS_FLAG_DEBUG);</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#define log4cplus_fatal(category, logFmt, ...) \</span><br><span class="line">if(XDX_IOS_LOG_LEVEL &amp; XDX_IOS_FLAG_FATAL) \</span><br><span class="line">syslog(LOG_CRIT, &quot;%s:&quot; logFmt, category,##__VA_ARGS__); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_error(category, logFmt, ...) \</span><br><span class="line">if(XDX_IOS_LOG_LEVEL &amp; XDX_IOS_FLAG_ERROR) \</span><br><span class="line">syslog(LOG_ERR, &quot;%s:&quot; logFmt, category,##__VA_ARGS__); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_warn(category, logFmt, ...) \</span><br><span class="line">if(XDX_IOS_LOG_LEVEL &amp; XDX_IOS_FLAG_WARN) \</span><br><span class="line">syslog(LOG_WARNING, &quot;%s:&quot; logFmt, category,##__VA_ARGS__); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_info(category, logFmt, ...) \</span><br><span class="line">if(XDX_IOS_LOG_LEVEL &amp; XDX_IOS_FLAG_INFO) \</span><br><span class="line">syslog(LOG_WARNING, &quot;%s:&quot; logFmt, category,##__VA_ARGS__); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_debug(category, logFmt, ...) \</span><br><span class="line">if(XDX_IOS_LOG_LEVEL &amp; XDX_IOS_FLAG_DEBUG) \</span><br><span class="line">syslog(LOG_WARNING, &quot;%s:&quot; logFmt, category,##__VA_ARGS__); \</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line"></span><br><span class="line">#define log4cplus_fatal(category, logFmt, ...); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_error(category, logFmt, ...); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_warn(category, logFmt, ...); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_info(category, logFmt, ...); \</span><br><span class="line"></span><br><span class="line">#define log4cplus_debug(category, logFmt, ...); \</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -514,6 +557,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/29/20190629_ios_audioqueue_player/" rel="prev" title="AudioQueue实现音频流实时播放实战">
+                AudioQueue实现音频流实时播放实战 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -592,8 +639,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -610,7 +666,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">50</span>
+                    <span class="site-state-item-count">51</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -753,6 +809,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简要分析"><span class="nav-number">3.</span> <span class="nav-text">简要分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Log模式"><span class="nav-number">3.1.</span> <span class="nav-text">1. Log模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Log级别"><span class="nav-number">3.2.</span> <span class="nav-text">2. Log级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-模块名"><span class="nav-number">3.3.</span> <span class="nav-text">3. 模块名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-注意"><span class="nav-number">3.4.</span> <span class="nav-text">4. 注意</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-使用方式"><span class="nav-number">3.5.</span> <span class="nav-text">5. 使用方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">4.</span> <span class="nav-text">具体实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
