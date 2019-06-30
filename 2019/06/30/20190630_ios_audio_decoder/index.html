@@ -118,10 +118,12 @@
 <meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="利用FFmepg解析并解码音频流数据,然后将解码后的音频数据送给Audio Queue以实现播放.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-30T09:10:45.898Z">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qVhrmy5Cg6arMuvEB5m8or7SFqFD3KlB.Z24r9LAqvs!/r/dDABAAAAAAAA">
+<meta property="og:updated_time" content="2019-06-30T09:12:39.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS利用FFmpeg解码音频数据并播放">
 <meta name="twitter:description" content="利用FFmepg解析并解码音频流数据,然后将解码后的音频数据送给Audio Queue以实现播放.">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qVhrmy5Cg6arMuvEB5m8or7SFqFD3KlB.Z24r9LAqvs!/r/dDABAAAAAAAA">
 
 
 
@@ -349,7 +351,7 @@
                 
               
 
-              <time title="Created: 2019-06-30 17:10:45" itemprop="dateCreated datePublished" datetime="2019-06-30T17:10:45+08:00">2019-06-30</time>
+              <time title="Created: 2019-06-30 17:12:39" itemprop="dateCreated datePublished" datetime="2019-06-30T17:12:39+08:00">2019-06-30</time>
             
 
             
@@ -441,6 +443,77 @@
         <p class="description"></p>
 
 <a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>利用FFmepg解析并解码音频流数据,然后将解码后的音频数据送给Audio Queue以实现播放.</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>利用FFmpeg解析音频数据流, 利用FFmpeg解码音频数据为PCM格式. 利用Audio Queue Player实现音频数据播放.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h3><ul>
+<li>音视频基础</li>
+<li><a href="https://juejin.im/post/5ceff73df265da1bb13f16f4" target="_blank" rel="noopener">iOS FFmpeg环境搭建</a></li>
+<li><a href="https://juejin.im/post/5cffac756fb9a07f08708d20" target="_blank" rel="noopener">FFmpeg解析音视频数据</a></li>
+<li><a href="https://juejin.im/post/5a91315c6fb9a063395c8944" target="_blank" rel="noopener">传输音频数据队列实现</a></li>
+<li><a href="https://juejin.im/post/5d177338f265da1bc07e4efd" target="_blank" rel="noopener">Audio Queue播放音频流</a></li>
+</ul>
+<hr>
+<h4 id="代码地址-Audio-Decoder"><a href="#代码地址-Audio-Decoder" class="headerlink" title="代码地址 : Audio Decoder"></a>代码地址 : <a href="https://github.com/XiaoDongXie1024/XDXAudioDecoderPro" target="_blank" rel="noopener">Audio Decoder</a></h4><h4 id="掘金地址-Audio-Decoder"><a href="#掘金地址-Audio-Decoder" class="headerlink" title="掘金地址 : Audio Decoder"></a>掘金地址 : <a href="https://juejin.im/post/5d187cb5f265da1ba25274ce" target="_blank" rel="noopener">Audio Decoder</a></h4><h4 id="简书地址-Audio-Decoder"><a href="#简书地址-Audio-Decoder" class="headerlink" title="简书地址 : Audio Decoder"></a>简书地址 : <a href="https://www.jianshu.com/p/452ee7c6559e" target="_blank" rel="noopener">Audio Decoder</a></h4><h4 id="博客地址-Audio-Decoder"><a href="#博客地址-Audio-Decoder" class="headerlink" title="博客地址 : Audio Decoder"></a>博客地址 : <a href="https://xiaodongxie1024.github.io/2019/06/30/20190630_ios_audio_decoder/">Audio Decoder</a></h4><hr>
+<h3 id="总体架构"><a href="#总体架构" class="headerlink" title="总体架构"></a>总体架构</h3><p>本例以一个苹果原生相机录制的.MOV文件为例, 将该文件使用FFmpeg解析并解码,将解码后的数据放入传输队列中,然后开启audio queue player, 播放器在回调函数中轮循取出队列中的数据实现播放.</p>
+<h4 id="简易流程"><a href="#简易流程" class="headerlink" title="简易流程"></a>简易流程</h4><p>FFmpeg parse流程</p>
+<ul>
+<li>创建format context: <code>avformat_alloc_context</code></li>
+<li>打开文件流: <code>avformat_open_input</code></li>
+<li>寻找流信息: <code>avformat_find_stream_info</code></li>
+<li>获取音视频流的索引值: <code>formatContext-&gt;streams[i]-&gt;codecpar-&gt;codec_type == (isVideoStream ? AVMEDIA_TYPE_VIDEO : AVMEDIA_TYPE_AUDIO)</code></li>
+<li>获取音视频流: <code>m_formatContext-&gt;streams[m_audioStreamIndex]</code></li>
+<li>解析音视频数据帧: <code>av_read_frame</code></li>
+</ul>
+<p>FFmpeg解码流程</p>
+<ul>
+<li>从parse中的<code>AVFormatContext</code>获取音频流对象<code>AVStream</code>. <code>m_formatContext-&gt;streams[m_audioStreamIndex];</code></li>
+<li>获取解码器上下文: <code>formatContext-&gt;streams[audioStreamIndex]-&gt;codec</code></li>
+<li>获取解码器实例: <code>avcodec_find_decoder(codecContext-&gt;codec_id)</code></li>
+<li>打开解码器: <code>avcodec_open2</code></li>
+<li>初始化音频帧: <code>AVFrame *av_frame_alloc(void);</code></li>
+<li>将数据发给解码器: <code>int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt)</code></li>
+<li>获取解码后的数据: <code>int avcodec_receive_frame(AVCodecContext *avctx, AVFrame *frame);</code></li>
+<li>创建转码器: <code>struct SwrContext *swr_alloc(void);</code></li>
+<li>设置转码器参数: <code>swr_alloc_set_opts</code></li>
+<li>初始化转码器上下文: <code>int swr_init(struct SwrContext *s)</code></li>
+<li>开始转码: <code>int swr_convert(struct SwrContext *s, uint8_t **out, int out_count,const uint8_t **in , int in_count);</code></li>
+<li>获取转码后的data与size.</li>
+</ul>
+<h4 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/qVhrmy5Cg6arMuvEB5m8or7SFqFD3KlB.Z24r9LAqvs!/r/dDABAAAAAAAA" alt="file"></p>
+<h4 id="快速使用"><a href="#快速使用" class="headerlink" title="快速使用"></a>快速使用</h4><ul>
+<li><p>设置音频格式ASBD</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AudioStreamBasicDescription audioFormat = &#123;</span><br><span class="line">    .mSampleRate         = 48000,</span><br><span class="line">    .mFormatID           = kAudioFormatLinearPCM,</span><br><span class="line">    .mChannelsPerFrame   = 2,</span><br><span class="line">    .mFormatFlags        = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked,</span><br><span class="line">    .mBitsPerChannel     = 16,</span><br><span class="line">    .mBytesPerPacket     = 4,</span><br><span class="line">    .mBytesPerFrame      = 4,</span><br><span class="line">    .mFramesPerPacket    = 1,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置播放器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[XDXAudioQueuePlayer getInstance] configureAudioPlayerWithAudioFormat:&amp;audioFormat bufferSize:kXDXBufferSize];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Parse并解码音频文件数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (void)startDecode &#123;</span><br><span class="line">    NSString *path = [[NSBundle mainBundle] pathForResource:@&quot;test&quot; ofType:@&quot;MOV&quot;];</span><br><span class="line">    XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];</span><br><span class="line">    XDXFFmpegAudioDecoder *decoder = [[XDXFFmpegAudioDecoder alloc] initWithFormatContext:[parseHandler getFormatContext] audioStreamIndex:[parseHandler getAudioStreamIndex]];</span><br><span class="line">    decoder.delegate = self;</span><br><span class="line">    [parseHandler startParseGetAVPackeWithCompletionHandler:^(BOOL isVideoFrame, BOOL isFinish, AVPacket packet) &#123;</span><br><span class="line">        if (isFinish) &#123;</span><br><span class="line">            [decoder stopDecoder];</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!isVideoFrame) &#123;</span><br><span class="line">            [decoder startDecodeAudioDataWithAVPacket:packet];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取解码后数据并播放</p>
+</li>
+</ul>
+<p>为了每次能够重新播放,这里需要标记当前是否为解码的第一帧数据,以重新启动播放器. 另一点是使用NSTimer等待音频数据放入队列再开始播放,因为audio queue是驱动播放模式,所以必须等音频数据放入传输队列再开始播放.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - Decode Callback</span><br><span class="line">- (void)getDecodeAudioDataByFFmpeg:(void *)data size:(int)size isFirstFrame:(BOOL)isFirstFrame &#123;</span><br><span class="line">    if (isFirstFrame) &#123;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            // First put 3 frame audio data to work queue then start audio queue to read it to play.</span><br><span class="line">            [NSTimer scheduledTimerWithTimeInterval:0.01 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">                </span><br><span class="line">                XDXCustomQueueProcess *audioBufferQueue = [XDXAudioQueuePlayer getInstance]-&gt;_audioBufferQueue;</span><br><span class="line">                int size = audioBufferQueue-&gt;GetQueueSize(audioBufferQueue-&gt;m_work_queue);</span><br><span class="line">                if (size &gt; 3) &#123;</span><br><span class="line">                    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                        [[XDXAudioQueuePlayer getInstance] startAudioPlayer];</span><br><span class="line">                    &#125;);</span><br><span class="line">                    [timer invalidate];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // Put audio data from audio file into audio data queue</span><br><span class="line">    [self addBufferToWorkQueueWithAudioData:data size:size];</span><br><span class="line">    </span><br><span class="line">    // control rate</span><br><span class="line">    usleep(16*1000);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="1-初始化解码器"><a href="#1-初始化解码器" class="headerlink" title="1. 初始化解码器"></a>1. 初始化解码器</h4><p>从Parse模块中可以获取当前文件对应FFmepg的上下文对象<code>AVFormatContext</code>.因此音频流解码器信息可以直接获取.</p>
+<ul>
+<li><p>获取音频流对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AVStream *audioStream = m_formatContext-&gt;streams[m_audioStreamIndex];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取解码器上下文对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (AVCodecContext *)createAudioEncderWithFormatContext:(AVFormatContext *)formatContext stream:(AVStream *)stream audioStreamIndex:(int)audioStreamIndex &#123;</span><br><span class="line">    AVCodecContext *codecContext = formatContext-&gt;streams[audioStreamIndex]-&gt;codec;</span><br><span class="line">    AVCodec *codec = avcodec_find_decoder(codecContext-&gt;codec_id);</span><br><span class="line">    if (!codec) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: Not find audio codec&quot;,__func__);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (avcodec_open2(codecContext, codec, NULL) &lt; 0) &#123;</span><br><span class="line">        log4cplus_error(kModuleName, &quot;%s: Can&apos;t open audio codec&quot;,__func__);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return codecContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>初始化音频帧</p>
+</li>
+</ul>
+<p><code>AVFrame</code> 作为解码后原始的音视频数据的容器.AVFrame通常被分配一次然后多次重复（例如，单个AVFrame以保持从解码器接收的帧）。在这种情况下，av_frame_unref（）将释放框架所持有的任何引用，并在再次重用之前将其重置为其原始的清理状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Get audio frame</span><br><span class="line">m_audioFrame = av_frame_alloc();</span><br><span class="line">if (!m_audioFrame) &#123;</span><br><span class="line">    log4cplus_error(kModuleName, &quot;%s: alloc audio frame failed&quot;,__func__);</span><br><span class="line">    avcodec_close(m_audioCodecContext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-将原始数据发给解码器"><a href="#2-将原始数据发给解码器" class="headerlink" title="2. 将原始数据发给解码器"></a>2. 将原始数据发给解码器</h4><p>调用avcodec_send_packet将压缩数据发送给解码器.最后利用循环接收avcodec_receive_frame解码后的音视频数据.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int result = avcodec_send_packet(audioCodecContext, &amp;packet);</span><br><span class="line">if (result &lt; 0) &#123;</span><br><span class="line">    log4cplus_error(kModuleName, &quot;%s: Send audio data to decoder failed.&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-接收解码后的数据"><a href="#3-接收解码后的数据" class="headerlink" title="3. 接收解码后的数据."></a>3. 接收解码后的数据.</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result = avcodec_receive_frame(audioCodecContext, audioFrame);</span><br></pre></td></tr></table></figure>
+<h4 id="4-将解码后的数据转码为iOS设备可播放的类型"><a href="#4-将解码后的数据转码为iOS设备可播放的类型" class="headerlink" title="4. 将解码后的数据转码为iOS设备可播放的类型"></a>4. 将解码后的数据转码为iOS设备可播放的类型</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"> result = avcodec_receive_frame(audioCodecContext, audioFrame);</span><br><span class="line">        while (0 == result) &#123;</span><br><span class="line">            struct SwrContext *au_convert_ctx = swr_alloc();</span><br><span class="line">            au_convert_ctx = swr_alloc_set_opts(au_convert_ctx,</span><br><span class="line">                                                AV_CH_LAYOUT_STEREO,</span><br><span class="line">                                                AV_SAMPLE_FMT_S16,</span><br><span class="line">                                                48000,</span><br><span class="line">                                                audioCodecContext-&gt;channel_layout,</span><br><span class="line">                                                audioCodecContext-&gt;sample_fmt,</span><br><span class="line">                                                audioCodecContext-&gt;sample_rate,</span><br><span class="line">                                                0,</span><br><span class="line">                                                NULL);</span><br><span class="line">            swr_init(au_convert_ctx);</span><br><span class="line">            int out_linesize;</span><br><span class="line">            int out_buffer_size = av_samples_get_buffer_size(&amp;out_linesize,</span><br><span class="line">                                                             audioCodecContext-&gt;channels,</span><br><span class="line">                                                             audioCodecContext-&gt;frame_size,</span><br><span class="line">                                                             audioCodecContext-&gt;sample_fmt,</span><br><span class="line">                                                             1);</span><br><span class="line">            </span><br><span class="line">            uint8_t *out_buffer = (uint8_t *)av_malloc(out_buffer_size);</span><br><span class="line">            // 解码</span><br><span class="line">            swr_convert(au_convert_ctx, &amp;out_buffer, out_linesize, (const uint8_t **)audioFrame-&gt;data , audioFrame-&gt;nb_samples);</span><br><span class="line">            swr_free(&amp;au_convert_ctx);</span><br><span class="line">            au_convert_ctx = NULL;</span><br><span class="line">            if ([self.delegate respondsToSelector:@selector(getDecodeAudioDataByFFmpeg:size:isFirstFrame:)]) &#123;</span><br><span class="line">                [self.delegate getDecodeAudioDataByFFmpeg:out_buffer size:out_linesize isFirstFrame:m_isFirstFrame];</span><br><span class="line">                m_isFirstFrame=NO;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            av_free(out_buffer);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (result != 0) &#123;</span><br><span class="line">            log4cplus_error(kModuleName, &quot;%s: Decode finish.&quot;,__func__);</span><br><span class="line">        &#125;</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -592,8 +665,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -753,6 +835,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#代码地址-Audio-Decoder"><span class="nav-number">3.1.</span> <span class="nav-text">代码地址 : Audio Decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-Audio-Decoder"><span class="nav-number">3.2.</span> <span class="nav-text">掘金地址 : Audio Decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-Audio-Decoder"><span class="nav-number">3.3.</span> <span class="nav-text">简书地址 : Audio Decoder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-Audio-Decoder"><span class="nav-number">3.4.</span> <span class="nav-text">博客地址 : Audio Decoder</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体架构"><span class="nav-number">4.</span> <span class="nav-text">总体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简易流程"><span class="nav-number">4.1.</span> <span class="nav-text">简易流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件结构"><span class="nav-number">4.2.</span> <span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#快速使用"><span class="nav-number">4.3.</span> <span class="nav-text">快速使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">5.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-初始化解码器"><span class="nav-number">5.1.</span> <span class="nav-text">1. 初始化解码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-将原始数据发给解码器"><span class="nav-number">5.2.</span> <span class="nav-text">2. 将原始数据发给解码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-接收解码后的数据"><span class="nav-number">5.3.</span> <span class="nav-text">3. 接收解码后的数据.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-将解码后的数据转码为iOS设备可播放的类型"><span class="nav-number">5.4.</span> <span class="nav-text">4. 将解码后的数据转码为iOS设备可播放的类型</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
