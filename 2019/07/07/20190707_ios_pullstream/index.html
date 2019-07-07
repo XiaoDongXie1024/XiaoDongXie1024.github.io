@@ -118,10 +118,13 @@
 <meta property="og:site_name" content="小东邪 Show Time">
 <meta property="og:description" content="解析文件中的音视频流以解码同步并将视频渲染到屏幕上,音频通过扬声器输出.对于仅仅需要单纯播放一个视频文件可直接使用`AVFoundation`中上层播放器,这里是用最底层的方式实现,可获取原始音视频帧数据.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-07T03:21:21.139Z">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/WTuyS9Z.0Wr3lOPyY*S3o2PT.YpPFu34yB*snBNmzTE!/r/dLgAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/HKfkE94Ef1Fc5ab*GbA0IGZGlWwGM2oFhN*wYHbY3mQ!/r/dL4AAAAAAAAA">
+<meta property="og:updated_time" content="2019-07-07T03:29:08.732Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS完整文件拉流解析解码同步渲染音视频流">
 <meta name="twitter:description" content="解析文件中的音视频流以解码同步并将视频渲染到屏幕上,音频通过扬声器输出.对于仅仅需要单纯播放一个视频文件可直接使用`AVFoundation`中上层播放器,这里是用最底层的方式实现,可获取原始音视频帧数据.">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/WTuyS9Z.0Wr3lOPyY*S3o2PT.YpPFu34yB*snBNmzTE!/r/dLgAAAAAAAAA">
 
 
 
@@ -349,7 +352,7 @@
                 
               
 
-              <time title="Created: 2019-07-07 11:21:21" itemprop="dateCreated datePublished" datetime="2019-07-07T11:21:21+08:00">2019-07-07</time>
+              <time title="Created: 2019-07-07 11:29:08" itemprop="dateCreated datePublished" datetime="2019-07-07T11:29:08+08:00">2019-07-07</time>
             
 
             
@@ -441,6 +444,76 @@
         <p class="description"></p>
 
 <a id="more"></a>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>解析文件中的音视频流以解码同步并将视频渲染到屏幕上,音频通过扬声器输出.对于仅仅需要单纯播放一个视频文件可直接使用<code>AVFoundation</code>中上层播放器,这里是用最底层的方式实现,可获取原始音视频帧数据.</p>
+<hr>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>本文主要分为三大块,解析模块使用FFmpeg parse文件中的音视频流,解码模块使用FFmpeg或苹果原生解码器解码音视频,渲染模块使用OpenGL将视频流渲染到屏幕,使用Audio Queue Player将音频以扬声器形式输出.</p>
+<hr>
+<h3 id="阅读前提"><a href="#阅读前提" class="headerlink" title="阅读前提"></a>阅读前提</h3><h4 id="注意-本文涉及到的所有模块具体实现均在如下链接中-可根据需求自行查看讲解部分"><a href="#注意-本文涉及到的所有模块具体实现均在如下链接中-可根据需求自行查看讲解部分" class="headerlink" title="注意: 本文涉及到的所有模块具体实现均在如下链接中,可根据需求自行查看讲解部分."></a>注意: 本文涉及到的所有模块具体实现均在如下链接中,可根据需求自行查看讲解部分.</h4><ul>
+<li>音视频基础</li>
+<li><a href="https://juejin.im/post/5ceff73df265da1bb13f16f4" target="_blank" rel="noopener">iOS FFmpeg环境搭建</a></li>
+<li><a href="https://juejin.im/post/5cffac756fb9a07f08708d20" target="_blank" rel="noopener">FFmpeg解析视频数据</a></li>
+<li><a href="https://juejin.im/post/5d1243b75188257b791527d5" target="_blank" rel="noopener">VideoToolbox实现视频硬解码</a></li>
+<li><a href="https://xiaodongxie1024.github.io/2019/05/19/20190519_AudioDecoder/">Audio Converter音频解码</a></li>
+<li><a href="https://juejin.im/post/5d187cb5f265da1ba25274ce" target="_blank" rel="noopener">FFmpeg音频解码</a></li>
+<li><a href="https://juejin.im/post/5d0a5a6c518825431f5e5ed8" target="_blank" rel="noopener">FFmpeg视频解码</a></li>
+<li><a href="https://juejin.im/post/5d08f861518825699040ecac" target="_blank" rel="noopener">OpenGL渲染视频数据</a></li>
+<li><a href="https://juejin.im/post/5ce9f36bf265da1bbd4b5084" target="_blank" rel="noopener">H.264,H.265码流结构</a></li>
+<li><a href="https://juejin.im/post/5a91315c6fb9a063395c8944" target="_blank" rel="noopener">传输音频数据队列实现</a></li>
+<li><a href="https://xiaodongxie1024.github.io/2019/06/29/20190629_ios_audioqueue_player/">Audio Queue 播放器</a></li>
+</ul>
+<hr>
+<h4 id="代码地址-iOS-File-Player"><a href="#代码地址-iOS-File-Player" class="headerlink" title="代码地址 : iOS File Player"></a>代码地址 : <a href="https://github.com/XiaoDongXie1024/XDXParseFileAVStreamDemo" target="_blank" rel="noopener">iOS File Player</a></h4><h4 id="掘金地址-iOS-File-Player"><a href="#掘金地址-iOS-File-Player" class="headerlink" title="掘金地址 : iOS File Player"></a>掘金地址 : <a href="https://juejin.im/post/5d216633e51d4555fd20a3b9" target="_blank" rel="noopener">iOS File Player</a></h4><h4 id="简书地址-iOS-File-Player"><a href="#简书地址-iOS-File-Player" class="headerlink" title="简书地址 : iOS File Player"></a>简书地址 : <a href="https://www.jianshu.com/p/854a1bb47173" target="_blank" rel="noopener">iOS File Player</a></h4><h4 id="博客地址-iOS-File-Player"><a href="#博客地址-iOS-File-Player" class="headerlink" title="博客地址 : iOS File Player"></a>博客地址 : <a href="https://xiaodongxie1024.github.io/2019/06/30/20190630_ios_audio_decoder/">iOS File Player</a></h4><hr>
+<h3 id="总体架构"><a href="#总体架构" class="headerlink" title="总体架构"></a>总体架构</h3><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/WTuyS9Z.0Wr3lOPyY*S3o2PT.YpPFu34yB*snBNmzTE!/r/dLgAAAAAAAAA" alt="1.overview"></p>
+<p>本文以解码一个.MOV媒体文件为例, 该文件中包含H.264编码的视频数据, AAC编码的音频数据,首先要通过FFmpeg去parse文件中的音视频流信息,parse出来的结果保存在<code>AVPacket</code>结构体中,然后分别提取音视频帧数据,音频帧通过FFmpeg解码器或苹果原生框架中的Audio Converter进行解码,视频通过FFmpeg或苹果原生框架VideoToolbox中的解码器可将数据解码,解码后的音频数据格式为PCM,解码后的视频数据格式为YUV原始数据,根据时间戳对音视频数据进行同步,最后将PCM数据音频传给Audio Queue以实现音频的播放,将YUV视频原始数据封装为<code>CMSampleBufferRef</code>数据结构并传给OpenGL以将视频渲染到屏幕上,至此一个完整拉取文件视频流的操作完成.</p>
+<blockquote>
+<p>注意: 通过网址拉取一个RTMP流进行解码播放的流程与拉取文件流基本相同, 只是需要通过socket接收音视频数据后再完成解码及后续流程.</p>
+</blockquote>
+<h4 id="简易流程"><a href="#简易流程" class="headerlink" title="简易流程"></a>简易流程</h4><h5 id="Parse"><a href="#Parse" class="headerlink" title="Parse"></a>Parse</h5><ul>
+<li>创建<code>AVFormatContext</code>上下文对象: <code>AVFormatContext *avformat_alloc_context(void);</code></li>
+<li>从文件中获取上下文对象并赋值给指定对象: <code>int avformat_open_input(AVFormatContext **ps, const char *url, AVInputFormat *fmt, AVDictionary **options)</code></li>
+<li>读取文件中的流信息: <code>int avformat_find_stream_info(AVFormatContext *ic, AVDictionary **options);</code></li>
+<li>获取文件中音视频流: <code>m_formatContext-&gt;streams[audio/video index]e</code></li>
+<li>开始parse以获取文件中视频帧帧: <code>int av_read_frame(AVFormatContext *s, AVPacket *pkt);</code></li>
+<li>如果是视频帧通过<code>av_bitstream_filter_filter</code>生成sps,pps等关键信息.</li>
+<li>读取到的<code>AVPacket</code>即包含文件中所有的音视频压缩数据.</li>
+</ul>
+<h5 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h5><p>通过FFmpeg解码</p>
+<ul>
+<li>获取文件流的解码器上下文: <code>formatContext-&gt;streams[a/v index]-&gt;codec;</code></li>
+<li>通过解码器上下文找到解码器: <code>AVCodec *avcodec_find_decoder(enum AVCodecID id);</code></li>
+<li>打开解码器: <code>int avcodec_open2(AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options);</code></li>
+<li>将文件中音视频数据发送给解码器: <code>int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);</code></li>
+<li>循环接收解码后的音视频数据: <code>int avcodec_receive_frame(AVCodecContext *avctx, AVFrame *frame);</code></li>
+<li>如果是音频数据可能需要重新采样以便转成设备支持的格式播放.(借助<code>SwrContext</code>)</li>
+</ul>
+<p>通过VideoToolbox解码视频</p>
+<ul>
+<li>将从FFmpeg中parse到的extra data中分离提取中NALU头关键信息sps,pps等</li>
+<li>通过上面提取的关键信息创建视频描述信息:<code>CMVideoFormatDescriptionRef</code>, <code>CMVideoFormatDescriptionCreateFromH264ParameterSets / CMVideoFormatDescriptionCreateFromHEVCParameterSets</code></li>
+<li>创建解码器:<code>VTDecompressionSessionCreate</code>,并指定一系列相关参数.</li>
+<li>将压缩数据放入CMBlockBufferRef中:<code>CMBlockBufferCreateWithMemoryBlock</code></li>
+<li>开始解码: <code>VTDecompressionSessionDecodeFrame</code></li>
+<li>在回调中接收解码后的视频数据</li>
+</ul>
+<p>通过AudioConvert解码音频</p>
+<ul>
+<li>通过原始数据与解码后数据格式的ASBD结构体创建解码器: <code>AudioConverterNewSpecific</code></li>
+<li>指定解码器类型<code>AudioClassDescription</code></li>
+<li>开始解码: <code>AudioConverterFillComplexBuffer</code></li>
+<li>注意: 解码的前提是每次需要有1024个采样点才能完成一次解码操作.</li>
+</ul>
+<h5 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h5><p>因为这里解码的是本地文件中的音视频, 也就是说只要本地文件中音视频的时间戳打的完全正确,我们解码出来的数据是可以直接播放以实现同步的效果.而我们要做的仅仅是保证音视频解码后同时渲染.</p>
+<blockquote>
+<p>注意: 比如通过一个RTMP地址拉取的流因为存在网络原因可能造成某个时间段数据丢失,造成音视频不同步,所以需要有一套机制来纠正时间戳.大体机制即为视频追赶音频,后面会有文件专门介绍,这里不作过多说明.</p>
+</blockquote>
+<h5 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h5><p>通过上面的步骤获取到的视频原始数据即可通过封装好的OpenGL ES直接渲染到屏幕上,苹果原生框架中也有<code>GLKViewController</code>可以完成屏幕渲染.音频这里通过Audio Queue接收音频帧数据以完成播放.</p>
+<h4 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h4><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/HKfkE94Ef1Fc5ab*GbA0IGZGlWwGM2oFhN*wYHbY3mQ!/r/dL4AAAAAAAAA" alt="2.file_structure"></p>
+<h4 id="快速使用"><a href="#快速使用" class="headerlink" title="快速使用"></a>快速使用</h4><h5 id="使用FFmpeg解码"><a href="#使用FFmpeg解码" class="headerlink" title="使用FFmpeg解码"></a>使用FFmpeg解码</h5><p>首先根据文件地址初始化FFmpeg以实现parse音视频流.然后利用FFmpeg中的解码器解码音视频数据,这里需要注意的是,我们将从读取到的第一个I帧开始作为起点,以实现音视频同步.解码后的音频要先装入传输队列中,因为audio queue player设计模式是不断从传输队列中取数据以实现播放.视频数据即可直接进行渲染.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">- (void)startRenderAVByFFmpegWithFileName:(NSString *)fileName &#123;</span><br><span class="line">    NSString *path = [[NSBundle mainBundle] pathForResource:fileName ofType:@&quot;MOV&quot;];</span><br><span class="line">    </span><br><span class="line">    XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];</span><br><span class="line">    </span><br><span class="line">    XDXFFmpegVideoDecoder *videoDecoder = [[XDXFFmpegVideoDecoder alloc] initWithFormatContext:[parseHandler getFormatContext] videoStreamIndex:[parseHandler getVideoStreamIndex]];</span><br><span class="line">    videoDecoder.delegate = self;</span><br><span class="line">    </span><br><span class="line">    XDXFFmpegAudioDecoder *audioDecoder = [[XDXFFmpegAudioDecoder alloc] initWithFormatContext:[parseHandler getFormatContext] audioStreamIndex:[parseHandler getAudioStreamIndex]];</span><br><span class="line">    audioDecoder.delegate = self;</span><br><span class="line">    </span><br><span class="line">    static BOOL isFindIDR = NO;</span><br><span class="line">    </span><br><span class="line">    [parseHandler startParseGetAVPackeWithCompletionHandler:^(BOOL isVideoFrame, BOOL isFinish, AVPacket packet) &#123;</span><br><span class="line">        if (isFinish) &#123;</span><br><span class="line">            isFindIDR = NO;</span><br><span class="line">            [videoDecoder stopDecoder];</span><br><span class="line">            [audioDecoder stopDecoder];</span><br><span class="line">            dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                self.startWorkBtn.hidden = NO;</span><br><span class="line">            &#125;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (isVideoFrame) &#123; // Video</span><br><span class="line">            if (packet.flags == 1 &amp;&amp; isFindIDR == NO) &#123;</span><br><span class="line">                isFindIDR = YES;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (!isFindIDR) &#123;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            [videoDecoder startDecodeVideoDataWithAVPacket:packet];</span><br><span class="line">        &#125;else &#123;             // Audio</span><br><span class="line">            [audioDecoder startDecodeAudioDataWithAVPacket:packet];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)getDecodeVideoDataByFFmpeg:(CMSampleBufferRef)sampleBuffer &#123;</span><br><span class="line">    CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">    [self.previewView displayPixelBuffer:pix];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getDecodeAudioDataByFFmpeg:(void *)data size:(int)size pts:(int64_t)pts isFirstFrame:(BOOL)isFirstFrame &#123;</span><br><span class="line">//    NSLog(@&quot;demon test - %d&quot;,size);</span><br><span class="line">    // Put audio data from audio file into audio data queue</span><br><span class="line">    [self addBufferToWorkQueueWithAudioData:data size:size pts:pts];</span><br><span class="line"></span><br><span class="line">    // control rate</span><br><span class="line">    usleep(14.5*1000);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="使用原生框架解码"><a href="#使用原生框架解码" class="headerlink" title="使用原生框架解码"></a>使用原生框架解码</h5><p>首先根据文件地址初始化FFmpeg以实现parse音视频流.这里首先根据文件中实际的音频流数据构造ASBD结构体以初始化音频解码器,然后将解码后的音视频数据分别渲染即可.这里需要注意的是,如果要拉取的文件视频是H.265编码格式的,解码出来的数据的因为含有B帧所以时间戳是乱序的,我们需要借助一个链表对其排序,然后再将排序后的数据渲染到屏幕上.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">- (void)startRenderAVByOriginWithFileName:(NSString *)fileName &#123;</span><br><span class="line">    NSString *path = [[NSBundle mainBundle] pathForResource:fileName ofType:@&quot;MOV&quot;];</span><br><span class="line">    XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];</span><br><span class="line">    </span><br><span class="line">    XDXVideoDecoder *videoDecoder = [[XDXVideoDecoder alloc] init];</span><br><span class="line">    videoDecoder.delegate = self;</span><br><span class="line"></span><br><span class="line">    // Origin file aac format</span><br><span class="line">    AudioStreamBasicDescription audioFormat = &#123;</span><br><span class="line">        .mSampleRate         = 48000,</span><br><span class="line">        .mFormatID           = kAudioFormatMPEG4AAC,</span><br><span class="line">        .mChannelsPerFrame   = 2,</span><br><span class="line">        .mFramesPerPacket    = 1024,</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    XDXAduioDecoder *audioDecoder = [[XDXAduioDecoder alloc] initWithSourceFormat:audioFormat</span><br><span class="line">                                                                     destFormatID:kAudioFormatLinearPCM</span><br><span class="line">                                                                       sampleRate:48000</span><br><span class="line">                                                              isUseHardwareDecode:YES];</span><br><span class="line">    </span><br><span class="line">    [parseHandler startParseWithCompletionHandler:^(BOOL isVideoFrame, BOOL isFinish, struct XDXParseVideoDataInfo *videoInfo, struct XDXParseAudioDataInfo *audioInfo) &#123;</span><br><span class="line">        if (isFinish) &#123;</span><br><span class="line">            [videoDecoder stopDecoder];</span><br><span class="line">            [audioDecoder freeDecoder];</span><br><span class="line">            </span><br><span class="line">            dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                self.startWorkBtn.hidden = NO;</span><br><span class="line">            &#125;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (isVideoFrame) &#123;</span><br><span class="line">            [videoDecoder startDecodeVideoData:videoInfo];</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            [audioDecoder decodeAudioWithSourceBuffer:audioInfo-&gt;data</span><br><span class="line">                                     sourceBufferSize:audioInfo-&gt;dataSize</span><br><span class="line">                                      completeHandler:^(AudioBufferList * _Nonnull destBufferList, UInt32 outputPackets, AudioStreamPacketDescription * _Nonnull outputPacketDescriptions) &#123;</span><br><span class="line">                                          // Put audio data from audio file into audio data queue</span><br><span class="line">                                          [self addBufferToWorkQueueWithAudioData:destBufferList-&gt;mBuffers-&gt;mData size:destBufferList-&gt;mBuffers-&gt;mDataByteSize pts:audioInfo-&gt;pts];</span><br><span class="line"></span><br><span class="line">                                          // control rate</span><br><span class="line">                                          usleep(16.8*1000);</span><br><span class="line">                                      &#125;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer isFirstFrame:(BOOL)isFirstFrame &#123;</span><br><span class="line">    if (self.hasBFrame) &#123;</span><br><span class="line">        // Note : the first frame not need to sort.</span><br><span class="line">        if (isFirstFrame) &#123;</span><br><span class="line">            CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">            [self.previewView displayPixelBuffer:pix];</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [self.sortHandler addDataToLinkList:sampleBuffer];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);</span><br><span class="line">        [self.previewView displayPixelBuffer:pix];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - Sort Callback</span><br><span class="line">- (void)getSortedVideoNode:(CMSampleBufferRef)sampleBuffer &#123;</span><br><span class="line">    int64_t pts = (int64_t)(CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000);</span><br><span class="line">    static int64_t lastpts = 0;</span><br><span class="line">//    NSLog(@&quot;Test marigin - %lld&quot;,pts - lastpts);</span><br><span class="line">    lastpts = pts;</span><br><span class="line">    </span><br><span class="line">    [self.previewView displayPixelBuffer:CMSampleBufferGetImageBuffer(sampleBuffer)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>本文中每一部分的具体实现均有详细介绍, 如需帮助请参考阅读前提中附带的链接地址.</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>因为不同文件中压缩的音视频数据格式不同,这里仅仅兼容部分格式,可自定义进行扩展.</p>
 
       
     </div>
@@ -592,8 +665,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -753,6 +835,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读前提"><span class="nav-number">3.</span> <span class="nav-text">阅读前提</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意-本文涉及到的所有模块具体实现均在如下链接中-可根据需求自行查看讲解部分"><span class="nav-number">3.1.</span> <span class="nav-text">注意: 本文涉及到的所有模块具体实现均在如下链接中,可根据需求自行查看讲解部分.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码地址-iOS-File-Player"><span class="nav-number">3.2.</span> <span class="nav-text">代码地址 : iOS File Player</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#掘金地址-iOS-File-Player"><span class="nav-number">3.3.</span> <span class="nav-text">掘金地址 : iOS File Player</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简书地址-iOS-File-Player"><span class="nav-number">3.4.</span> <span class="nav-text">简书地址 : iOS File Player</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#博客地址-iOS-File-Player"><span class="nav-number">3.5.</span> <span class="nav-text">博客地址 : iOS File Player</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体架构"><span class="nav-number">4.</span> <span class="nav-text">总体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简易流程"><span class="nav-number">4.1.</span> <span class="nav-text">简易流程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Parse"><span class="nav-number">4.1.1.</span> <span class="nav-text">Parse</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#解码"><span class="nav-number">4.1.2.</span> <span class="nav-text">解码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#同步"><span class="nav-number">4.1.3.</span> <span class="nav-text">同步</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#渲染"><span class="nav-number">4.1.4.</span> <span class="nav-text">渲染</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件结构"><span class="nav-number">4.2.</span> <span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#快速使用"><span class="nav-number">4.3.</span> <span class="nav-text">快速使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用FFmpeg解码"><span class="nav-number">4.3.1.</span> <span class="nav-text">使用FFmpeg解码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用原生框架解码"><span class="nav-number">4.3.2.</span> <span class="nav-text">使用原生框架解码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">5.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">6.</span> <span class="nav-text">注意</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
