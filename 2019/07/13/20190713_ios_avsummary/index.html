@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=6.4.2" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="音视频的发展正在向各个行业不断扩展，从教育的远程授课，交通的人脸识别，医疗的远程就医等等，音视频方向已经占据一个相当重要的位置，而音视频真正入门的文章又少之甚少，一个刚毕业小白可能很难切入理解,因为音视频中涉及大量理论知识,而代码的书写需要结合这些理论,所以搞懂音视频,编解码等理论知识至关重要.本人也是从实习开始接触音视频项目,看过很多人的文章，在这里总结一个通俗易懂的文章，让更多准备学习音视频的">
+<meta name="keywords" content="iOS,Audio,Video,Stream,FFmpeg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(强烈推荐)移动端音视频从零到上手">
+<meta property="og:url" content="https://XiaoDongXie1024.github.io/2019/07/13/20190713_ios_avsummary/index.html">
+<meta property="og:site_name" content="小东邪 Show Time">
+<meta property="og:description" content="音视频的发展正在向各个行业不断扩展，从教育的远程授课，交通的人脸识别，医疗的远程就医等等，音视频方向已经占据一个相当重要的位置，而音视频真正入门的文章又少之甚少，一个刚毕业小白可能很难切入理解,因为音视频中涉及大量理论知识,而代码的书写需要结合这些理论,所以搞懂音视频,编解码等理论知识至关重要.本人也是从实习开始接触音视频项目,看过很多人的文章，在这里总结一个通俗易懂的文章，让更多准备学习音视频的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4HaZ0CqQ6ayyYKUSlPkWkB*abU.sfr0XDoRtzF1kKBY!/r/dDUBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/ajtOxqmSBGHx1pR8*0gtWcpwEV*YD1FiejDVqZelkPs!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/AGBXcsf06SB2NjWIahe*hrhn73*us5aY3h9Hvzi4rQA!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/C4aCHNowvyYMf5QYCsyWpxS*9q2*o2kRlp35vHEPMco!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/JTKBRjOhK4p3k*s.3YCuo9Wes1.haCunGWWCLED8lFs!/r/dC4BAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uY1RxSiuTSgebVqwdk7h54bmhTlfPRTl5YUbI6RR13g!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/mSRvr*AraMPfd0CT9u4*sS1ovHxIZsyShplc7WtkcbQ!/r/dFMBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/q23.wKQyCPBwT34wiBWXVumNu6u.f.lU0pEq8MUKWHQ!/r/dLYAAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/2PYZf0ecHdmq4LDurMf6f60vb5cTjvEsR7lA4tkazPM!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/r4hGG2BPCH2GxBf.vnolGr2tlyMLp3Z72UF0Nak319s!/r/dC0BAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/ahzP5K8sI6.7HfV*8ZhCJ1kf8H52olw8p2uMCqeQzds!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/FiuVSdAaJZ.fWOAe0ucO0q1A9EV.vMyrZTLPrlkPtGI!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/O8J54FYUGO3f*h8470RW*GTLWpOXbpOn2QuYqNquV4I!/r/dFQBAAAAAAAA">
+<meta property="og:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/0Ms2vwez9.HWkz8WcRv5MjY5hMdxZkpXrfMkA4h9aII!/r/dL8AAAAAAAAA">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5086522-cec9976c4c5443ea?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-07-13T13:27:02.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="(强烈推荐)移动端音视频从零到上手">
+<meta name="twitter:description" content="音视频的发展正在向各个行业不断扩展，从教育的远程授课，交通的人脸识别，医疗的远程就医等等，音视频方向已经占据一个相当重要的位置，而音视频真正入门的文章又少之甚少，一个刚毕业小白可能很难切入理解,因为音视频中涉及大量理论知识,而代码的书写需要结合这些理论,所以搞懂音视频,编解码等理论知识至关重要.本人也是从实习开始接触音视频项目,看过很多人的文章，在这里总结一个通俗易懂的文章，让更多准备学习音视频的">
+<meta name="twitter:image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4HaZ0CqQ6ayyYKUSlPkWkB*abU.sfr0XDoRtzF1kKBY!/r/dDUBAAAAAAAA">
+
+
+
+
+
+
+  <link rel="canonical" href="https://XiaoDongXie1024.github.io/2019/07/13/20190713_ios_avsummary/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>(强烈推荐)移动端音视频从零到上手 | 小东邪 Show Time</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小东邪 Show Time</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-桃花岛">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>桃花岛</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-时间轴">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间轴</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-武功秘籍">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>武功秘籍</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖地位">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>江湖地位</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-江湖历程">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-futbol-o"></i> <br>江湖历程</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://XiaoDongXie1024.github.io/2019/07/13/20190713_ios_avsummary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小东邪 - Demon">
+      <meta itemprop="description" content="一生负气成今日，四海无人对夕阳.">
+      <meta itemprop="image" content="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小东邪 Show Time">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">(强烈推荐)移动端音视频从零到上手
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-07-13 21:27:02" itemprop="dateCreated datePublished" datetime="2019-07-13T21:27:02+08:00">2019-07-13</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/音视频总结/" itemprop="url" rel="index"><span itemprop="name">音视频总结</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/13/20190713_ios_avsummary/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count gitment-comments-count" data-xid="/2019/07/13/20190713_ios_avsummary/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/07/13/20190713_ios_avsummary/" class="leancloud_visitors" data-flag-title="(强烈推荐)移动端音视频从零到上手">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Views: </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">音视频的发展正在向各个行业不断扩展，从教育的远程授课，交通的人脸识别，医疗的远程就医等等，音视频方向已经占据一个相当重要的位置，而音视频真正入门的文章又少之甚少，一个刚毕业小白可能很难切入理解,因为音视频中涉及大量理论知识,而代码的书写需要结合这些理论,所以搞懂音视频,编解码等理论知识至关重要.本人也是从实习开始接触音视频项目,看过很多人的文章，在这里总结一个通俗易懂的文章，让更多准备学习音视频的同学更快入门.</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p class="description"></p>
+
+<a id="more"></a>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>[toc]</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>随着整个互联网的崛起，数据传递的形式也在不断升级变化，总的流行趋势如下：</p>
+<pre><code>纯文本的短信，QQ -&gt; 空间，微博，朋友圈的图片文字结合 -&gt; 微信语音 -&gt; 各大直播软件 -&gt; 抖音短视频
+</code></pre><p>音视频的发展正在向各个行业不断扩展，从教育的远程授课，交通的人脸识别，医疗的远程就医等等，音视频方向已经占据一个相当重要的位置，而音视频真正入门的文章又少之甚少，一个刚毕业小白可能很难切入理解,因为音视频中涉及大量理论知识,而代码的书写需要结合这些理论,所以搞懂音视频,编解码等理论知识至关重要.本人也是从实习开始接触音视频项目,看过很多人的文章，在这里总结一个通俗易懂的文章，让更多准备学习音视频的同学更快入门。</p>
+<h2 id="划重点"><a href="#划重点" class="headerlink" title="划重点"></a>划重点</h2><p>本文中理论知识来自于各种音视频文章的归纳音视频编码基本原理汇总,其中也会有一些我自己总结增加的部分.若有错误可评论,检查后会更正.</p>
+<p>为了防止大家理解过于空洞,作者花了三个月时间将最常用,最重要的一些功能的理论知识及实战Demo亲自写出来,配合文章阅读效果更佳.每一部分的文章可以在下面每章章节开始的深入学习中点击链接查看, 链接中文章均有Github地址,每个Demo都亲测可以通过,可以下载Demo运行.</p>
+<p>如果喜欢,请帮忙点赞并支持转载,转载请附原文链接.</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><ul>
+<li><p>采集</p>
+<p>  无论是iOS平台,还是安卓平台,我们都是需要借助官方的API实现一系列相关功能.首先我们要明白我们想要什么,最开始我们需要一部手机,智能手机中摄像头是不可缺少的一部分,所以我们通过一些系统API获取就要可以获取物理摄像头将采集到的视频数据与麦克风采集到的音频数据.</p>
+</li>
+</ul>
+<ul>
+<li><p>处理</p>
+<p>  音频和视频原始数据本质都是一大段数据,系统将其包装进自定义的结构体中,通常都以回调函数形式提供给我们,拿到音视频数据后,可以根据各自项目需求做一系列特殊处理,如: 视频的旋转,缩放,滤镜,美颜,裁剪等等功能, 音频的单声道降噪,消除回声,静音等等功能.</p>
+</li>
+<li><p>编码</p>
+<p>  原始数据做完自定义处理后就可以进行传输,像直播这样的功能就是把采集好的视频数据发送给服务器,以在网页端供所有粉丝观看,而传输由于本身就是基于网络环境,庞大的原始数据就必须压缩后才能带走,可以理解为我们搬家要将物品都打包到行李箱这样理解.</p>
+</li>
+<li><p>传输</p>
+<p>  编码后的音视频数据通常以RTMP协议进行传输,这是一种专门用于传输音视频的协议,因为各种各样的视频数据格式无法统一,所以需要有一个标准作为传输的规则.协议就起到这样的作用.</p>
+</li>
+<li><p>解码</p>
+<p>  服务端接收到我们送过去的编码数据后,需要对其解码成原始数据,因为编码的数据直接送给物理硬件的设备是不能直接播放的,只有解码为原始数据才能使用.</p>
+</li>
+<li><p>音视频同步</p>
+<p>  解码后的每帧音视频中都含有最开始录制时候设置的时间戳,我们需要根据时间戳将它们正确的播放出来,但是在网络传输中可能会丢失一些数据,或者是延时获取,这时我们就需要一定的策略去实现音视频的同步,大体分为几种策略:缓存一定视频数据,视频追音频等等.</p>
+</li>
+</ul>
+<h2 id="推流，拉流流程"><a href="#推流，拉流流程" class="headerlink" title="推流，拉流流程"></a>推流，拉流流程</h2><ul>
+<li>推流: 将手机采集到的视频数据传给后台播放端进行展示，播放端可以是windows, linux, web端，即手机充当采集的功能，将手机摄像头采集到视频和麦克风采集到的音频合成编码后传给对应平台的播放端。</li>
+</ul>
+<ul>
+<li>拉流: 将播放端传来的视频数据在手机上播放,推流的逆过程，即将windows, linux, web端传来的视频数据进行解码后传给对应音视频硬件，最终将视频渲染在手机界面上播放.</li>
+</ul>
+<h5 id="推流如下"><a href="#推流如下" class="headerlink" title="推流如下:"></a>推流如下:</h5><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/4HaZ0CqQ6ayyYKUSlPkWkB*abU.sfr0XDoRtzF1kKBY!/r/dDUBAAAAAAAA" alt="2.push_stream"></p>
+<h5 id="拉流如下"><a href="#拉流如下" class="headerlink" title="拉流如下:"></a>拉流如下:</h5><p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/ajtOxqmSBGHx1pR8*0gtWcpwEV*YD1FiejDVqZelkPs!/r/dL8AAAAAAAAA" alt="1.pull_stream"></p>
+<h2 id="具体剖析"><a href="#具体剖析" class="headerlink" title="具体剖析"></a>具体剖析</h2><p>推流，拉流实际为互逆过程，这里按照从采集开始介绍.</p>
+<h3 id="1-采集"><a href="#1-采集" class="headerlink" title="1. 采集"></a>1. 采集</h3><p>采集是推流的第一个环节，是原始的音视频数据的来源.采集的原始数据类型为音频数据PCM，视频数据YUV,RGB…。</p>
+<h4 id="1-1-音频采集"><a href="#1-1-音频采集" class="headerlink" title="1.1. 音频采集"></a>1.1. 音频采集</h4><ul>
+<li><p>深入研究</p>
+<ul>
+<li><a href="https://juejin.im/post/5cca9e99f265da03a54c2bc0" target="_blank" rel="noopener">iOS Core Audio简介</a></li>
+<li><a href="https://juejin.im/post/5ccafdb46fb9a032233537fd" target="_blank" rel="noopener">iOS Audio Session管理音频上下文</a></li>
+<li><a href="https://juejin.im/post/5ccc2aadf265da037875a640" target="_blank" rel="noopener">iOS Audio Queue采集播放音频数据</a></li>
+<li><a href="https://juejin.im/post/5cd67805f265da039f0f2e21" target="_blank" rel="noopener">iOS Audio Queue采集音频数据实战</a></li>
+<li><a href="https://juejin.im/post/5cd053b051882541332f5bdb" target="_blank" rel="noopener">iOS Audio Unit采集音频数据</a></li>
+<li><a href="https://juejin.im/post/5cd69e5ff265da037371a3c7" target="_blank" rel="noopener">iOS Audio Unit采集音频数据实战</a></li>
+</ul>
+</li>
+<li><p>采集来源</p>
+<ul>
+<li>内置麦克风</li>
+<li>外置具有麦克风功能的设备(相机，话筒…)</li>
+<li>系统自带相册</li>
+</ul>
+</li>
+<li><p>音频主要参数</p>
+<ul>
+<li>采样率(samplerate): 模拟信号数字化的过程,每秒钟采集的数据量,采样频率越高,数据量越大,音质越好。</li>
+<li>声道数(channels): 即单声道或双声道 (iPhone无法直接采集双声道，但可以模拟,即复制一份采集到的单声道数据.安卓部分机型可以)</li>
+<li>位宽: 每个采样点的大小,位数越多,表示越精细,音质越好,一般是8bit或16bit.</li>
+<li>数据格式: iOS端设备采集的原始数据为线性PCM类型音频数据</li>
+<li>其他: 还可以设置采样值的精度,每个数据包有几帧数据,每帧数据占多少字节等等.</li>
+</ul>
+</li>
+<li><p>音频帧</p>
+<p>  音频与视频不同,视频每一帧就是一张图片,音频是流式,本身没有明确的帧的概念,实际中为了方便,取2.5ms~60ms为单位的数据为一帧音频.</p>
+</li>
+<li><p>计算</p>
+<p>  数据量（字节 / 秒）=（采样频率（Hz）* 采样位数（bit）* 声道数）/ 8</p>
+<p>  单声道的声道数为1，立体声的声道数为2. 字节B，1MB=1024KB = 1024*1024B</p>
+</li>
+</ul>
+<h4 id="1-2-视频采集"><a href="#1-2-视频采集" class="headerlink" title="1.2. 视频采集"></a>1.2. 视频采集</h4><ul>
+<li>深入研究<ul>
+<li><a href="https://juejin.im/post/5cb1f987f265da039d3274c3" target="_blank" rel="noopener">iOS AVCaptureSession采集视频数据</a></li>
+<li><a href="https://juejin.im/post/5cb1fd9af265da03bb6fa489" target="_blank" rel="noopener">iOS AVCaptureSession采集视频数据Demo)</a></li>
+<li><a href="https://juejin.im/post/5ab74e50f265da239d4944df" target="_blank" rel="noopener">视频原始数据YUV介绍</a></li>
+</ul>
+</li>
+<li>采集来源<ul>
+<li>摄像头</li>
+<li>屏幕录制</li>
+<li>外置带摄像头采集功能的设备(相机，DJI无人机，OSMO…)</li>
+<li>系统自带相册</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注意: 像一些外置摄像头,如像利用摄像机的摄像头采集,然后用手机将数据处理编码并发出,也是可以的,但是数据的流向需要我们解析,即从摄像头的HDMI线转成网线口,网线口再转USB,USB转苹果Lighting接口,利用FFmpeg可以获取其中的数据.</p>
+</blockquote>
+<ul>
+<li><p>视频主要参数</p>
+<ul>
+<li>图像格式: YUV, RGB (即红黄蓝三种颜色混合组成各种颜色). </li>
+<li>分辨率: 当前设备屏幕支持的最大分辨率</li>
+<li>帧率: 一秒钟采集的帧数</li>
+<li>其他: 白平衡,对焦,曝光,闪光灯等等</li>
+</ul>
+</li>
+<li><p>计算 (RGB)</p>
+</li>
+</ul>
+<p>1帧数据量 = 分辨率(width * height) * 每个像素的所占字节数(一般是3个字节)</p>
+<blockquote>
+<p>注意上面计算的方法并不是唯一的,因为视频的数据格式有很多种,如YUV420计算方式为<code>分辨率(width * height) * 3/2</code></p>
+</blockquote>
+<h4 id="1-3-综上所述"><a href="#1-3-综上所述" class="headerlink" title="1.3. 综上所述"></a>1.3. 综上所述</h4><p>我们假设要上传的视频是1080P 30fps(分辨率:1920*1080), 声音是48kHz,那么每秒钟数据量如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">video = 1920 * 1080 * 30 * 3 = 186624000B = 186.624 MB</span><br><span class="line">audio = (48000 * 16 * 2) / 8 = 192000B = 0.192 MB</span><br></pre></td></tr></table></figure>
+<p>由此我们可得，如果直接将原始采集的数据进行传输,那么一部电影就需要1000多G的视频，如果是这样将多么恐怖，所以就涉及到我们后面的编码环节。</p>
+<h3 id="2-处理"><a href="#2-处理" class="headerlink" title="2. 处理"></a>2. 处理</h3><ul>
+<li>深入研究 (待添加)<ul>
+<li><a href="https://juejin.im/post/5a8fe2a66fb9a063317c6828" target="_blank" rel="noopener">高效裁剪视频</a></li>
+<li><a href="https://juejin.im/post/5a8fe7156fb9a063342683b8" target="_blank" rel="noopener">根据声音大小实现音量柱功能</a></li>
+</ul>
+</li>
+</ul>
+<p>从上一步中，我们可以得到采集到的音频原始数据和视频原始数据，在移动端，一般是通过各自手机平台官方API中拿到, 前文链接中皆有实现的方法.</p>
+<p>之后,我们可以对原始数据加以处理,对原始操作处理只能在编码之前,因为编码后的数据只能用于传输. 比如可<br>以对图像处理</p>
+<ul>
+<li>美颜</li>
+<li>水印</li>
+<li>滤镜</li>
+<li>裁剪</li>
+<li>旋转</li>
+<li>…</li>
+</ul>
+<p>对音频处理</p>
+<ul>
+<li>混音</li>
+<li>消除回声</li>
+<li>降噪</li>
+<li>…</li>
+</ul>
+<p>目前流行的有很多大型框架专门用来处理视频,音频,如OpenGL, OpenAL, GPUImage…以上的各种处理网上均有开源的库可以实现,基本原理就是,我们拿到原始的音视频帧数据,将其送给开源库,处理完后再拿到处理好的音视频继续我们自己的流程.当然很多开源库仍需要根据项目需求略微更改并封装.</p>
+<h3 id="3-编码"><a href="#3-编码" class="headerlink" title="3.编码"></a>3.编码</h3><ul>
+<li>深入研究<ul>
+<li><a href="https://juejin.im/post/5cea08a36fb9a07eab685ceb" target="_blank" rel="noopener">iOS视频视频编码</a></li>
+<li><a href="https://juejin.im/post/5cdae84df265da036902ba09" target="_blank" rel="noopener">iOS音频音频编码</a><h4 id="3-1-为什么要编码"><a href="#3-1-为什么要编码" class="headerlink" title="3.1.  为什么要编码"></a>3.1.  为什么要编码</h4>在第<code>1.</code>步采集最后已经讲到,原始的视频每秒钟就产生200多MB,如果直接拿原始数据传输,网络带宽即内存消耗是巨大的,所以视频在传输中是必须经过编码的. </li>
+</ul>
+</li>
+</ul>
+<p>类似的例子就像我们平常搬家,如果直接搬家,东西很零散,需要跑很多趟拿,如果将衣服,物品打包,我们仅仅需要几个行李箱就可以一次搞定.等我们到达新家,再将东西取出来,重新布置,编解码的原理就是如此.</p>
+<h4 id="3-2-有损压缩-VS-无损压缩"><a href="#3-2-有损压缩-VS-无损压缩" class="headerlink" title="3.2. 有损压缩 VS 无损压缩"></a>3.2. 有损压缩 VS 无损压缩</h4><ul>
+<li><p>有损压缩</p>
+<ul>
+<li><p>视频利用人眼的视觉特性, 以一定的客观失真换取数据的压缩,比如人眼对亮度识别的阈值,视觉阈值,对亮度和色度的敏感度不同,以至于可以在编码时引入适量误差,不会被察觉出来. </p>
+</li>
+<li><p>音频利用了人类对图像或声波中的某些频率成分不敏感的特性，允许压缩过程中损失一定的信息；去除声音中冗余成分的方法实现。冗余成分指的是音频中不能被人耳朵察觉的信号，它们对声音的音色，音调等信息没有任何帮助。重构后的数据与原来的数据有所不同，但不影响人对原始资料表达的信息造成误解。</p>
+<p>有损压缩适用于重构信号不一定非要和原始信号完全相同的场合。</p>
+</li>
+</ul>
+</li>
+<li><p>无损压缩</p>
+<ul>
+<li>视频的空间冗余,时间冗余,结构冗余,熵冗余等,即图像的各个像素间存在很强的关联性,消除这些冗余不会导致信息丢失</li>
+<li>音频压缩格式则是利用数据的统计冗余进行压缩，可完全恢复原始数据而不引起任何失真，但压缩率是受到数据统计冗余度的理论限制，一般为2:1到5:1。</li>
+</ul>
+</li>
+</ul>
+<p>正因为有着上面的压缩方法,视频数据量可以极大的压缩,有利于传输和存储.</p>
+<h4 id="3-3-视频编码"><a href="#3-3-视频编码" class="headerlink" title="3.3. 视频编码"></a>3.3. 视频编码</h4><ul>
+<li>原理：编码是如何做到将很大的数据量变小的呢? 主要原理如下<ul>
+<li>空间冗余: 图像相邻像素之间有很强的相关性</li>
+<li>时间冗余: 视频序列的相邻图像之间内容相似</li>
+<li>编码冗余: 不同像素值出现的概率不同</li>
+<li>视觉冗余: 人的视觉系统对某些细节不敏感</li>
+<li>知识冗余: 规律性的结构可由先前知识和背景知识得到</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>压缩编码的方法</p>
+<ul>
+<li><p>变换编码 (了解即可，具体请谷歌)</p>
+<p>  将空间域描述的图像信号变换成频率域，然后对变换后的系数进行编码处理。一般来说，图像在空间上具有较强的相关性，变换频率域可以实现去除相关与能量集中。常用的正交变换有离散傅里叶变换，离散余弦变换等等。</p>
+</li>
+<li><p>熵编码 (了解即可，具体请谷歌)</p>
+<p>  熵编码是因编码后的平均码长接近信源熵值而得名。熵编码多用可变字长编码（VLC，Variable Length Coding）实现。其基本原理是对信源中出现概率大的符号赋予短码，对于出现概率小的符号赋予长码，从而在统计上获得较短的平均码长。可变字长编码通常有霍夫曼编码、算术编码、游程编码等。</p>
+</li>
+<li><p>运动估计和运动补偿 (重要)</p>
+<p>  运动估计和运动补偿是消除图像序列时间方向相关性的有效手段。上面介绍的变换编码，熵编码都是在以一帧图像的基础上进行的，通过这些方法可以消除图像内部各像素在空间上的相关性。实际上图像信号除了空间上的相关性外，还有时间上的相关性。例如对于像新闻联播这种背景静止，画面主体运动较小的数字视频，每一幅画面之间的区别很小，画面之间的相关性很大。对于这种情况我们没有必要对每一帧图像单独进行编码，而是可以只对相邻视频帧中变化的部分进行编码，从而进一步减小数据量，这方面的工作是由运动估计和运动补偿来实现的。</p>
+<h5 id="a-运动估计技术"><a href="#a-运动估计技术" class="headerlink" title="a. 运动估计技术"></a>a. 运动估计技术</h5><p>将当前的输入图像分割成若干彼此不相重叠的小图像子块，例如一帧图像为1280*720,首先将其以网格状形式分成40*45个尺寸为16*16彼此没有重叠的图像块，然后在前一图像或者后一图像某个搜索窗口的范围内为每一个图像块寻找一个与之最为相似的图像块，这个搜寻的过程叫做运动估计。</p>
+<h5 id="b-运动补偿"><a href="#b-运动补偿" class="headerlink" title="b. 运动补偿"></a>b. 运动补偿</h5><p>通过计算最相似的图像块与该图像块之间的位置信息，可以得到一个运动矢量。这样在编码的过程中就可以将当前图像中的块与参考图像运动矢量所指向的最相似的图像块相减，得到一个残差图像块，由于每个残差图像块中的每个像素值都很小，所以在压缩编码中可以获得更高的压缩比。</p>
+</li>
+</ul>
+</li>
+<li><p>压缩数据类型</p>
+<p>  正因为运动估计与运动补偿，所以编码器将输入的每一帧图像根据参考图像分成了三种类型：I帧，P帧，B帧。</p>
+<ul>
+<li><p>I帧: 只使用本帧内的数据进行编码，在编码过程中不需要进行运动估计和运动补偿。</p>
+</li>
+<li><p>P帧: 在编码过程中使用前面的I帧或P帧作为参考图像的运动补偿，实际是对当前图像与参考图像的差值进行编码。</p>
+</li>
+<li><p>B帧: 在编码过程中使用前面的I帧或P帧和后面的I帧或P帧进行预测。由此可见，每个P帧利用一帧图像为参考图像。而B帧需要两帧图像作为参考。</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>实际应用中使用混合编码(变换编码+运动估计，运动补偿+熵编码)</p>
+</blockquote>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/AGBXcsf06SB2NjWIahe*hrhn73*us5aY3h9Hvzi4rQA!/r/dL8AAAAAAAAA" alt="3.videoencoder"></p>
+<ul>
+<li><p>编码器</p>
+<p>  经过数十年的发展，编码器的功能已经十分强大，种类繁多，下面介绍最主流的一些编码器。</p>
+<ul>
+<li><p>H.264</p>
+<p>与旧标准相比，它能够在更低带宽下提供优质视频（换言之，只有 MPEG-2，H.263 或 MPEG-4 第 2 部分的一半带宽或更少），也不增加太多设计复杂度使得无法实现或实现成本过高。</p>
+</li>
+<li><p>H.265/HEVC</p>
+<p>高效率视频编码（High Efficiency Video Coding，简称HEVC）是一种视频压缩标准，被视为是 ITU-T H.264/MPEG-4 AVC 标准的继任者。HEVC 被认为不仅提升视频质量，同时也能达到 H.264/MPEG-4 AVC 两倍之压缩率（等同于同样画面质量下比特率减少了 50%）.</p>
+</li>
+<li><p>VP8</p>
+<p>VP8 是一个开放的视频压缩格式，最早由 On2 Technologies 开发，随后由 Google 发布。</p>
+</li>
+<li><p>VP9</p>
+<p>VP9 的开发从 2011 年第三季开始，目标是在同画质下，比 VP8 编码减少 50%的文件大小，另一个目标则是要在编码效率上超越 HEVC 编码。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-4-音频编码"><a href="#3-4-音频编码" class="headerlink" title="3.4. 音频编码"></a>3.4. 音频编码</h4><ul>
+<li><p>原理</p>
+<p>  数字音频压缩编码在保证信号在听觉方面不产生失真的前提下，对音频数据信号进行尽可能的压缩。数字音频压缩编码采取去除声音中冗余成分的方法实现。冗余成分指的是音频中不能被人耳朵察觉的信号，它们对声音的音色，音调等信息没有任何帮助。</p>
+<p>  冗余信号包含人耳听觉范围外的音频信号以及被掩蔽掉的音频信号灯。例如，人耳能察觉的声音频率为20Hz~20kHz,出此之外的其他频率人耳无法察觉，都为冗余信号。此外，根据人耳听觉的生理和心理学现象。当一个强音信号与一个弱音信号同时存在时，弱音信号将被强音信号所掩蔽而听不见，这样弱音信号就可以视为冗余信号不用传送。这就是人耳听觉的掩蔽效应。</p>
+</li>
+<li><p>压缩编码方法</p>
+<ul>
+<li><p>频谱掩蔽</p>
+<p>一个频率的声音能量小于某个阈值之后，人耳就会听不到，这个阈值称为最小可闻阈。当有另外能量较大的声音出现的时候，该声音频率附近的阈值会提高很多，即所谓的掩蔽效应 </p>
+<p>人耳对2KHz～5KHz的声音最敏感，而对频率太低或太高的声音信号都很迟钝，当有一个频率为0.2KHz、强度为60dB的声音出现时，其附近的阈值提高了很多。</p>
+</li>
+<li><p>时域掩蔽</p>
+<p>当强音信号和弱音信号同时出现时，还存在时域掩蔽效应，前掩蔽，同时掩蔽，后掩蔽。前掩蔽是指人耳在听到强信号之前的短暂时间内，已经存在的弱信号会被掩蔽而听不到。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- 前掩蔽是指人耳在听到强信号之前的短暂时间内，已经存在的弱信号会被掩蔽而听不到</span><br><span class="line">- 同时掩蔽是指当强信号与弱信号同时存在时，弱信号会被强信号所掩蔽而听不到。</span><br><span class="line">- 后掩蔽是指当强信号消失后，需经过较长的一段时间才能重新听见弱信号，称为后掩蔽。这些被掩蔽的弱信号即可视为冗余信号。</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/C4aCHNowvyYMf5QYCsyWpxS*9q2*o2kRlp35vHEPMco!/r/dL8AAAAAAAAA" alt="4.audioencoder"></p>
+<h3 id="4-封装编码数据"><a href="#4-封装编码数据" class="headerlink" title="4. 封装编码数据"></a>4. 封装编码数据</h3><ul>
+<li>深入研究<ul>
+<li><a href="https://juejin.im/post/5d28aa28f265da1bb9700af8" target="_blank" rel="noopener">iOS完整推流过程</a> </li>
+<li><a href="https://juejin.im/post/5ceff73df265da1bb13f16f4" target="_blank" rel="noopener">iOS FFmpeg环境搭建</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="4-1-定义"><a href="#4-1-定义" class="headerlink" title="4.1 定义"></a>4.1 定义</h4><p>封装就是把编码器生成的音频,视频同步以生成我们肉眼可见,耳朵可听并且看到的与听到的是同步的视频文件.即封装后生成一个容器,来存放音频和视频流以及一些其他信息(比如字幕, metadata等).</p>
+<h4 id="4-2-格式"><a href="#4-2-格式" class="headerlink" title="4.2 格式"></a>4.2 格式</h4><ul>
+<li>AVI(.AVI):<ul>
+<li>优点是图像质量好。由于无损AVI可以保存 alpha 通道，经常被我们使用</li>
+<li>缺点太多，体积过于庞大，而且更加糟糕的是压缩标准不统一，</li>
+</ul>
+</li>
+<li>MOV(.MOV): 美国Apple公司开发的一种视频格式，默认的播放器是苹果的QuickTime。</li>
+<li>MPEG(.MPG,.MPEG,MPE,.DAT,.VOB,.ASF,.3GP,.MP4):</li>
+<li>WMV(.WMV,.ASF)</li>
+<li>Real Video(.RM,.RMBV): 根据不同的网络传输速率制定出不同的压缩比率，从而实现在低速率的网络上进行影像数据实时传送和播放</li>
+<li>Flash Video(.FLV):由 Adobe Flash 延伸出来的的一种流行网络视频封装格式。随着视频网站的丰富，这个格式已经非常普及。</li>
+</ul>
+<h4 id="4-3-将编码数据合成流"><a href="#4-3-将编码数据合成流" class="headerlink" title="4.3 将编码数据合成流"></a>4.3 将编码数据合成流</h4><p>在移动端我们需要借助FFmpeg框架,正如上面介绍的,FFmpeg不仅可以做编解码,还可以合成视频流,像常用的.flv流,.asf流.</p>
+<p>最后, 合成好的数据即可用于写文件或者在网络上传播</p>
+<h5 id="补充-FFmpeg-必学框架"><a href="#补充-FFmpeg-必学框架" class="headerlink" title="补充: FFmpeg (必学框架)"></a>补充: FFmpeg (必学框架)</h5><p>FFmpeg 是一个开源框架，可以运行音频和视频多种格式的录影、转换、流功能，包含了 libavcodec: 这是一个用于多个项目中音频和视频的解码器库，以及 libavformat 一个音频与视频格式转换库。</p>
+<p>目前支持 Linux ,Mac OS,Windows 三个主流的平台，也可以自己编译到 Android 或者 iOS 平台。<br>如果是 Mac OS ，可以通过 brew 安装 brew install ffmpeg –with-libvpx –with-libvorbis –with-ffplay</p>
+<h4 id="4-4-FLV流简介"><a href="#4-4-FLV流简介" class="headerlink" title="4.4. FLV流简介"></a>4.4. FLV流简介</h4><ul>
+<li><p>Overview</p>
+<p>  FLV封装格式分析器。FLV全称是Flash Video，是互联网上使用极为广泛的视频封装格式。像Youtube，优酷这类视频网站，都使用FLV封装视频</p>
+<p>  FLV（Flash Video）是Adobe公司设计开发的一种流行的流媒体格式，由于其视频文件体积轻巧、封装简单等特点，使其很适合在互联网上进行应用。此外，FLV可以使用Flash Player进行播放，而Flash Player插件已经安装在全世界绝大部分浏览器上，这使得通过网页播放FLV视频十分容易。目前主流的视频网站如优酷网，土豆网，乐视网等网站无一例外地使用了FLV格式。FLV封装格式的文件后缀通常为“.flv”。</p>
+</li>
+<li><p>结构</p>
+<p>  FLV包括文件头（File Header）和文件体（File Body）两部分，其中文件体由一系列的Tag组成。因此一个FLV文件是如图1结构。</p>
+<p>  <img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/JTKBRjOhK4p3k*s.3YCuo9Wes1.haCunGWWCLED8lFs!/r/dC4BAAAAAAAA" alt="10_fileStructure"></p>
+<p>  每个Tag前面还包含了Previous Tag Size字段，表示前面一个Tag的大小。Tag的类型可以是视频、音频和Script，每个Tag只能包含以上三种类型的数据中的一种。图2展示了FLV文件的详细结构。</p>
+<p>  <img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/uY1RxSiuTSgebVqwdk7h54bmhTlfPRTl5YUbI6RR13g!/r/dL8AAAAAAAAA" alt="11_flvStructure"></p>
+</li>
+</ul>
+<h3 id="5-将数据通过RTMP协议传输"><a href="#5-将数据通过RTMP协议传输" class="headerlink" title="5. 将数据通过RTMP协议传输"></a>5. 将数据通过RTMP协议传输</h3><ul>
+<li><p>优点</p>
+<ul>
+<li>CDN 支持良好，主流的 CDN 厂商都支持</li>
+<li>协议简单，在各平台上实现容易</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>基于 TCP ，传输成本高，在弱网环境丢包率高的情况下问题显著</li>
+<li>不支持浏览器推送</li>
+<li>Adobe 私有协议，Adobe 已经不再更新</li>
+</ul>
+</li>
+</ul>
+<p>我们推送出去的流媒体需要传输到观众，整个链路就是传输网络.</p>
+<h4 id="5-1-Overview"><a href="#5-1-Overview" class="headerlink" title="5.1. Overview"></a>5.1. Overview</h4><p>RTMP协议是一个互联网TCP/IP五层体系结构中应用层的协议。RTMP协议中基本的数据单元称为消息（Message）。当RTMP协议在互联网中传输数据的时候，消息会被拆分成更小的单元，称为消息块（Chunk）。</p>
+<h4 id="5-2-消息"><a href="#5-2-消息" class="headerlink" title="5.2. 消息"></a>5.2. 消息</h4><p>消息是RTMP协议中基本的数据单元。不同种类的消息包含不同的Message Type ID，代表不同的功能。RTMP协议中一共规定了十多种消息类型，分别发挥着不同的作用。</p>
+<ul>
+<li>1-7的消息用于协议控制，这些消息一般是RTMP协议自身管理要使用的消息，用户一般情况下无需操作其中的数据</li>
+<li>Message Type ID为8，9的消息分别用于传输音频和视频数据</li>
+<li>Message Type ID为15-20的消息用于发送AMF编码的命令，负责用户与服务器之间的交互，比如播放，暂停等等</li>
+<li>消息首部（Message Header）有四部分组成：标志消息类型的Message Type ID，标志消息长度的Payload Length，标识时间戳的Timestamp，标识消息所属媒体流的Stream ID</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/mSRvr*AraMPfd0CT9u4*sS1ovHxIZsyShplc7WtkcbQ!/r/dFMBAAAAAAAA" alt="2_message"></p>
+<h4 id="2-消息块"><a href="#2-消息块" class="headerlink" title="2.消息块"></a>2.消息块</h4><p>在网络上传输数据时，消息需要被拆分成较小的数据块，才适合在相应的网络环境上传输。RTMP协议中规定，消息在网络上传输时被拆分成消息块（Chunk）。</p>
+<p>消息块首部（Chunk Header）有三部分组成：</p>
+<ul>
+<li>用于标识本块的Chunk Basic Header</li>
+<li>用于标识本块负载所属消息的Chunk Message Header</li>
+<li>以及当时间戳溢出时才出现的Extended Timestamp</li>
+</ul>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/q23.wKQyCPBwT34wiBWXVumNu6u.f.lU0pEq8MUKWHQ!/r/dLYAAAAAAAAA" alt="3_chunk"></p>
+<h4 id="3-消息分块"><a href="#3-消息分块" class="headerlink" title="3.消息分块"></a>3.消息分块</h4><p>在消息被分割成几个消息块的过程中，消息负载部分（Message Body）被分割成大小固定的数据块（默认是128字节，最后一个数据块可以小于该固定长度），并在其首部加上消息块首部（Chunk Header），就组成了相应的消息块。消息分块过程如图5所示，一个大小为307字节的消息被分割成128字节的消息块（除了最后一个）。</p>
+<p>RTMP传输媒体数据的过程中，发送端首先把媒体数据封装成消息，然后把消息分割成消息块，最后将分割后的消息块通过TCP协议发送出去。接收端在通过TCP协议收到数据后，首先把消息块重新组合成消息，然后通过对消息进行解封装处理就可以恢复出媒体数据。</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/2PYZf0ecHdmq4LDurMf6f60vb5cTjvEsR7lA4tkazPM!/r/dL8AAAAAAAAA" alt="4_messageblock"></p>
+<h4 id="4-RTMP中的逻辑结构"><a href="#4-RTMP中的逻辑结构" class="headerlink" title="4.RTMP中的逻辑结构"></a>4.RTMP中的逻辑结构</h4><p>RTMP协议规定，播放一个流媒体有两个前提步骤</p>
+<ul>
+<li>第一步，建立一个网络连接（NetConnection）</li>
+<li>第二步，建立一个网络流（NetStream）。</li>
+</ul>
+<p>其中，网络连接代表服务器端应用程序和客户端之间基础的连通关系。网络流代表了发送多媒体数据的通道。服务器和客户端之间只能建立一个网络连接，但是基于该连接可以创建很多网络流。他们的关系如图所示：</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/r4hGG2BPCH2GxBf.vnolGr2tlyMLp3Z72UF0Nak319s!/r/dC0BAAAAAAAA" alt="5_structure"></p>
+<h4 id="5-连接流程"><a href="#5-连接流程" class="headerlink" title="5. 连接流程"></a>5. 连接流程</h4><p>播放一个RTMP协议的流媒体需要经过以下几个步骤：</p>
+<ul>
+<li>握手</li>
+<li>建立连接</li>
+<li>建立流</li>
+<li>播放</li>
+</ul>
+<p>RTMP连接都是以握手作为开始的。建立连接阶段用于建立客户端与服务器之间的“网络连接”；建立流阶段用于建立客户端与服务器之间的“网络流”；播放阶段用于传输视音频数据。</p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/ahzP5K8sI6.7HfV*8ZhCJ1kf8H52olw8p2uMCqeQzds!/r/dL8AAAAAAAAA" alt="6_hand"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/FiuVSdAaJZ.fWOAe0ucO0q1A9EV.vMyrZTLPrlkPtGI!/r/dL8AAAAAAAAA" alt="7_connect"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/O8J54FYUGO3f*h8470RW*GTLWpOXbpOn2QuYqNquV4I!/r/dFQBAAAAAAAA" alt="8_setup"></p>
+<p><img src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/0Ms2vwez9.HWkz8WcRv5MjY5hMdxZkpXrfMkA4h9aII!/r/dL8AAAAAAAAA" alt="9_play"></p>
+<h3 id="6-解析并解码视频流"><a href="#6-解析并解码视频流" class="headerlink" title="6. 解析并解码视频流"></a>6. 解析并解码视频流</h3><ul>
+<li>深入研究<ul>
+<li><a href="https://juejin.im/post/5d216633e51d4555fd20a3b9" target="_blank" rel="noopener">iOS完整文件拉流解析解码同步渲染音视频流</a></li>
+<li><a href="https://juejin.im/post/5cffac756fb9a07f08708d20" target="_blank" rel="noopener">FFmpeg解析视频数据</a></li>
+<li><a href="https://juejin.im/post/5d0a5a6c518825431f5e5ed8" target="_blank" rel="noopener">iOS利用FFmpeg实现视频硬解码</a></li>
+<li><a href="https://juejin.im/post/5d1243b75188257b791527d5" target="_blank" rel="noopener">iOS利用VideoToolbox实现视频硬解码</a></li>
+<li><a href="https://juejin.im/post/5d187cb5f265da1ba25274ce" target="_blank" rel="noopener">iOS利用FFmpeg实现音频硬解码</a></li>
+<li><a href="https://juejin.im/post/5ce17177e51d45107b67e8c4" target="_blank" rel="noopener">iOS利用原生音频解码</a></li>
+</ul>
+</li>
+</ul>
+<p>到这里为止,完整的推流过程已经介绍完成,下面的过程即为逆向过程-拉流.</p>
+<p>因为接收端拿到编码的视频流最终还是想将视频渲染到屏幕上, 将音频通过扬声器等输出设备播出,所以接着上面的步骤,接收端可以通过RTMP协议拿到视频流数据,然后需要利用FFmpeg parse数据,因为我们需要将数据中的音频跟视频分开,分离出音视频数据后需要分别对它们做解码操作.解码的视频即为YUV/RGB等格式,解码后的音频即为线性PCM数据.</p>
+<p>需要注意的是,我们解码出来的数据并不能够直接使用,因为,手机端如果想要播放解码出来的数据是需要将其放入特定的数据结构中,在iOS中,视频数据需要放入CMSampleBufferRef中,而该数据结构又由CMTime,CMVideoFormatDes,CMBlockBuffer组成,所以我们需要提供它所需要的信息才能组成系统能够播放的格式.</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5086522-cec9976c4c5443ea?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="CMSampleBufferCreate"></p>
+<h3 id="7-音视频同步并播放"><a href="#7-音视频同步并播放" class="headerlink" title="7. 音视频同步并播放"></a>7. 音视频同步并播放</h3><ul>
+<li>深入研究<ul>
+<li><a href="https://juejin.im/post/5d08f861518825699040ecac" target="_blank" rel="noopener">iOS视频渲染</a></li>
+<li><a href="https://juejin.im/post/5d177338f265da1bc07e4efd" target="_blank" rel="noopener">AudioQueue实现音频流实时播放实战</a></li>
+</ul>
+</li>
+</ul>
+<p>当我们拿到解码后的音视频帧时,首先要考虑的问题就是如何同步音视频,在网络正常的情况下是不需要做音视频同步操作,因为我们parse到的音视频数据里本身带着它们在采集时的时间戳,只要我们在合理时间内拿到音视频帧,将它们分别送给屏幕与扬声器即可实现同步播放.但是考虑到网络波动,所以可能丢失一些帧或延迟后才能获取,当这种情况出现时就会造成声音视频不同步,因此需要对音视频做同步处理.</p>
+<p>我们可以这样理解: 有一把尺子 一只蚂蚁（视频）跟着一个标杆（音频）走， 标杆是匀速的 蚂蚁或快或慢，慢了你就抽它 让它跑起来，快了就拽它。这样音视频就能同步了。 这里最大的问题就是音频是匀速的，视频是非线性的。</p>
+<p>分别获得音视频的PTS后，我们有三个选择：视频同步音频(计算音视频PTS之差，来判定视频是否有延迟)、音频同步视频（根据音视频PTS差值调整音频取的样值，即改变音频缓冲区的大小）和音频视频同步外部时钟（同前一个），因为调整音频范围过大，会造成令用户不适的尖锐声，所以通常我们选择第一种。</p>
+<p>我们的策略是通过比较前一个 PTS 和当前的 PTS 来预测下一帧的 PTS。与此同时，我们需要同步视频到音频。我们将创建一个 audio clock 作为内部变量来跟踪音频现在播放的时间点，video thread 将用这个值来计算和判断视频是播快了还是播慢了。</p>
+<p>现在假设我们有一个 get_audio_clock 函数来返回我们 audio clock，那当我们拿到这个值，我们怎么去处理音视频不同步的情况呢？如果只是简单的尝试跳到正确的 packet 来解决并不是一个很好的方案。我们要做的是调整下一次刷新的时机：如果视频播慢了我们就加快刷新，如果视频播快了我们就减慢刷新。既然我们调整好了刷新时间，接下来用 frame_timer 跟设备的时钟做一下比较。frame_timer 会一直累加在播放过程中我们计算的延时。换而言之，这个 frame_timer 就是播放下一帧的应该对上的时间点。我们简单的在 frame_timer 上累加新计算的 delay，然后和系统时间比较，并用得到的值来作为时间间隔去刷新。</p>
+<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><ul>
+<li><a href="https://blog.csdn.net/leixiaohua1020/article/details/18893769" target="_blank" rel="noopener">雷神</a></li>
+<li><a href="https://www.zhihu.com/org/qi-niu-yun/posts?page=6" target="_blank" rel="noopener">阿里七牛云</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>穷则github点星,达可兼济本人</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小东邪 - Demon WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小东邪 - Demon Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/音视频总结/" rel="tag"># 音视频总结</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/12/20190712_ios_mux_asf/" rel="next" title="iOS完整推流采集音视频数据编码同步合成流">
+                <i class="fa fa-chevron-left"></i> iOS完整推流采集音视频数据编码同步合成流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+        <div onclick="showGitment()" id="gitment_title" class="gitment_title">显示 Gitment 评论</div>
+        <div id="container" style="display:none"></div>
+        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+        <script>
+        const myTheme = {
+          render(state, instance) {
+            const container = document.createElement('div');
+            container.lang = "en-US";
+            container.className = 'gitment-container gitment-root-container';
+            container.appendChild(instance.renderHeader(state, instance));
+            container.appendChild(instance.renderEditor(state, instance));
+            container.appendChild(instance.renderComments(state, instance));
+            container.appendChild(instance.renderFooter(state, instance));
+            return container;
+          }
+        }
+        function showGitment() {
+          $("#gitment_title").attr("style", "display:none");
+          $("#container").attr("style", "").addClass("gitment_container");
+          var gitment = new Gitment({
+            id: window.location.pathname,
+            theme: myTheme,
+            owner: '',
+            repo: '',
+            oauth: {
+              client_id: 'c209d8cfa2d7f7696f17',
+              client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8'
+            }
+          });
+          gitment.render('container');
+        }
+        </script>
+
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://r.photo.store.qq.com/psb?/V14Id4Zj1TAt9e/yzeIpXHXXaOcxOnovNgST0jvIeuupEGzPfZ3DWoYrLY!/r/dFQBAAAAAAAA" alt="小东邪 - Demon">
+            
+              <p class="site-author-name" itemprop="name">小东邪 - Demon</p>
+              <p class="site-description motion-element" itemprop="description">一生负气成今日，四海无人对夕阳.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">55</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XiaoDongXie1024" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/23f3ec991fed" target="_blank" title="简书"><i class="fa fa-fw fa-book"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/58ec343861ff4b00691b4f26" target="_blank" title="掘金"><i class="fa fa-fw fa-star"></i>掘金</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#划重点"><span class="nav-number">3.</span> <span class="nav-text">划重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">4.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推流，拉流流程"><span class="nav-number">5.</span> <span class="nav-text">推流，拉流流程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#推流如下"><span class="nav-number">5.0.0.1.</span> <span class="nav-text">推流如下:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#拉流如下"><span class="nav-number">5.0.0.2.</span> <span class="nav-text">拉流如下:</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#具体剖析"><span class="nav-number">6.</span> <span class="nav-text">具体剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-采集"><span class="nav-number">6.1.</span> <span class="nav-text">1. 采集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-音频采集"><span class="nav-number">6.1.1.</span> <span class="nav-text">1.1. 音频采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-视频采集"><span class="nav-number">6.1.2.</span> <span class="nav-text">1.2. 视频采集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-综上所述"><span class="nav-number">6.1.3.</span> <span class="nav-text">1.3. 综上所述</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-处理"><span class="nav-number">6.2.</span> <span class="nav-text">2. 处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-编码"><span class="nav-number">6.3.</span> <span class="nav-text">3.编码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-为什么要编码"><span class="nav-number">6.3.1.</span> <span class="nav-text">3.1.  为什么要编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-有损压缩-VS-无损压缩"><span class="nav-number">6.3.2.</span> <span class="nav-text">3.2. 有损压缩 VS 无损压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-视频编码"><span class="nav-number">6.3.3.</span> <span class="nav-text">3.3. 视频编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#a-运动估计技术"><span class="nav-number">6.3.3.1.</span> <span class="nav-text">a. 运动估计技术</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#b-运动补偿"><span class="nav-number">6.3.3.2.</span> <span class="nav-text">b. 运动补偿</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-音频编码"><span class="nav-number">6.3.4.</span> <span class="nav-text">3.4. 音频编码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-封装编码数据"><span class="nav-number">6.4.</span> <span class="nav-text">4. 封装编码数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-定义"><span class="nav-number">6.4.1.</span> <span class="nav-text">4.1 定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-格式"><span class="nav-number">6.4.2.</span> <span class="nav-text">4.2 格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-将编码数据合成流"><span class="nav-number">6.4.3.</span> <span class="nav-text">4.3 将编码数据合成流</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#补充-FFmpeg-必学框架"><span class="nav-number">6.4.3.1.</span> <span class="nav-text">补充: FFmpeg (必学框架)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-FLV流简介"><span class="nav-number">6.4.4.</span> <span class="nav-text">4.4. FLV流简介</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-将数据通过RTMP协议传输"><span class="nav-number">6.5.</span> <span class="nav-text">5. 将数据通过RTMP协议传输</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-Overview"><span class="nav-number">6.5.1.</span> <span class="nav-text">5.1. Overview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-消息"><span class="nav-number">6.5.2.</span> <span class="nav-text">5.2. 消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-消息块"><span class="nav-number">6.5.3.</span> <span class="nav-text">2.消息块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-消息分块"><span class="nav-number">6.5.4.</span> <span class="nav-text">3.消息分块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-RTMP中的逻辑结构"><span class="nav-number">6.5.5.</span> <span class="nav-text">4.RTMP中的逻辑结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-连接流程"><span class="nav-number">6.5.6.</span> <span class="nav-text">5. 连接流程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-解析并解码视频流"><span class="nav-number">6.6.</span> <span class="nav-text">6. 解析并解码视频流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-音视频同步并播放"><span class="nav-number">6.7.</span> <span class="nav-text">7. 音视频同步并播放</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考文章"><span class="nav-number">6.7.1.</span> <span class="nav-text">参考文章</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小东邪 - Demon</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="Total Visitors">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="Total Views">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'XiaoDongXie1024',
+            repo: 'gitment-comments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '1681a33c8745e7a79871dfc6613170a03c44fed8',
+            
+                client_id: 'c209d8cfa2d7f7696f17'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "",
+                'X-LC-Key': "",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
